@@ -1,0 +1,126 @@
+﻿<Window x:Class="ModernDesign.MVVM.View.OfflineWarningWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Warning"
+        Height="400" Width="600"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        AllowsTransparency="True">
+
+    <Border Background="#1E293B" CornerRadius="12" BorderBrush="#334155" BorderThickness="1">
+        <Grid Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <TextBlock x:Name="WarningTitle"
+                       Grid.Row="0"
+                       Text="⚠️ WARNING!"
+                       FontSize="28"
+                       FontWeight="Bold"
+                       Foreground="#FBBF24"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,20"/>
+
+            <!-- Content -->
+            <StackPanel Grid.Row="1" VerticalAlignment="Center">
+                <TextBlock x:Name="WarningMessage"
+                           TextWrapping="Wrap"
+                           FontSize="14"
+                           Foreground="#F8FAFC"
+                           LineHeight="22"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           Margin="0,0,0,20"/>
+
+                <!-- Clickable Link -->
+                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,20">
+                    <Hyperlink x:Name="EAForumLink"
+                               NavigateUri="https://forums.ea.com/blog/the-sims-game-info-hub-en/mods--game-updates-best-practices-and-getting-you-back-into-the-sims-4/12938569"
+                               RequestNavigate="Hyperlink_RequestNavigate"
+                               Foreground="#60A5FA"
+                               TextDecorations="None">
+                        <Run Text="https://forums.ea.com/blog/.../12938569" FontSize="13"/>
+                    </Hyperlink>
+                </TextBlock>
+            </StackPanel>
+
+            <!-- Buttons -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+                <Button x:Name="ProtectedBtn"
+                        Content="I'm Protected"
+                        Width="150"
+                        Height="40"
+                        Margin="0,0,15,0"
+                        Background="#22C55E"
+                        Foreground="White"
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="ProtectedBtn_Click">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#22C55E"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="8"
+                                                Padding="15,10">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#16A34A"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Button x:Name="CancelBtn"
+                        Content="Cancel"
+                        Width="150"
+                        Height="40"
+                        Background="#EF4444"
+                        Foreground="White"
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="CancelBtn_Click">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#EF4444"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="8"
+                                                Padding="15,10">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#DC2626"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

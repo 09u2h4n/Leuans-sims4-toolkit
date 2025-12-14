@@ -1,0 +1,217 @@
+﻿<Window x:Class="ModernDesign.MVVM.View.S4STutorialWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Tutorial"
+        Height="600" Width="950"
+        WindowStartupLocation="CenterOwner"
+        Background="#0F172A"
+        ResizeMode="NoResize">
+
+    <Window.Resources>
+        <Style x:Key="TitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#F9FAFB"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style x:Key="BodyStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#E5E7EB"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="8" 
+                                Padding="{TemplateBinding Padding}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.85"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="25">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock x:Name="StepIndicator" 
+                       Text="Step 1 of 11" 
+                       Style="{StaticResource BodyStyle}" 
+                       FontSize="11" 
+                       Foreground="#A78BFA"
+                       Margin="0,0,0,5"/>
+            <TextBlock x:Name="TitleText" 
+                       Text="🎓 Tutorial" 
+                       Style="{StaticResource TitleStyle}" 
+                       FontSize="22"/>
+            <TextBlock x:Name="SubtitleText" 
+                       Text="Aprende a crear: Rasgo" 
+                       Style="{StaticResource BodyStyle}" 
+                       FontSize="13" 
+                       Margin="0,5,0,0"
+                       Foreground="#94A3B8"/>
+        </StackPanel>
+
+        <!-- CONTENT -->
+        <Border Grid.Row="1" 
+                Background="#1E293B" 
+                CornerRadius="16"
+                Padding="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="380"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- LEFT: Step Info -->
+                <Border Grid.Column="0" 
+                        Background="#111827" 
+                        CornerRadius="16,0,0,16"
+                        Padding="25">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <TextBlock x:Name="StepTitle" 
+                                       Text="Paso 1: Título del Paso" 
+                                       Style="{StaticResource TitleStyle}" 
+                                       FontSize="17" 
+                                       Margin="0,0,0,15"
+                                       Foreground="#22C55E"/>
+
+                            <TextBlock x:Name="StepDescription" 
+                                       Text="Descripción detallada del paso con instrucciones completas sobre qué hacer..." 
+                                       Style="{StaticResource BodyStyle}" 
+                                       FontSize="13"
+                                       LineHeight="22"/>
+
+                            <!-- Tips Box -->
+                            <Border x:Name="TipsBox" 
+                                    Background="#1E293B" 
+                                    CornerRadius="12" 
+                                    Padding="15" 
+                                    Margin="0,20,0,0" 
+                                    Visibility="Collapsed"
+                                    BorderBrush="#FCD34D"
+                                    BorderThickness="2">
+                                <StackPanel>
+                                    <TextBlock x:Name="TipsTitle" 
+                                               Text="💡 Consejos" 
+                                               Style="{StaticResource TitleStyle}" 
+                                               FontSize="13" 
+                                               Foreground="#FCD34D"
+                                               Margin="0,0,0,8"/>
+                                    <TextBlock x:Name="TipsText" 
+                                               Text="Aquí van los consejos útiles..." 
+                                               Style="{StaticResource BodyStyle}" 
+                                               FontSize="12"
+                                               LineHeight="20"
+                                               Foreground="#FEF3C7"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+
+                <!-- RIGHT: Image Preview -->
+                <Grid Grid.Column="1" Margin="20">
+                    <Border CornerRadius="12" 
+                            Background="#0F172A" 
+                            Padding="15"
+                            BorderBrush="#334155"
+                            BorderThickness="1">
+                        <Grid>
+                            <!-- Screenshot Image -->
+                            <Border CornerRadius="8" 
+                                    Background="#1E293B"
+                                    ClipToBounds="True">
+                                <Image x:Name="StepImage" 
+                                       Stretch="Uniform" 
+                                       Source="/MVVM/View/guidesandlessons.png"
+                                       RenderOptions.BitmapScalingMode="HighQuality"/>
+                            </Border>
+
+                            <!-- Image placeholder text when no image -->
+                            <TextBlock Text="📸 Imagen del Paso" 
+                                       Style="{StaticResource BodyStyle}"
+                                       FontSize="16"
+                                       Foreground="#475569"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       x:Name="PlaceholderText"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- FOOTER -->
+        <Grid Grid.Row="2" Margin="0,20,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Progress dots -->
+            <StackPanel x:Name="ProgressDots" 
+                        Grid.Column="0" 
+                        Orientation="Horizontal" 
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"/>
+
+            <!-- Navigation Buttons -->
+            <StackPanel Grid.Column="1" 
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button x:Name="PrevButton" 
+                        Content="← Atrás" 
+                        Padding="18,10" 
+                        Margin="0,0,10,0" 
+                        Background="#374151" 
+                        Foreground="White" 
+                        BorderThickness="0" 
+                        Click="PrevButton_Click" 
+                        Visibility="Collapsed"
+                        Style="{StaticResource ButtonStyle}"
+                        FontSize="13"/>
+
+                <Button x:Name="NextButton" 
+                        Content="Siguiente →" 
+                        Padding="18,10" 
+                        Margin="0,0,10,0" 
+                        Background="#22C55E" 
+                        Foreground="#0F172A" 
+                        BorderThickness="0" 
+                        Click="NextButton_Click"
+                        Style="{StaticResource ButtonStyle}"
+                        FontSize="13"/>
+
+                <Button x:Name="CloseButton" 
+                        Content="Cerrar" 
+                        Padding="18,10" 
+                        Background="#475569" 
+                        Foreground="White" 
+                        BorderThickness="0" 
+                        Click="CloseButton_Click"
+                        Style="{StaticResource ButtonStyle}"
+                        FontSize="13"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,203 @@
+﻿<Window x:Class="ModernDesign.MVVM.View.RestoreBackupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Restore Savegame"
+        WindowStartupLocation="CenterOwner"
+        Width="800" Height="550"
+        Background="#020617"
+        AllowsTransparency="True"
+        WindowStyle="None">
+
+    <Window.Resources>
+        <Style x:Key="TitleTextBlock" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#F9FAFB"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="1" BlurRadius="8" Opacity="0.9"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BodyTextBlock" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#E5E7EB"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="1" BlurRadius="6" Opacity="0.8"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="GreenButton" TargetType="Button">
+            <Setter Property="Background" Value="#22C55E"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <Border.Effect>
+                                <DropShadowEffect ShadowDepth="2" BlurRadius="8" Opacity="0.3"/>
+                            </Border.Effect>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#16A34A"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="#4B5563"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border CornerRadius="12" Background="#020617" BorderBrush="#1F2937" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect ShadowDepth="0" BlurRadius="30" Opacity="0.8"/>
+        </Border.Effect>
+
+        <Grid Margin="25">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- HEADER -->
+            <Grid Grid.Row="0" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock x:Name="TitleText" Text="♻️ Restore Savegame" Style="{StaticResource TitleTextBlock}" FontSize="24">
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#EF4444" Offset="0"/>
+                                <GradientStop Color="#F59E0B" Offset="1"/>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+                    <TextBlock x:Name="SubtitleText" Text="Select a backup to restore" Style="{StaticResource BodyTextBlock}" FontSize="13" Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <Button Content="✕"
+                        Width="28" Height="28"
+                        Background="#EF4444"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        FontSize="14"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Click="CancelButton_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="closeBorder" Background="{TemplateBinding Background}" CornerRadius="6">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="closeBorder" Property="Background" Value="#DC2626"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+
+            <!-- LISTA DE BACKUPS -->
+            <Border Grid.Row="1" Background="#111827" CornerRadius="10" Padding="0" Margin="0,0,0,15">
+                <ListView x:Name="BackupsListView" Background="Transparent" BorderThickness="0">
+                    <ListView.Resources>
+                        <Style TargetType="GridViewColumnHeader">
+                            <Setter Property="Background" Value="#1F2937"/>
+                            <Setter Property="Foreground" Value="#F9FAFB"/>
+                            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="FontStyle" Value="Italic"/>
+                            <Setter Property="FontSize" Value="12"/>
+                            <Setter Property="Padding" Value="10,8"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Style>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="#E5E7EB"/>
+                            <Setter Property="Padding" Value="8"/>
+                            <Setter Property="Margin" Value="4,2"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListViewItem">
+                                        <Border x:Name="itemBorder" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}" Margin="{TemplateBinding Margin}">
+                                            <GridViewRowPresenter Content="{TemplateBinding Content}" Columns="{TemplateBinding GridView.ColumnCollection}"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="itemBorder" Property="Background" Value="#1F2937"/>
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="itemBorder" Property="Background" Value="#374151"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.Resources>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="📅 Date" Width="200">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Timestamp}" Foreground="#60A5FA" FontFamily="Bahnschrift Light" FontWeight="Bold" FontStyle="Italic" FontSize="11"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="💾 Slot" Width="180">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding SlotId}" Foreground="#22C55E" FontFamily="Bahnschrift Light" FontWeight="Bold" FontStyle="Italic" FontSize="11"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="📊 Files" Width="80">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#8B5CF6" CornerRadius="6" Padding="6,3">
+                                            <TextBlock Text="{Binding FileCount}" Foreground="White" FontFamily="Bahnschrift Light" FontWeight="Bold" FontStyle="Italic" FontSize="10" HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="📁 Size" Width="120">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding SizeFormatted}" Foreground="#E5E7EB" FontFamily="Bahnschrift Light" FontWeight="Bold" FontStyle="Italic" FontSize="11"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Border>
+
+            <!-- BOTONES -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="RestoreSelectedButton" Style="{StaticResource GreenButton}" Background="#EF4444" Content="♻️ Restore Selected" Click="RestoreSelectedButton_Click" Margin="0,0,10,0"/>
+                <Button x:Name="CancelButton" Style="{StaticResource GreenButton}" Background="#6B7280" Content="Cancel" Click="CancelButton_Click"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

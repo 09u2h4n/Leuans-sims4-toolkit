@@ -1,0 +1,525 @@
+﻿<UserControl x:Class="ModernDesign.MVVM.View.FPSBoosterView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="519"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
+
+    <UserControl.Resources>
+        <Style x:Key="OptimizeButton" TargetType="Button">
+            <Setter Property="Background" Value="#22C55E"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                CornerRadius="8" Padding="20,12">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#16A34A"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="#4B5563"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CheckItemCard" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="15,12"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <Style x:Key="StatusIndicator" TargetType="Ellipse">
+            <Setter Property="Width" Value="12"/>
+            <Setter Property="Height" Value="12"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="-26,0,0,0" Background="Transparent">
+        <!-- Scroll general, pero el contenido igual ocupa todo el ancho -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled" Cursor="">
+            <Grid Margin="30,15,30,20" Cursor="">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- HEADER -->
+                <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                    <TextBlock x:Name="TitleText" Text="FPS Booster" 
+                               Foreground="White" FontSize="28"
+                               FontWeight="Bold" FontFamily="Bahnschrift Light"
+                               FontStyle="Italic">
+                        <TextBlock.Effect>
+                            <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="8"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                    <TextBlock x:Name="SubtitleText" 
+                               Text="Analyze and optimize your game performance"
+                               Foreground="#E5E7EB" FontSize="15"
+                               FontFamily="Bahnschrift Light"
+                               FontWeight="Bold"
+                               FontStyle="Italic"
+                               Margin="0,5,0,0">
+                        <TextBlock.Effect>
+                            <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="6"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+
+                    <!-- NUEVO BOTÓN: CAMBIAR CARPETA -->
+                    <Button x:Name="ChangeFolderButton"
+                            Content="Change folder..."
+                            Style="{StaticResource OptimizeButton}"
+                            Padding="16,8"
+                            Margin="0,10,0,0"
+                            HorizontalAlignment="Left"
+                            Click="ChangeFolderButton_Click"/>
+                </StackPanel>
+
+                <!-- SCORE CIRCLE -->
+                <Grid Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,25">
+                    <Ellipse Width="140" Height="140" StrokeThickness="8">
+                        <Ellipse.Stroke>
+                            <SolidColorBrush Color="#20FFFFFF"/>
+                        </Ellipse.Stroke>
+                    </Ellipse>
+                    <Ellipse x:Name="ScoreRing" Width="140" Height="140" StrokeThickness="8"
+                             RenderTransformOrigin="0.5,0.5">
+                        <Ellipse.Stroke>
+                            <SolidColorBrush x:Name="ScoreColor" Color="#22C55E"/>
+                        </Ellipse.Stroke>
+                        <Ellipse.StrokeDashArray>
+                            <DoubleCollection>0,100</DoubleCollection>
+                        </Ellipse.StrokeDashArray>
+                        <Ellipse.RenderTransform>
+                            <RotateTransform Angle="-90"/>
+                        </Ellipse.RenderTransform>
+                    </Ellipse>
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock x:Name="ScoreText" Text="--%" 
+                                   Foreground="White" FontSize="32"
+                                   FontWeight="Bold" FontFamily="Bahnschrift Light"
+                                   FontStyle="Italic"
+                                   HorizontalAlignment="Center">
+                            <TextBlock.Effect>
+                                <DropShadowEffect ShadowDepth="1" Opacity="0.8" BlurRadius="6"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                        <TextBlock x:Name="ScoreLabel" Text="Optimized" 
+                                   Foreground="#E5E7EB" FontSize="13"
+                                   FontFamily="Bahnschrift Light"
+                                   FontWeight="Bold"
+                                   FontStyle="Italic"
+                                   HorizontalAlignment="Center">
+                            <TextBlock.Effect>
+                                <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="5"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+
+                <!-- CHECK ITEMS (sin ScrollViewer interno, se adapta al ancho del Grid) -->
+                <StackPanel Grid.Row="2" x:Name="CheckItemsPanel" Cursor="">
+
+                    <!-- Item 1: LocalThumbCache -->
+                    <Border Style="{StaticResource CheckItemCard}">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#15803D" Offset="0"/>
+                                <GradientStop Color="#10FFFFFF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Ellipse x:Name="CacheStatus" Grid.Column="0" 
+                                     Style="{StaticResource StatusIndicator}"
+                                     Fill="#6B7280" Margin="0,0,12,0"/>
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock x:Name="CacheTitle" Text="Thumbnail Cache"
+                                           Foreground="White" FontSize="15"
+                                           FontWeight="Bold" FontFamily="Bahnschrift Light"
+                                           FontStyle="Italic">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Opacity="0.8" BlurRadius="6"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                                <TextBlock x:Name="CacheDesc" Text="localthumbcache.package not found"
+                                           Foreground="#E5E7EB" FontSize="12"
+                                           FontFamily="Bahnschrift Light"
+                                           FontWeight="Bold"
+                                           FontStyle="Italic">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="5"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </StackPanel>
+
+                            <Border Grid.Column="2" Background="#20000000" CornerRadius="6" 
+                                    Padding="8,4" VerticalAlignment="Center" Margin="0,0,10,0">
+                                <TextBlock x:Name="CacheBoost" Text="+25%" Foreground="#22C55E"
+                                           FontWeight="Bold" FontSize="12"
+                                           FontFamily="Bahnschrift Light"
+                                           FontStyle="Italic">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="4"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </Border>
+
+                            <Button x:Name="CacheFixBtn" Grid.Column="3" Content="Fix"
+                                    Style="{StaticResource OptimizeButton}"
+                                    Padding="12,6" FontSize="12"
+                                    Click="CacheFixBtn_Click" Visibility="Collapsed"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Item 2: Merged Packages -->
+                    <Border Style="{StaticResource CheckItemCard}">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#0891B2" Offset="0"/>
+                                <GradientStop Color="#10FFFFFF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Ellipse x:Name="MergeStatus" Grid.Column="0" 
+                                     Style="{StaticResource StatusIndicator}"
+                                     Fill="#6B7280" Margin="0,0,12,0"/>
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock x:Name="MergeTitle" Text="Package Merging"
+                                           Foreground="White" FontSize="15"
+                                           FontWeight="Bold" FontFamily="Bahnschrift Light"
+                                           FontStyle="Italic">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Opacity="0.8" BlurRadius="6"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                                <TextBlock x:Name="MergeDesc" Text="Checking .package files..."
+                                           Foreground="#E5E7EB" FontSize="12"
+                                           FontFamily="Bahnschrift Light"
+                                           FontWeight="Bold"
+                                           FontStyle="Italic">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="4"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </StackPanel>
+
+                            <Border Grid.Column="2" Background="#20000000" CornerRadius="6" 
+                                    Padding="8,4" VerticalAlignment="Center" Margin="0,0,10,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock x:Name="MergeBoostFPS" Text="+10% FPS" Foreground="#22C55E"
+                                               FontWeight="Bold" FontSize="11"
+                                               FontFamily="Bahnschrift Light"
+                                               FontStyle="Italic"
+                                               Margin="0,0,5,0">
+                                        <TextBlock.Effect>
+                                            <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="4"/>
+                                        </TextBlock.Effect>
+                                    </TextBlock>
+                                    <TextBlock x:Name="MergeBoostLoad" Text="+50% Load" Foreground="#3B82F6"
+                                               FontWeight="Bold" FontSize="11"
+                                               FontFamily="Bahnschrift Light"
+                                               FontStyle="Italic">
+                                        <TextBlock.Effect>
+                                            <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="4"/>
+                                        </TextBlock.Effect>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <Button x:Name="MergeInfoBtn" Grid.Column="3" Content="Info"
+                                    Style="{StaticResource OptimizeButton}"
+                                    Padding="12,6" FontSize="12" Background="#3B82F6"
+                                    Click="MergeInfoBtn_Click"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Item 3: Special Characters -->
+                    <Border Style="{StaticResource CheckItemCard}">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#7C3AED" Offset="0"/>
+                                <GradientStop Color="#10FFFFFF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Ellipse x:Name="CharsStatus" Grid.Column="0" 
+                                     Style="{StaticResource StatusIndicator}"
+                                     Fill="#6B7280" Margin="0,0,12,0"/>
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock x:Name="CharsTitle" Text="File Names"
+                                           Foreground="White" FontSize="15"
+                                           FontWeight="Bold" FontFamily="Bahnschrift Light"
+                                           FontStyle="Italic">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Opacity="0.8" BlurRadius="6"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                                <TextBlock x:Name="CharsDesc" Text="Checking for special characters..."
+                                           Foreground="#E5E7EB" FontSize="12"
+                                           FontFamily="Bahnschrift Light"
+                                           FontWeight="Bold"
+                                           FontStyle="Italic">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="5"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </StackPanel>
+
+                            <Border Grid.Column="2" Background="#20000000" CornerRadius="6" 
+                                    Padding="8,4" VerticalAlignment="Center" Margin="0,0,10,0">
+                                <TextBlock x:Name="CharsBoost" Text="+30%" Foreground="#3B82F6"
+                                           FontWeight="Bold" FontSize="12"
+                                           FontFamily="Bahnschrift Light"
+                                           FontStyle="Italic">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="4"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </Border>
+
+                            <Button x:Name="CharsFixBtn" Grid.Column="3" Content="Fix"
+                                    Style="{StaticResource OptimizeButton}"
+                                    Padding="12,6" FontSize="12"
+                                    Click="CharsFixBtn_Click" Visibility="Collapsed"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Item 4: FPS Booster Mod -->
+                    <Border Style="{StaticResource CheckItemCard}" Cursor="">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#BE185D" Offset="0"/>
+                                <GradientStop Color="#10FFFFFF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid Cursor="">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Ellipse x:Name="ModStatus" Grid.Column="0" 
+                                     Style="{StaticResource StatusIndicator}"
+                                     Fill="#6B7280" Margin="0,0,12,0"/>
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Cursor="">
+                                <TextBlock x:Name="ModTitle" Text="FPS Booster Mod"
+                                           Foreground="White" FontSize="15"
+                                           FontWeight="Bold" FontFamily="Bahnschrift Light"
+                                           FontStyle="Italic">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Opacity="0.8" BlurRadius="6"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                                <TextBlock x:Name="ModDesc" Text="Leuan's FPS Booster not installed"
+                                           Foreground="#E5E7EB" FontSize="12"
+                                           FontFamily="Bahnschrift Light"
+                                           FontWeight="Bold"
+                                           FontStyle="Italic" Cursor="">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="4"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </StackPanel>
+
+                            <Border Grid.Column="2" Background="#20000000" CornerRadius="6" 
+                                    Padding="8,4" VerticalAlignment="Center" Margin="0,0,10,0" Cursor="">
+                                <TextBlock x:Name="ModBoost" Text="+20%" Foreground="#22C55E"
+                                           FontWeight="Bold" FontSize="12"
+                                           FontFamily="Bahnschrift Light"
+                                           FontStyle="Italic" Cursor="">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="4"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </Border>
+
+                            <Button x:Name="ModDownloadBtn" Grid.Column="3" Content="Download"
+                                    Style="{StaticResource OptimizeButton}"
+                                    Padding="12,6" FontSize="12" Background="#8B5CF6"
+                                    Click="ModDownloadBtn_Click" Visibility="Collapsed"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Item 5: Screenshot File Size (NUEVO) -->
+                    <Border Style="{StaticResource CheckItemCard}">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#F97316" Offset="0"/>
+                                <GradientStop Color="#10FFFFFF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Ellipse x:Name="ScreenshotStatus" Grid.Column="0" 
+                                     Style="{StaticResource StatusIndicator}"
+                                     Fill="#6B7280" Margin="0,0,12,0"/>
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock x:Name="ScreenshotTitle" Text="Screenshot File Size"
+                                           Foreground="White" FontSize="15"
+                                           FontWeight="Bold" FontFamily="Bahnschrift Light"
+                                           FontStyle="Italic">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Opacity="0.8" BlurRadius="6"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                                <TextBlock x:Name="ScreenshotDesc" Text="Checking screenshots..."
+                                           Foreground="#E5E7EB" FontSize="12"
+                                           FontFamily="Bahnschrift Light"
+                                           FontWeight="Bold"
+                                           FontStyle="Italic">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="4"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </StackPanel>
+
+                            <Border Grid.Column="2" Background="#20000000" CornerRadius="6" 
+                                    Padding="8,4" VerticalAlignment="Center" Margin="0,0,10,0">
+                                <TextBlock x:Name="ScreenshotBoost" Text="+5%" Foreground="#22C55E"
+                                           FontWeight="Bold" FontSize="12"
+                                           FontFamily="Bahnschrift Light"
+                                           FontStyle="Italic">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="4"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </Border>
+
+                            <Button x:Name="ScreenshotFixBtn" Grid.Column="3" Content="Fix"
+                                    Style="{StaticResource OptimizeButton}"
+                                    Padding="12,6" FontSize="12"
+                                    Click="ScreenshotFixBtn_Click" Visibility="Collapsed"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Item 6: Show Mod List on Startup (NUEVO) -->
+                    <Border Style="{StaticResource CheckItemCard}">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#3B82F6" Offset="0"/>
+                                <GradientStop Color="#10FFFFFF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Ellipse x:Name="ModListStatus" Grid.Column="0" 
+                 Style="{StaticResource StatusIndicator}"
+                 Fill="#6B7280" Margin="0,0,12,0"/>
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock x:Name="ModListTitle" Text="Show Mod List on Startup"
+                       Foreground="White" FontSize="15"
+                       FontWeight="Bold" FontFamily="Bahnschrift Light"
+                       FontStyle="Italic">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Opacity="0.8" BlurRadius="6"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                                <TextBlock x:Name="ModListDesc" Text="Checking Options.ini..."
+                       Foreground="#E5E7EB" FontSize="12"
+                       FontFamily="Bahnschrift Light"
+                       FontWeight="Bold"
+                       FontStyle="Italic">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="4"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </StackPanel>
+
+                            <Border Grid.Column="2" Background="#20000000" CornerRadius="6" 
+                Padding="8,4" VerticalAlignment="Center" Margin="0,0,10,0">
+                                <TextBlock x:Name="ModListBoost" Text="+80%" Foreground="#3B82F6"
+                       FontWeight="Bold" FontSize="12"
+                       FontFamily="Bahnschrift Light"
+                       FontStyle="Italic">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="4"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </Border>
+
+                            <Button x:Name="ModListFixBtn" Grid.Column="3" Content="Fix"
+                Style="{StaticResource OptimizeButton}"
+                Padding="12,6" FontSize="12"
+                Click="ModListFixBtn_Click" Visibility="Collapsed"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <!-- BOTTOM ACTIONS -->
+                <StackPanel Grid.Row="3" Orientation="Horizontal" 
+                            HorizontalAlignment="Center" Margin="0,15,0,0" Cursor="">
+                    <Button x:Name="ScanButton" Content="🔍 Scan Now"
+                            Style="{StaticResource OptimizeButton}"
+                            Background="#3B82F6" Padding="25,12"
+                            Click="ScanButton_Click"/>
+                    <Button x:Name="OptimizeAllButton" Content="⚡ Optimize All"
+                            Style="{StaticResource OptimizeButton}"
+                            Margin="15,0,0,0" Padding="25,12"
+                            Click="OptimizeAllButton_Click" IsEnabled="False" Cursor=""/>
+                </StackPanel>
+
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

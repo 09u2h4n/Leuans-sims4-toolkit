@@ -1,0 +1,272 @@
+﻿<Window x:Class="ModernDesign.MVVM.View.S4SCategoriesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Create a Mod - Categories"
+        Height="620" Width="1024"
+        WindowStartupLocation="CenterOwner"
+        Background="#0F172A"
+        ResizeMode="NoResize">
+
+    <Window.Resources>
+        <Style x:Key="TitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#F9FAFB"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style x:Key="BodyStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#E5E7EB"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        <Style x:Key="CategoryCard" TargetType="Border">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.05" Duration="0:0:0.15"/>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.05" Duration="0:0:0.15"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="1" Duration="0:0:0.15"/>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="1" Duration="0:0:0.15"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DownloadButton" TargetType="Button">
+            <Setter Property="Background" Value="#6366F1"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="10"
+                                Padding="{TemplateBinding Padding}">
+                            <Border.Effect>
+                                <DropShadowEffect ShadowDepth="0" BlurRadius="15" Opacity="0.5" Color="#6366F1"/>
+                            </Border.Effect>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#4F46E5"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="#374151"/>
+                                <Setter Property="Foreground" Value="#9CA3AF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock x:Name="TitleText" Text="🎨 Choose What to Create" Style="{StaticResource TitleStyle}" FontSize="22"/>
+            <TextBlock x:Name="SubtitleText" Text="Select a category to see step-by-step tutorials" Style="{StaticResource BodyStyle}" FontSize="12" Margin="0,4,0,0"/>
+        </StackPanel>
+
+        <!-- CATEGORIES GRID -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <WrapPanel HorizontalAlignment="Center">
+                <!-- Social Interaction -->
+                <Border x:Name="CardInteraction" Width="200" Height="130" CornerRadius="12" Style="{StaticResource CategoryCard}" Margin="8" MouseLeftButtonUp="CardInteraction_Click">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#EC4899" Offset="0"/>
+                            <GradientStop Color="#0F172A" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid>
+                        <StackPanel Margin="15" VerticalAlignment="Center">
+                            <TextBlock Text="💬" FontSize="28"/>
+                            <TextBlock x:Name="CardInteractionTitle" Text="Social Interaction" Style="{StaticResource TitleStyle}" FontSize="13" Margin="0,5,0,0"/>
+                            <TextBlock x:Name="CardInteractionDesc" Text="Create custom interactions" Style="{StaticResource BodyStyle}" FontSize="10"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Career -->
+                <Border x:Name="CardCareer" Width="200" Height="130" CornerRadius="12" Style="{StaticResource CategoryCard}" Margin="8" MouseLeftButtonUp="CardCareer_Click">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#F97316" Offset="0"/>
+                            <GradientStop Color="#0F172A" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid>
+                        <StackPanel Margin="15" VerticalAlignment="Center">
+                            <TextBlock Text="💼" FontSize="28"/>
+                            <TextBlock x:Name="CardCareerTitle" Text="Career" Style="{StaticResource TitleStyle}" FontSize="13" Margin="0,5,0,0"/>
+                            <TextBlock x:Name="CardCareerDesc" Text="Create a new career path" Style="{StaticResource BodyStyle}" FontSize="10"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Trait -->
+                <Border x:Name="CardTrait" Width="200" Height="130" CornerRadius="12" Style="{StaticResource CategoryCard}" Margin="8" MouseLeftButtonUp="CardTrait_Click">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#22C55E" Offset="0"/>
+                            <GradientStop Color="#0F172A" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid>
+                        <StackPanel Margin="15" VerticalAlignment="Center">
+                            <TextBlock Text="⭐" FontSize="28"/>
+                            <TextBlock x:Name="CardTraitTitle" Text="Trait" Style="{StaticResource TitleStyle}" FontSize="13" Margin="0,5,0,0"/>
+                            <TextBlock x:Name="CardTraitDesc" Text="Create a personality trait" Style="{StaticResource BodyStyle}" FontSize="10"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Buff/Moodlet -->
+                <Border x:Name="CardBuff" Width="200" Height="130" CornerRadius="12" Style="{StaticResource CategoryCard}" Margin="8" MouseLeftButtonUp="CardBuff_Click">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#EAB308" Offset="0"/>
+                            <GradientStop Color="#0F172A" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid>
+                        <StackPanel Margin="15" VerticalAlignment="Center">
+                            <TextBlock Text="😊" FontSize="28"/>
+                            <TextBlock x:Name="CardBuffTitle" Text="Buff / Moodlet" Style="{StaticResource TitleStyle}" FontSize="13" Margin="0,5,0,0"/>
+                            <TextBlock x:Name="CardBuffDesc" Text="Create emotional states" Style="{StaticResource BodyStyle}" FontSize="10"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Clothing -->
+                <Border x:Name="CardSocialEvent" Width="200" Height="130" CornerRadius="12" Style="{StaticResource CategoryCard}" Margin="8" MouseLeftButtonUp="CardClothing_Click">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#A78BFA" Offset="0"/>
+                            <GradientStop Color="#0F172A" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid>
+                        <StackPanel Margin="15" VerticalAlignment="Center">
+                            <TextBlock Text="👗" FontSize="28"/>
+                            <TextBlock x:Name="CardSocialEventTitle" Text="Clothing" Style="{StaticResource TitleStyle}" FontSize="13" Margin="0,5,0,0"/>
+                            <TextBlock x:Name="CardSocialEventDesc" Text="Create or recolor clothes" Style="{StaticResource BodyStyle}" FontSize="10"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Object -->
+                <Border x:Name="CardHoliday" Width="200" Height="130" CornerRadius="12" Style="{StaticResource CategoryCard}" Margin="8" MouseLeftButtonUp="CardObject_Click">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#06B6D4" Offset="0"/>
+                            <GradientStop Color="#0F172A" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid>
+                        <StackPanel Margin="15" VerticalAlignment="Center">
+                            <TextBlock Text="🪑" FontSize="28"/>
+                            <TextBlock x:Name="CardHolidayTitle" Text="Object / CC" Style="{StaticResource TitleStyle}" FontSize="13" Margin="0,5,0,0"/>
+                            <TextBlock x:Name="CardHolidayDesc" Text="Create furniture or decor" Style="{StaticResource BodyStyle}" FontSize="10"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </WrapPanel>
+        </ScrollViewer>
+
+        <!-- DOWNLOAD TOOLS BUTTON -->
+        <Border Grid.Row="2" 
+                Background="#1E293B" 
+                CornerRadius="12" 
+                Padding="20,15" 
+                Margin="0,20,0,15">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="0" BlurRadius="10" Opacity="0.3"/>
+            </Border.Effect>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock x:Name="DownloadToolsTitle" 
+                               Text="📦 Modding Tools Required" 
+                               Style="{StaticResource TitleStyle}" 
+                               FontSize="15"/>
+                    <TextBlock x:Name="DownloadToolsDesc" 
+                               Text="Download and install all necessary tools to start creating mods" 
+                               Style="{StaticResource BodyStyle}" 
+                               FontSize="11" 
+                               Margin="0,4,0,0"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <Button x:Name="DownloadToolsButton" 
+            Style="{StaticResource DownloadButton}"
+            Click="DownloadToolsButton_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="⬇️" FontSize="16" Margin="0,0,8,0"/>
+                            <TextBlock x:Name="DownloadButtonText" Text="Download Tools" FontSize="14"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Progress Bar -->
+                    <ProgressBar x:Name="DownloadProgressBar" 
+                 Height="4" 
+                 Margin="0,8,0,0"
+                 Background="#374151"
+                 Foreground="#6366F1"
+                 Minimum="0"
+                 Maximum="100"
+                 Value="0"
+                 Visibility="Collapsed"/>
+
+                    <TextBlock x:Name="DownloadPercentText"
+               Text="0%"
+               Style="{StaticResource BodyStyle}"
+               FontSize="11"
+               HorizontalAlignment="Center"
+               Margin="0,4,0,0"
+               Visibility="Collapsed"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- FOOTER -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,0">
+            <Button x:Name="CloseButton" Content="Close" Padding="12,6" Background="#374151" Foreground="White" BorderThickness="0" Cursor="Hand" Click="CloseButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

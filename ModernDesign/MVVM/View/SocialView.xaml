@@ -1,0 +1,388 @@
+﻿<UserControl x:Class="ModernDesign.MVVM.View.SocialView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="519"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
+
+    <UserControl.Resources>
+
+        <!-- Títulos -->
+        <Style x:Key="TitleTextBlock" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+            <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
+        </Style>
+
+        <!-- Texto normal -->
+        <Style x:Key="BodyTextBlock" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+            <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
+        </Style>
+
+        <!-- Social Card con animación mejorada -->
+        <Style x:Key="SocialCard" TargetType="Border">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                        <TranslateTransform Y="0"/>
+                    </TransformGroup>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"
+                                                 To="1.02" Duration="0:0:0.25">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)"
+                                                 To="1.02" Duration="0:0:0.25">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.Y)"
+                                                 To="-3" Duration="0:0:0.25">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"
+                                                 To="1" Duration="0:0:0.25">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)"
+                                                 To="1" Duration="0:0:0.25">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.Y)"
+                                                 To="0" Duration="0:0:0.25">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Thanks Card -->
+        <Style x:Key="ThanksCard" TargetType="Border">
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="20,18"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#FFFFFF12"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="Transparent">
+        <ScrollViewer VerticalScrollBarVisibility="Hidden" 
+                      HorizontalScrollBarVisibility="Disabled"
+                      PanningMode="VerticalOnly">
+            <StackPanel Margin="40,30,40,30">
+
+                <!-- HEADER -->
+                <StackPanel HorizontalAlignment="Center" Margin="0,0,0,40">
+                    <TextBlock x:Name="TitleText"
+                               Text="Connect with Us" 
+                               Style="{StaticResource TitleTextBlock}"
+                               FontSize="36"
+                               HorizontalAlignment="Center"
+                               Foreground="White">
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="#A78BFA" BlurRadius="30" ShadowDepth="0" Opacity="0.4"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                    <TextBlock x:Name="SubtitleText" 
+                               Text="Join our community and stay updated with the latest news"
+                               Style="{StaticResource BodyTextBlock}"
+                               FontSize="14"
+                               HorizontalAlignment="Center"
+                               Opacity="0.7"
+                               Margin="0,12,0,0"/>
+                </StackPanel>
+
+                <!-- SOCIAL CARDS (3 COLUMNAS) -->
+                <UniformGrid Columns="3" 
+                             HorizontalAlignment="Center"
+                             Margin="0,0,0,50"
+                             MaxWidth="900">
+
+                    <!-- Website Card -->
+                    <Border x:Name="WebsiteCard"
+                            Height="150" 
+                            CornerRadius="20"
+                            Style="{StaticResource SocialCard}"
+                            Margin="0,0,10,0"
+                            Background="#18181840"
+                            BorderBrush="#A78BFA60"
+                            BorderThickness="1"
+                            MouseLeftButtonUp="WebsiteCard_Click">
+                        <Border.Effect>
+                            <DropShadowEffect Color="#A78BFA" BlurRadius="16" ShadowDepth="0" Opacity="0.25"/>
+                        </Border.Effect>
+                        <Grid>
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock Text="🌐" FontSize="44" HorizontalAlignment="Center" Margin="0,0,0,12"/>
+                                <TextBlock x:Name="WebsiteTitle"
+                                           Text="Website"
+                                           Style="{StaticResource TitleTextBlock}"
+                                           FontSize="20"
+                                           HorizontalAlignment="Center"
+                                           Foreground="White"/>
+                                <TextBlock Text="leuan.zeroauno.com"
+                                           Style="{StaticResource BodyTextBlock}"
+                                           FontSize="12"
+                                           HorizontalAlignment="Center"
+                                           Foreground="#C4B5FD"
+                                           Opacity="0.85"
+                                           Margin="0,6,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Discord Server Card -->
+                    <Border x:Name="DiscordServerCard"
+                            Height="150" 
+                            CornerRadius="20"
+                            Style="{StaticResource SocialCard}"
+                            Margin="5,0"
+                            Background="#18181840"
+                            BorderBrush="#A78BFA60"
+                            BorderThickness="1"
+                            MouseLeftButtonUp="DiscordServerCard_Click">
+                        <Border.Effect>
+                            <DropShadowEffect Color="#A78BFA" BlurRadius="16" ShadowDepth="0" Opacity="0.25"/>
+                        </Border.Effect>
+                        <Grid>
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock Text="💬" FontSize="44" HorizontalAlignment="Center" Margin="0,0,0,12"/>
+                                <TextBlock x:Name="DiscordServerTitle"
+                                           Text="Discord Server"
+                                           Style="{StaticResource TitleTextBlock}"
+                                           FontSize="20"
+                                           HorizontalAlignment="Center"
+                                           Foreground="White"/>
+                                <TextBlock x:Name="DiscordServerDesc"
+                                           Text="Join the community"
+                                           Style="{StaticResource BodyTextBlock}"
+                                           FontSize="12"
+                                           HorizontalAlignment="Center"
+                                           Foreground="#C4B5FD"
+                                           Opacity="0.85"
+                                           Margin="0,6,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Personal Discord Card -->
+                    <Border x:Name="PersonalDiscordCard"
+                            Height="150" 
+                            CornerRadius="20"
+                            Style="{StaticResource SocialCard}"
+                            Margin="10,0,0,0"
+                            Background="#18181840"
+                            BorderBrush="#A78BFA60"
+                            BorderThickness="1"
+                            MouseLeftButtonUp="PersonalDiscordCard_Click">
+                        <Border.Effect>
+                            <DropShadowEffect Color="#A78BFA" BlurRadius="16" ShadowDepth="0" Opacity="0.25"/>
+                        </Border.Effect>
+                        <Grid>
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock Text="👤" FontSize="44" HorizontalAlignment="Center" Margin="0,0,0,12"/>
+                                <TextBlock x:Name="PersonalDiscordTitle"
+                                           Text="Personal Discord"
+                                           Style="{StaticResource TitleTextBlock}"
+                                           FontSize="20"
+                                           HorizontalAlignment="Center"
+                                           Foreground="White"/>
+                                <TextBlock x:Name="PersonalDiscordDesc"
+                                           Text="leuan"
+                                           Style="{StaticResource BodyTextBlock}"
+                                           FontSize="12"
+                                           HorizontalAlignment="Center"
+                                           Foreground="#C4B5FD"
+                                           Opacity="0.85"
+                                           Margin="0,6,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                </UniformGrid>
+
+                <!-- SPECIAL THANKS SECTION -->
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Center" 
+                                Margin="0,0,0,30">
+                        <TextBlock Text="💖" FontSize="32" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="ThanksTitle"
+                                   Text="Special Thanks" 
+                                   Style="{StaticResource TitleTextBlock}"
+                                   FontSize="30"
+                                   VerticalAlignment="Center"
+                                   Foreground="White">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="#F472B6" BlurRadius="25" ShadowDepth="0" Opacity="0.35"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <Grid HorizontalAlignment="Center" MaxWidth="900">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Left Column -->
+                        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                            <Border Style="{StaticResource ThanksCard}" Background="#18181835">
+                                <StackPanel>
+                                    <TextBlock Text="Anadius"
+                                               Foreground="#C4B5FD" 
+                                               FontFamily="Segoe UI"
+                                               FontWeight="SemiBold"
+                                               FontSize="17"
+                                               Margin="0,0,0,8"/>
+                                    <TextBlock x:Name="AnadiusThanks" 
+                                               Text="For all the incredible work on DLC unlockers. Rest in peace. 🕊️"
+                                               Style="{StaticResource BodyTextBlock}"
+                                               FontSize="13"
+                                               Opacity="0.8"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource ThanksCard}" Background="#18181835">
+                                <StackPanel>
+                                    <TextBlock Text="The Sims Community"
+                                               Foreground="#C4B5FD" 
+                                               FontFamily="Segoe UI"
+                                               FontWeight="SemiBold"
+                                               FontSize="17"
+                                               Margin="0,0,0,8"/>
+                                    <TextBlock x:Name="CommunityThanks" 
+                                               Text="For keeping the modding scene alive and thriving."
+                                               Style="{StaticResource BodyTextBlock}"
+                                               FontSize="13"
+                                               Opacity="0.8"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource ThanksCard}" Background="#18181835">
+                                <StackPanel>
+                                    <TextBlock Text="All Mod Creators"
+                                               Foreground="#C4B5FD" 
+                                               FontFamily="Segoe UI"
+                                               FontWeight="SemiBold"
+                                               FontSize="17"
+                                               Margin="0,0,0,8"/>
+                                    <TextBlock x:Name="CreatorsThanks" 
+                                               Text="Your creativity makes The Sims 4 infinitely better."
+                                               Style="{StaticResource BodyTextBlock}"
+                                               FontSize="13"
+                                               Opacity="0.8"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Right Column -->
+                        <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                            <Border Style="{StaticResource ThanksCard}" Background="#18181835">
+                                <StackPanel>
+                                    <TextBlock Text="Beta Testers"
+                                               Foreground="#C4B5FD" 
+                                               FontFamily="Segoe UI"
+                                               FontWeight="SemiBold"
+                                               FontSize="17"
+                                               Margin="0,0,0,8"/>
+                                    <TextBlock x:Name="TestersThanks" 
+                                               Text="For finding bugs and suggesting improvements."
+                                               Style="{StaticResource BodyTextBlock}"
+                                               FontSize="13"
+                                               Opacity="0.8"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource ThanksCard}" Background="#18181835">
+                                <StackPanel>
+                                    <TextBlock Text="Discord Members"
+                                               Foreground="#C4B5FD" 
+                                               FontFamily="Segoe UI"
+                                               FontWeight="SemiBold"
+                                               FontSize="17"
+                                               Margin="0,0,0,8"/>
+                                    <TextBlock x:Name="DiscordThanks" 
+                                               Text="For being an amazing and supportive community."
+                                               Style="{StaticResource BodyTextBlock}"
+                                               FontSize="13"
+                                               Opacity="0.8"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource ThanksCard}" Background="#18181835">
+                                <StackPanel>
+                                    <TextBlock x:Name="YouTitle"
+                                               Text="You! 💜"
+                                               Foreground="#F9A8D4" 
+                                               FontFamily="Segoe UI"
+                                               FontWeight="SemiBold"
+                                               FontSize="17"
+                                               Margin="0,0,0,8"/>
+                                    <TextBlock x:Name="YouThanks" 
+                                               Text="For using this tool and supporting the project."
+                                               Style="{StaticResource BodyTextBlock}"
+                                               FontSize="13"
+                                               Opacity="0.8"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                    </Grid>
+                </StackPanel>
+
+                <!-- FOOTER -->
+                <TextBlock x:Name="FooterText" 
+                           Text="Made with 💜 by Leuan"
+                           Style="{StaticResource BodyTextBlock}"
+                           FontSize="13"
+                           Foreground="#9CA3AF"
+                           Opacity="0.6"
+                           HorizontalAlignment="Center"
+                           Margin="0,40,0,0"/>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

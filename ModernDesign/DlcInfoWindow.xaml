@@ -1,0 +1,141 @@
+﻿<Window x:Class="ModernDesign.MVVM.View.DlcInfoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+        Title="DLC Info"
+        Height="500" Width="800"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStartupLocation="CenterOwner">
+
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="40"
+                            ResizeBorderThickness="6"
+                            CornerRadius="0"
+                            GlassFrameThickness="0"
+                            UseAeroCaptionButtons="False"/>
+    </shell:WindowChrome.WindowChrome>
+
+    <Border CornerRadius="16">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#0F172A" Offset="0"/>
+                <GradientStop Color="#1E293B" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.Background>
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="30" ShadowDepth="0" Opacity="0.5"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- HEADER -->
+            <Border Grid.Row="0" Padding="20,10">
+                <Grid>
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Center"
+                                shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                        <TextBlock x:Name="TitleText"
+                                   Text="DLC Info"
+                                   Foreground="White"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                        <Button Content="✕"
+                                Width="40" Height="32"
+                                Background="Transparent"
+                                Foreground="#94A3B8"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                Click="CloseBtn_Click"
+                                ToolTip="Close"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- CONTENT -->
+            <Border Grid.Row="1"
+                    Margin="20,0,20,20"
+                    CornerRadius="12"
+                    Background="#10FFFFFF">
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Top: imagen + datos básicos + botón abrir wiki -->
+                    <DockPanel Grid.Row="0" Margin="0,0,0,10">
+                        <Border Width="80"
+                                Height="80"
+                                CornerRadius="12"
+                                Background="#20FFFFFF"
+                                DockPanel.Dock="Left"
+                                Margin="0,0,12,0">
+                            <Image x:Name="DlcImage"
+                                   Stretch="UniformToFill"
+                                   RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Border>
+
+                        <StackPanel>
+                            <TextBlock x:Name="DlcNameText"
+                                       Foreground="White"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"/>
+
+                            <TextBlock x:Name="DlcIdText"
+                                       Foreground="#9CA3AF"
+                                       FontSize="12"
+                                       Margin="0,2,0,4"/>
+
+                            <TextBlock x:Name="ShortDescriptionText"
+                                       Foreground="#CBD5F5"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,6"/>
+
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Source: "
+                                           Foreground="#9CA3AF"
+                                           FontSize="11"/>
+                                <TextBlock x:Name="UrlText"
+                                           Foreground="#60A5FA"
+                                           FontSize="11"
+                                           TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+
+                            <Button Content="Open full wiki in browser"
+                                    Margin="0,8,0,0"
+                                    Padding="12,6"
+                                    FontSize="11"
+                                    Background="#2563EB"
+                                    Foreground="White"
+                                    BorderThickness="0"
+                                    Cursor="Hand"
+                                    Click="OpenWikiInBrowser_Click"/>
+                        </StackPanel>
+                    </DockPanel>
+
+                    <!-- Main text (scraped summary) -->
+                    <ScrollViewer Grid.Row="1"
+                                  VerticalScrollBarVisibility="Auto">
+                        <TextBlock x:Name="SummaryText"
+                                   Foreground="#E5E7EB"
+                                   FontSize="13"
+                                   TextWrapping="Wrap"/>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

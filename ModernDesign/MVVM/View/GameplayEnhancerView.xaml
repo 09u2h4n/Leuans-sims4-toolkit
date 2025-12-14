@@ -1,0 +1,194 @@
+﻿<Window x:Class="ModernDesign.MVVM.View.GameplayEnhancerView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Gameplay Enhancer"
+        Height="650" Width="1024"
+        MinHeight="500" MinWidth="800"
+        WindowStartupLocation="CenterOwner"
+        Background="#0F172A"
+        ResizeMode="CanResizeWithGrip">
+
+    <Window.Resources>
+        <Style x:Key="TitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#F9FAFB"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style x:Key="BodyStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#E5E7EB"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        <Style x:Key="PresetCard" TargetType="Border">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.05" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.05" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="1" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="HiddenScrollViewer" TargetType="ScrollViewer">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollViewer">
+                        <Grid>
+                            <ScrollContentPresenter />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock x:Name="TitleText" Text="⚡ Gameplay Enhancer" Style="{StaticResource TitleStyle}" FontSize="28"/>
+            <TextBlock x:Name="SubtitleText" Text="Optimize your game settings for the best experience" Style="{StaticResource BodyStyle}" FontSize="13" Margin="0,5,0,0"/>
+        </StackPanel>
+
+        <!-- CONTENT -->
+        <ScrollViewer Grid.Row="1" Style="{StaticResource HiddenScrollViewer}">
+            <StackPanel>
+                <!-- PRESETS SECTION -->
+                <TextBlock x:Name="PresetsTitle" Text="🎮 Graphics Presets" Style="{StaticResource TitleStyle}" FontSize="20" Margin="0,0,0,15"/>
+
+                <Grid HorizontalAlignment="Center" Margin="0,0,0,30">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- PRETTY GRAPHICS CARD -->
+                    <Border Grid.Column="0" x:Name="PrettyGraphicsCard" MinWidth="200" MinHeight="250" MaxWidth="350" CornerRadius="16" Style="{StaticResource PresetCard}" Margin="5" MouseLeftButtonUp="PrettyGraphicsCard_Click">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#8B5CF6" Offset="0"/>
+                                <GradientStop Color="#6366F1" Offset="0.5"/>
+                                <GradientStop Color="#0F172A" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.Effect>
+                            <DropShadowEffect Color="#8B5CF6" BlurRadius="20" ShadowDepth="0" Opacity="0.4"/>
+                        </Border.Effect>
+                        <StackPanel Margin="20" VerticalAlignment="Center">
+                            <TextBlock Text="✨" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                            <TextBlock x:Name="PrettyGraphicsTitle" Text="Pretty Graphics" Style="{StaticResource TitleStyle}" FontSize="18" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                            <TextBlock x:Name="PrettyGraphicsDesc" Text="Maximum visual quality" Style="{StaticResource BodyStyle}" FontSize="11" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                            <StackPanel>
+                                <TextBlock Text="• Ultra settings" Style="{StaticResource BodyStyle}" FontSize="10" Margin="0,2"/>
+                                <TextBlock Text="• ReShade support" Style="{StaticResource BodyStyle}" FontSize="10" Margin="0,2"/>
+                                <TextBlock Text="• HD textures" Style="{StaticResource BodyStyle}" FontSize="10" Margin="0,2"/>
+                                <TextBlock Text="• Best for screenshots" Style="{StaticResource BodyStyle}" FontSize="10" Margin="0,2"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- BALANCED CARD -->
+                    <Border Grid.Column="1" x:Name="BalancedCard" MinWidth="200" MinHeight="250" MaxWidth="350" CornerRadius="16" Style="{StaticResource PresetCard}" Margin="5" MouseLeftButtonUp="BalancedCard_Click">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#10B981" Offset="0"/>
+                                <GradientStop Color="#059669" Offset="0.5"/>
+                                <GradientStop Color="#0F172A" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.Effect>
+                            <DropShadowEffect Color="#10B981" BlurRadius="20" ShadowDepth="0" Opacity="0.4"/>
+                        </Border.Effect>
+                        <StackPanel Margin="20" VerticalAlignment="Center">
+                            <TextBlock Text="⚖️" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                            <TextBlock x:Name="BalancedTitle" Text="Pretty &amp; Performance" Style="{StaticResource TitleStyle}" FontSize="18" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                            <TextBlock x:Name="BalancedDesc" Text="Best of both worlds" Style="{StaticResource BodyStyle}" FontSize="11" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                            <StackPanel>
+                                <TextBlock Text="• Medium-High settings" Style="{StaticResource BodyStyle}" FontSize="10" Margin="0,2"/>
+                                <TextBlock Text="• Smooth gameplay" Style="{StaticResource BodyStyle}" FontSize="10" Margin="0,2"/>
+                                <TextBlock Text="• Good visuals" Style="{StaticResource BodyStyle}" FontSize="10" Margin="0,2"/>
+                                <TextBlock Text="• Recommended" Style="{StaticResource BodyStyle}" FontSize="10" Margin="0,2" Foreground="#34D399" FontWeight="Bold"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- PERFORMANCE CARD -->
+                    <Border Grid.Column="2" x:Name="PerformanceCard" MinWidth="200" MinHeight="250" MaxWidth="350" CornerRadius="16" Style="{StaticResource PresetCard}" Margin="5" MouseLeftButtonUp="PerformanceCard_Click">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#F59E0B" Offset="0"/>
+                                <GradientStop Color="#D97706" Offset="0.5"/>
+                                <GradientStop Color="#0F172A" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.Effect>
+                            <DropShadowEffect Color="#F59E0B" BlurRadius="20" ShadowDepth="0" Opacity="0.4"/>
+                        </Border.Effect>
+                        <StackPanel Margin="20" VerticalAlignment="Center">
+                            <TextBlock Text="🚀" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                            <TextBlock x:Name="PerformanceTitle" Text="Performance" Style="{StaticResource TitleStyle}" FontSize="18" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                            <TextBlock x:Name="PerformanceDesc" Text="Maximum FPS" Style="{StaticResource BodyStyle}" FontSize="11" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                            <StackPanel>
+                                <TextBlock Text="• Low settings" Style="{StaticResource BodyStyle}" FontSize="10" Margin="0,2"/>
+                                <TextBlock Text="• Maximum FPS" Style="{StaticResource BodyStyle}" FontSize="10" Margin="0,2"/>
+                                <TextBlock Text="• Laptop friendly" Style="{StaticResource BodyStyle}" FontSize="10" Margin="0,2"/>
+                                <TextBlock Text="• Best for gameplay" Style="{StaticResource BodyStyle}" FontSize="10" Margin="0,2"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- ADVANCED TWEAKER SECTION -->
+                <Border Background="#111827" CornerRadius="16" Padding="30" Margin="0,20,0,0">
+                    <StackPanel>
+                        <TextBlock x:Name="AdvancedTitle" Text="🔧 Advanced Settings" Style="{StaticResource TitleStyle}" FontSize="20" Margin="0,0,0,10"/>
+                        <TextBlock x:Name="AdvancedDesc" Text="Fine-tune every aspect of your game" Style="{StaticResource BodyStyle}" FontSize="12" Margin="0,0,0,20"/>
+
+                        <Button x:Name="GameTweakerButton" MinHeight="60" Background="#DC2626" Foreground="White" BorderThickness="0" Cursor="Hand" Click="GameTweakerButton_Click" Padding="20">
+                            <Button.Effect>
+                                <DropShadowEffect Color="#DC2626" BlurRadius="25" ShadowDepth="0" Opacity="0.5"/>
+                            </Button.Effect>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <TextBlock Text="⚙️" FontSize="32" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock x:Name="GameTweakerTitle" Text="Game Tweaker" FontSize="20" FontWeight="Bold" FontFamily="Bahnschrift Light"/>
+                                    <TextBlock x:Name="GameTweakerSubtitle" Text="Edit Options.ini with advanced controls" FontSize="11" FontFamily="Bahnschrift Light" Opacity="0.9"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- FOOTER -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button x:Name="CloseButton" Content="Close" Padding="16,8" Background="#374151" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="CloseButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

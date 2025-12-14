@@ -1,0 +1,150 @@
+﻿<Window x:Class="ModernDesign.MVVM.View.OfflineWarningWindow3"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Warning"
+        Height="500" Width="650"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        AllowsTransparency="True">
+
+    <Border Background="#1E293B" CornerRadius="12" BorderBrush="#334155" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="30" ShadowDepth="0" Opacity="0.5"/>
+        </Border.Effect>
+
+        <Grid Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <TextBlock x:Name="WarningTitle"
+                       Grid.Row="0"
+                       Text="⚠️ ADVERTENCIA CRÍTICA"
+                       FontSize="28"
+                       FontWeight="Bold"
+                       Foreground="#EF4444"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,20"/>
+
+            <!-- Content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,0,0,20">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock x:Name="WarningMessage"
+                               TextWrapping="Wrap"
+                               FontSize="14"
+                               Foreground="#F8FAFC"
+                               LineHeight="24"
+                               HorizontalAlignment="Left"
+                               TextAlignment="Left"
+                               Margin="10,0,10,20"/>
+
+                    <!-- Info Box -->
+                    <Border Background="#15FFFFFF" CornerRadius="8" Padding="15" Margin="10,0,10,0">
+                        <StackPanel>
+                            <TextBlock x:Name="RequirementsTitle"
+                                       Text="✅ REQUISITOS:"
+                                       FontSize="13"
+                                       FontWeight="Bold"
+                                       Foreground="#22C55E"
+                                       Margin="0,0,0,8"/>
+
+                            <TextBlock x:Name="Requirement1"
+                                       Text="• Tener una versión crackeada (Anadius, FitGirl, etc.)"
+                                       FontSize="12"
+                                       Foreground="#E5E7EB"
+                                       Margin="0,0,0,4"/>
+
+                            <TextBlock x:Name="Requirement2"
+                                       Text="• Tener backup completo de tu carpeta del juego"
+                                       FontSize="12"
+                                       Foreground="#E5E7EB"
+                                       Margin="0,0,0,4"/>
+
+                            <TextBlock x:Name="Requirement3"
+                                       Text="• Saber restaurar el backup si algo sale mal"
+                                       FontSize="12"
+                                       Foreground="#E5E7EB"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Buttons -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+                <Button x:Name="ProtectedBtn"
+                        Content="Entiendo, continuar"
+                        Width="200"
+                        Height="45"
+                        Margin="0,0,15,0"
+                        Background="#22C55E"
+                        Foreground="White"
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="ProtectedBtn_Click">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#22C55E"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="8"
+                                                Padding="15,10">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#16A34A"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Button x:Name="CancelBtn"
+                        Content="Cancelar"
+                        Width="200"
+                        Height="45"
+                        Background="#EF4444"
+                        Foreground="White"
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="CancelBtn_Click">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#EF4444"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="8"
+                                                Padding="15,10">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#DC2626"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

@@ -1,0 +1,306 @@
+﻿<Window x:Class="ModernDesign.MVVM.View.LoadingScreenSelectorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Loading Screen Selector"
+        Width="1024"
+        Height="650"
+        MinWidth="900"
+        MinHeight="650"
+        WindowStartupLocation="CenterScreen"
+        Background="Transparent"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        ResizeMode="CanResizeWithGrip"
+        Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Background" Value="#22C55E"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Opacity" Value="0.85"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="#4B5563"/>
+                                <Setter TargetName="border" Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="LoadingScreenCard" TargetType="Border">
+            <Setter Property="Background" Value="#1E293B"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Margin" Value="12"/>
+            <Setter Property="Width" Value="320"/>
+            <Setter Property="Height" Value="280"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="0" BlurRadius="10" Opacity="0.3"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="#6366F1" ShadowDepth="0" BlurRadius="20" Opacity="0.6"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border CornerRadius="20" Background="#0F172A" BorderBrush="#6366F1" BorderThickness="2">
+        <Border.Effect>
+            <DropShadowEffect ShadowDepth="0" BlurRadius="30" Opacity="0.5" Color="#6366F1"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- HEADER -->
+            <Grid Grid.Row="0" Background="#1E293B" MouseDown="Header_MouseDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Margin="30,25,30,25">
+                    <TextBlock x:Name="TitleText" Text="🎨 Loading Screen Selector" 
+                               Foreground="White" FontSize="28"
+                               FontWeight="Bold" FontFamily="Bahnschrift Light"
+                               FontStyle="Italic">
+                        <TextBlock.Effect>
+                            <DropShadowEffect ShadowDepth="2" Opacity="0.8" BlurRadius="10" Color="#6366F1"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                    <TextBlock x:Name="SubtitleText" 
+                               Text="Choose and customize your game loading screens"
+                               Foreground="#94A3B8" FontSize="14"
+                               FontFamily="Bahnschrift Light"
+                               FontWeight="Bold"
+                               FontStyle="Italic"
+                               Margin="0,8,0,0">
+                        <TextBlock.Effect>
+                            <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="6"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                </StackPanel>
+
+                <Button Grid.Column="1" Content="✕" 
+                        Width="45" Height="45"
+                        Margin="0,0,20,0"
+                        VerticalAlignment="Center"
+                        Background="#EF4444"
+                        Foreground="White"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Cursor="Hand"
+                        BorderThickness="0"
+                        Click="CloseButton_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#DC2626"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+
+            <!-- CONTENT -->
+            <Grid Grid.Row="1" Margin="25,20,25,25">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Mods Folder Path -->
+                <Border Grid.Row="0" Background="#1E293B" CornerRadius="12" Padding="18" Margin="0,0,0,15">
+                    <Border.Effect>
+                        <DropShadowEffect ShadowDepth="0" BlurRadius="10" Opacity="0.3"/>
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="📁 Mods Folder" 
+                                       Foreground="#94A3B8" FontSize="11"
+                                       FontFamily="Bahnschrift Light"
+                                       FontWeight="Bold"
+                                       Margin="0,0,0,4"/>
+                            <TextBlock x:Name="ModsFolderText"
+                                       Text="Mods folder not detected"
+                                       Foreground="White" FontSize="13"
+                                       FontFamily="Bahnschrift Light"
+                                       FontWeight="Bold"
+                                       TextTrimming="CharacterEllipsis">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="4"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </StackPanel>
+
+                        <Button x:Name="ChangeFolderButton" Grid.Column="1"
+                                Content="📂 Change"
+                                Style="{StaticResource ActionButton}"
+                                Background="#6366F1"
+                                Padding="16,10"
+                                Click="ChangeFolderButton_Click"/>
+                    </Grid>
+                </Border>
+
+                <!-- Randomize Option -->
+                <Border Grid.Row="1" Background="#1E293B" CornerRadius="12" Padding="18" Margin="0,0,0,20">
+                    <Border.Effect>
+                        <DropShadowEffect ShadowDepth="0" BlurRadius="10" Opacity="0.3"/>
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Width="50" Height="50" CornerRadius="10"
+                                Background="#8B5CF6" VerticalAlignment="Center" Margin="0,0,15,0">
+                            <TextBlock Text="🎲" FontSize="28" 
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock x:Name="RandomizeTitle" 
+                                       Text="Randomize Loading Screen"
+                                       Foreground="White" FontSize="16"
+                                       FontWeight="Bold" FontFamily="Bahnschrift Light"
+                                       FontStyle="Italic">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect ShadowDepth="1" Opacity="0.8" BlurRadius="6"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                            <TextBlock x:Name="RandomizeDesc" 
+                                       Text="Change loading screen randomly on each game launch"
+                                       Foreground="#94A3B8" FontSize="12"
+                                       FontFamily="Bahnschrift Light"
+                                       FontWeight="Bold"
+                                       FontStyle="Italic"
+                                       Margin="0,4,0,0">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="4"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </StackPanel>
+
+                        <Button x:Name="RandomizeButton" Grid.Column="2"
+                                Content="Enable"
+                                Style="{StaticResource ActionButton}"
+                                Background="#8B5CF6"
+                                Padding="20,10"
+                                Click="RandomizeButton_Click"/>
+                    </Grid>
+                </Border>
+
+                <!-- Glitched Icon Fix -->
+                <Border x:Name="GlitchedIconPanel" Grid.Row="1" Background="#1E293B" CornerRadius="12" Padding="18" Margin="0,0,0,20">
+                    <Border.Effect>
+                        <DropShadowEffect ShadowDepth="0" BlurRadius="10" Opacity="0.3"/>
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Width="50" Height="50" CornerRadius="10"
+                Background="#EF4444" VerticalAlignment="Center" Margin="0,0,15,0">
+                            <TextBlock Text="⚠️" FontSize="28" 
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock x:Name="GlitchedIconTitle" 
+                       Text="Glitched Icon?"
+                       Foreground="White" FontSize="16"
+                       FontWeight="Bold" FontFamily="Bahnschrift Light"
+                       FontStyle="Italic">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect ShadowDepth="1" Opacity="0.8" BlurRadius="6"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                            <TextBlock x:Name="GlitchedIconDesc" 
+                       Text="Fix green Sims icon flickering to gray/glitched after installing loading screen"
+                       Foreground="#94A3B8" FontSize="12"
+                       FontFamily="Bahnschrift Light"
+                       FontWeight="Bold"
+                       FontStyle="Italic"
+                       Margin="0,4,0,0"
+                       TextWrapping="Wrap">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect ShadowDepth="1" Opacity="0.7" BlurRadius="4"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </StackPanel>
+
+                        <Button x:Name="GlitchedIconButton" Grid.Column="2"
+                Content="Fix Now"
+                Style="{StaticResource ActionButton}"
+                Background="#EF4444"
+                Padding="20,10"
+                Click="GlitchedIconButton_Click"/>
+                    </Grid>
+                </Border>
+                
+                <!-- Loading Screens Grid -->
+                <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <WrapPanel x:Name="LoadingScreensPanel" 
+                               HorizontalAlignment="Center"
+                               Orientation="Horizontal">
+                        <!-- Los items se generarán dinámicamente en el código -->
+                    </WrapPanel>
+                </ScrollViewer>
+            </Grid>
+
+            <!-- Resize Grip Visual -->
+            <Path Grid.Row="1" 
+                  Data="M 0,10 L 10,0 M 0,5 L 5,0" 
+                  Stroke="#6366F1" 
+                  StrokeThickness="2"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Bottom" 
+                  Margin="0,0,8,8"
+                  Opacity="0.5"/>
+        </Grid>
+    </Border>
+</Window>

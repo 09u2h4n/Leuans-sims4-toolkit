@@ -1,0 +1,635 @@
+﻿<UserControl x:Class="ModernDesign.MVVM.View.DiscoveryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             Loaded="UserControl_Loaded">
+
+    <UserControl.Resources>
+        <!-- Modern Title Style -->
+        <Style x:Key="TitleTextBlock" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+            <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
+        </Style>
+
+        <!-- Subtle Body Text -->
+        <Style x:Key="BodyTextBlock" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#D0D0D0"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+            <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
+        </Style>
+
+        <!-- Modern Card with Hover Animation -->
+        <Style x:Key="GuideCard" TargetType="Border">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <SolidColorBrush Color="#808080" Opacity="0.08"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderBrush">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#40FFFFFF" Offset="0"/>
+                        <GradientStop Color="#10FFFFFF" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.03" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.03" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="1" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Category Badge -->
+        <Style x:Key="CategoryBadge" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="8,3"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="Transparent">
+        <!-- CONTENIDO PRINCIPAL -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                      HorizontalScrollBarVisibility="Disabled">
+            <ScrollViewer.Resources>
+                <Style TargetType="{x:Type ScrollBar}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                <Grid/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ScrollViewer.Resources>
+
+            <StackPanel Margin="15,10,15,15" HorizontalAlignment="Center" MaxWidth="620">
+                <!-- HEADER -->
+                <Grid Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock x:Name="TitleText" Text="Discovery Hub" Style="{StaticResource TitleTextBlock}" FontSize="22" TextAlignment="Center"/>
+                        <TextBlock x:Name="SubtitleText" Text="Learn everything about modding The Sims 4" Style="{StaticResource BodyTextBlock}" FontSize="11" Margin="0,4,0,0" TextAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- BOTÓN PERFIL -->
+                    <Button x:Name="ProfileButton"
+                            Content="👤 Perfil" 
+                            HorizontalAlignment="Right" 
+                            VerticalAlignment="Top"
+                            Padding="8,5"
+                            Background="Transparent"
+                            Foreground="#FFFFFF"
+                            FontWeight="SemiBold"
+                            FontSize="10"
+                            FontFamily="Bahnschrift Light"
+                            BorderThickness="1"
+                            BorderBrush="#40FFFFFF"
+                            Cursor="Hand"
+                            Click="ProfileButton_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    CornerRadius="6"
+                                                    Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <SolidColorBrush Color="#FFFFFF" Opacity="0.08"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="BorderBrush" Value="#60FFFFFF"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+
+                <!-- FEATURED GUIDE -->
+                <Border x:Name="FeaturedCard" Height="105" CornerRadius="10" Style="{StaticResource GuideCard}" MouseLeftButtonUp="FeaturedCard_Click" Margin="0,0,0,15">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.5">
+                            <GradientStop Color="#7C3AED" Offset="0"/>
+                            <GradientStop Color="#4F46E5" Offset="0.5"/>
+                            <GradientStop Color="#3B82F6" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid Margin="15,12">
+                        <StackPanel VerticalAlignment="Center">
+                            <Border Style="{StaticResource CategoryBadge}" Background="#22D3EE" Margin="0,0,0,8">
+                                <TextBlock x:Name="FeaturedBadge" Text="⭐ FEATURED" FontSize="9" FontWeight="Bold" FontFamily="Bahnschrift Light" Foreground="#0F172A"/>
+                            </Border>
+                            <TextBlock x:Name="FeaturedTitle" Text="Complete Beginner's Guide to Modding" Style="{StaticResource TitleTextBlock}" FontSize="15"/>
+                            <TextBlock x:Name="FeaturedDesc" Text="Start from zero: learn to install, organize and manage your first mods" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
+                        </StackPanel>
+                        <TextBlock Text="→" Foreground="#FFFFFF" FontSize="28" FontFamily="Bahnschrift Light" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center" Opacity="0.6"/>
+                    </Grid>
+                </Border>
+
+                <!-- SECTION: MODS -->
+                <TextBlock x:Name="GettingStartedTitle" Text="MODS" Style="{StaticResource BodyTextBlock}" Foreground="#10B981" FontSize="9" FontWeight="SemiBold" Margin="0,0,0,8" TextAlignment="Center"/>
+                <WrapPanel Margin="0,0,0,15" HorizontalAlignment="Center">
+                    <!-- Install Mods Card -->
+                    <Border x:Name="InstallModsCard" Width="195" Height="105" CornerRadius="8" Style="{StaticResource GuideCard}" Margin="4" MouseLeftButtonUp="InstallModsCard_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="36" Height="36" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,8"
+                                    Background="#065F46" BorderBrush="#10B981" BorderThickness="1">
+                                <TextBlock Text="📦" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="InstallModsTitle" Text="Install Mods" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
+                                <TextBlock x:Name="InstallModsDesc" Text="Where to put .package and .ts4script files" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Find Mods Card -->
+                    <Border x:Name="FindModsCard" Width="195" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="FindModsCard_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="36" Height="36" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,8"
+                                    Background="#065F46" BorderBrush="#10B981" BorderThickness="1">
+                                <TextBlock Text="🔍" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="FindModsTitle" Text="Find Mods" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
+                                <TextBlock x:Name="FindModsDesc" Text="Best websites to download safe mods" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Organize Card -->
+                    <Border x:Name="OrganizeCard" Width="195" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="OrganizeCard_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="36" Height="36" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,8"
+                                    Background="#065F46" BorderBrush="#10B981" BorderThickness="1">
+                                <TextBlock Text="📁" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="OrganizeTitle" Text="Mod Manager" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
+                                <TextBlock x:Name="OrganizeDesc" Text="Folder structure and best practices" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Mod Gallery Card -->
+                </WrapPanel>
+
+                <!-- SECTION: UTILITIES -->
+                <TextBlock x:Name="UtilityTitle" Text="UTILITIES" Style="{StaticResource BodyTextBlock}" Foreground="#FCD34D" FontSize="9" FontWeight="SemiBold" Margin="0,0,0,8" TextAlignment="Center"/>
+                <UniformGrid Columns="3" Margin="0,0,0,15" HorizontalAlignment="Center">
+                    <!-- Loading Screen Card -->
+                    <Border x:Name="LoadingScreenCard" Width="195" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="LoadingScreenCard_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="36" Height="36" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,8"
+                                    Background="#92400E" BorderBrush="#FBBF24" BorderThickness="1">
+                                <TextBlock Text="⏳" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="LoadingScreenTitle" Text="Loading Screen" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
+                                <TextBlock x:Name="LoadingScreenDesc" Text="Customize loading screens" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Cheats Guide Card -->
+                    <Border x:Name="CheatsGuideCard" Width="195" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="CheatsGuideCard_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="36" Height="36" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,8"
+                                    Background="#92400E" BorderBrush="#FBBF24" BorderThickness="1">
+                                <TextBlock Text="🎮" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="CheatsGuideTitle" Text="Cheats Guide" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
+                                <TextBlock x:Name="CheatsGuideDesc" Text="All game cheats and commands" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Gameplay Enhancer Card -->
+                    <Border x:Name="GameplayEnhancerCard" Width="195" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="GameplayEnhancerCard_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="36" Height="36" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,8"
+                                    Background="#92400E" BorderBrush="#FBBF24" BorderThickness="1">
+                                <TextBlock Text="⚡" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="GameplayEnhancerTitle" Text="Gameplay Enhancer" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
+                                <TextBlock x:Name="GameplayEnhancerDesc" Text="Improve your gameplay experience" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- AutoExtractor Card -->
+                    <Border x:Name="AutoExtractorCard" Width="195" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="AutoExtractorCard_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="36" Height="36" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,8"
+                                Background="#92400E" BorderBrush="#FBBF24" BorderThickness="1">
+                                <TextBlock Text="📦" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="AutoExtractorCardTitle1" Text="AutoExtract DLCs" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
+                                <TextBlock x:Name="AutoExtractorCardDesc1" Text="Extract DLC files automatically" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Install Base Game Card -->
+                    <Border x:Name="InstallBaseGameCard" Width="195" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="InstallBaseGameCard_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="36" Height="36" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,8"
+                                Background="#92400E" BorderBrush="#FBBF24" BorderThickness="1">
+                                <TextBlock Text="💿" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="InstallBaseGameTitle" Text="Install Base Game" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
+                                <TextBlock x:Name="InstallBaseGameDesc" Text="Download and install The Sims 4" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Repair Your Game Card -->
+                    <Border x:Name="RepairGameCard" Width="195" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="RepairGameCard_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="36" Height="36" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,8"
+                                Background="#92400E" BorderBrush="#FBBF24" BorderThickness="1">
+                                <TextBlock Text="🔧" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="RepairGameTitle" Text="Repair Your Game" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
+                                <TextBlock x:Name="RepairGameDesc" Text="Fix corrupted or missing files" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Language Selector Card -->
+                    <Border x:Name="LanguageSelectorCard" Width="195" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="LanguageSelector_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="36" Height="36" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,8"
+                                Background="#92400E" BorderBrush="#FBBF24" BorderThickness="1">
+                                <TextBlock Text="👅" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="LanguageSelectorTitle1" Text="Change Sims Language" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
+                                <TextBlock x:Name="LanguageSelectorDesc1" Text="Change your Sims 4 Language" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Cracking Tool Card -->
+                    <Border x:Name="CrackingToolCard" Width="195" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="CrackingToolCard_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="36" Height="36" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,8"
+                                Background="#92400E" BorderBrush="#FBBF24" BorderThickness="1">
+                                <TextBlock Text="🔓" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="CrackingToolTitle1" Text="Cracking Tool" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
+                                <TextBlock x:Name="CrackingToolDesc1" Text="Make a legit copy a cracked version" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </UniformGrid>
+
+                <!-- SECTION: MANAGERS -->
+                <TextBlock Text="MANAGERS" Style="{StaticResource BodyTextBlock}" Foreground="#C4B5FD" FontSize="9" FontWeight="SemiBold" Margin="0,0,0,8" TextAlignment="Center"/>
+                <WrapPanel Margin="0,0,0,15" HorizontalAlignment="Center">
+                    <!-- Gallery Manager Card -->
+                    <Border x:Name="GalleryManagerCard" Width="195" Height="105" CornerRadius="8" Style="{StaticResource GuideCard}" Margin="4" MouseLeftButtonUp="GalleryManagerCard_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="36" Height="36" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,8"
+                                    Background="#6B21A8" BorderBrush="#A855F7" BorderThickness="1">
+                                <TextBlock Text="🖼️" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="GalleryManagerTitle" Text="Gallery Manager" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
+                                <TextBlock x:Name="GalleryManagerDesc" Text="Manage your gallery content" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Music Manager Card -->
+                    <Border x:Name="MusicManagerCard" Width="195" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="MusicManagerCard_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="36" Height="36" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,8"
+                                    Background="#581C87" BorderBrush="#A855F7" BorderThickness="1">
+                                <TextBlock Text="🎵" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="MusicManagerTitle" Text="Music Manager" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
+                                <TextBlock x:Name="MusicManagerDesc" Text="Custom music for your game" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- SaveGame Manager Card -->
+                    <Border x:Name="SaveGameManagerCard" Width="195" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="SaveGameManagerCard_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="36" Height="36" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,8"
+                                    Background="#6B21A8" BorderBrush="#A855F7" BorderThickness="1">
+                                <TextBlock Text="💾" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="SaveGameManagerTitle" Text="SaveGame Manager" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
+                                <TextBlock x:Name="SaveGameManagerDesc" Text="Manage your save files" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </WrapPanel>
+
+                <!-- SECTION: CREATE YOUR OWN -->
+                <TextBlock x:Name="CreateModsTitle" Text="CREATE YOUR OWN" Style="{StaticResource BodyTextBlock}" Foreground="#10B981" FontSize="9" FontWeight="SemiBold" Margin="0,0,0,8" TextAlignment="Center"/>
+                <WrapPanel Margin="0,0,0,15" HorizontalAlignment="Center">
+                    <!-- S4S Card -->
+                    <Border x:Name="S4SCard" Width="145" Height="105" CornerRadius="8" Style="{StaticResource GuideCard}" Margin="4" MouseLeftButtonUp="S4SCard_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="32" Height="32" CornerRadius="6" HorizontalAlignment="Left" Margin="0,0,0,6"
+                                    Background="#065F46" BorderBrush="#10B981" BorderThickness="1">
+                                <TextBlock Text="🛠️" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="S4STitle" Text="Basic Modding" Style="{StaticResource TitleTextBlock}" FontSize="11"/>
+                                <TextBlock x:Name="S4SDesc" Text="Create Traits, Moods, Buffs, Careers, CC, etc..." Style="{StaticResource BodyTextBlock}" FontSize="9" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Blender Card -->
+                    <Border x:Name="BlenderCard" Width="145" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="BlenderCard_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="32" Height="32" CornerRadius="6" HorizontalAlignment="Left" Margin="0,0,0,6"
+                                    Background="#065F46" BorderBrush="#10B981" BorderThickness="1">
+                                <TextBlock Text="🎭" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="BlenderTitle" Text="3D with Blender" Style="{StaticResource TitleTextBlock}" FontSize="11"/>
+                                <TextBlock x:Name="BlenderDesc" Text="Custom meshes" Style="{StaticResource BodyTextBlock}" FontSize="9" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Scripting Card -->
+                    <Border x:Name="ScriptingCard" Width="145" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="ScriptingCard_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="32" Height="32" CornerRadius="6" HorizontalAlignment="Left" Margin="0,0,0,6"
+                                    Background="#065F46" BorderBrush="#10B981" BorderThickness="1">
+                                <TextBlock Text="💻" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="ScriptingTitle" Text="Python Scripts" Style="{StaticResource TitleTextBlock}" FontSize="11"/>
+                                <TextBlock x:Name="ScriptingDesc" Text="Script mods basics" Style="{StaticResource BodyTextBlock}" FontSize="9" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Tuning Card -->
+                    <Border x:Name="TuningCard" Width="145" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="TuningCard_Click">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Width="32" Height="32" CornerRadius="6" HorizontalAlignment="Left" Margin="0,0,0,6"
+                                    Background="#065F46" BorderBrush="#10B981" BorderThickness="1">
+                                <TextBlock Text="⚙️" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                                <TextBlock x:Name="TuningTitle" Text="XML Tuning" Style="{StaticResource TitleTextBlock}" FontSize="11"/>
+                                <TextBlock x:Name="TuningDesc" Text="Modify game values" Style="{StaticResource BodyTextBlock}" FontSize="9" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </WrapPanel>
+
+                <!-- SECTION: TROUBLESHOOTING -->
+                <TextBlock x:Name="TroubleshootTitle" Text="TROUBLESHOOTING" Style="{StaticResource BodyTextBlock}" Foreground="#F9A8D4" FontSize="9" FontWeight="SemiBold" Margin="0,0,0,8" TextAlignment="Center"/>
+                <WrapPanel HorizontalAlignment="Center">
+                    <!-- Fix Errors Card -->
+                    <Border x:Name="FixErrorsCard" Width="295" Height="80" CornerRadius="8" Style="{StaticResource GuideCard}" Margin="4" MouseLeftButtonUp="FixErrorsCard_Click">
+                        <Grid Margin="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="36" Height="36" CornerRadius="8" Margin="0,0,12,0"
+                                    Background="#9F1239" BorderBrush="#F43F5E" BorderThickness="1">
+                                <TextBlock Text="❌" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock x:Name="FixErrorsTitle" Text="Fix Common Errors" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
+                                <TextBlock x:Name="FixErrorsDesc" Text="LastException, broken mods, game crashes" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Method 50/50 Card -->
+                    <Border x:Name="Method5050Card" Width="295" Height="80" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="Method5050Card_Click">
+                        <Grid Margin="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="36" Height="36" CornerRadius="8" Margin="0,0,12,0"
+                                    Background="#92400E" BorderBrush="#F59E0B" BorderThickness="1">
+                                <TextBlock Text="🔎" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock x:Name="Method5050Title" Text="50/50 Method" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
+                                <TextBlock x:Name="Method5050Desc" Text="Find problematic mods quickly" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </WrapPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- ================== OVERLAY LECCIONES ================== -->
+        <Grid x:Name="BeginnerGuideOverlay" Background="#BF020617" Visibility="Collapsed">
+            <Grid.RenderTransform>
+                <ScaleTransform x:Name="BeginnerOverlayScale" ScaleX="0.95" ScaleY="0.95"/>
+            </Grid.RenderTransform>
+
+            <Border CornerRadius="16" Padding="20" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="750" MaxHeight="500">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#020617" Offset="0"/>
+                        <GradientStop Color="#111827" Offset="0.4"/>
+                        <GradientStop Color="#4F46E5" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Content="✕" Width="24" Height="24" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0" Background="#EF4444" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="CloseBeginnerGuideOverlay_Click"/>
+
+                    <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,10,0">
+                        <StackPanel VerticalAlignment="Top">
+                            <TextBlock x:Name="LessonIndicator" Text="Lesson 1 of 8" Style="{StaticResource BodyTextBlock}" FontSize="9" Foreground="#A78BFA" Margin="0,0,0,3"/>
+                            <TextBlock x:Name="LessonTitleText" Text="Lesson 1: Mods folder" Style="{StaticResource TitleTextBlock}" FontSize="15" Margin="0,0,0,3"/>
+                            <TextBlock x:Name="LessonIntroText" Text="" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,0,0,8"/>
+
+                            <StackPanel x:Name="LessonContentPanel" Margin="0,3,0,0"/>
+
+                            <Border x:Name="OverlayStatusBorder" CornerRadius="8" Padding="8" Margin="0,3,0,0" Background="#111827" Visibility="Collapsed">
+                                <TextBlock x:Name="OverlayStatusText" Text="" Foreground="#F97373" FontFamily="Bahnschrift Light" FontWeight="Bold" FontSize="10" TextWrapping="Wrap"/>
+                            </Border>
+
+                            <StackPanel x:Name="Lesson1ButtonsPanel" Orientation="Horizontal" Margin="0,5,0,0" Visibility="Collapsed">
+                                <Button x:Name="OverlayFixButton" Content="Fix" Margin="0,0,6,0" Padding="6,3" Background="#EF4444" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="OverlayFixButton_Click" Visibility="Collapsed"/>
+                                <Button x:Name="OverlaySelectFolderButton" Content="Not your folder?" Margin="0,0,0,0" Padding="6,3" Background="#6366F1" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="OverlaySelectFolderButton_Click"/>
+                            </StackPanel>
+
+                            <StackPanel x:Name="LinksPanel" Margin="0,8,0,0" Visibility="Collapsed">
+                                <TextBlock x:Name="BeginnerLinksTitle" Text="Recommended links" Style="{StaticResource TitleTextBlock}" FontSize="11" Margin="0,0,0,3"/>
+                                <StackPanel x:Name="LinksContainer"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <Grid Grid.Column="1" Margin="0,15,0,0">
+                        <Border CornerRadius="12" Background="#020617" Padding="10">
+                            <Grid>
+                                <Image x:Name="GuideScreenshotImage" Source="/Assets/Discovery/mods_folder_example.png" Stretch="Uniform" Margin="0"/>
+                                <Border x:Name="ZoomBorder" BorderBrush="#22C55E" BorderThickness="2" CornerRadius="8" HorizontalAlignment="Right" VerticalAlignment="Top" Width="130" Height="75" Margin="0,8,8,0">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.8" Color="#22C55E"/>
+                                    </Border.Effect>
+                                </Border>
+                                <TextBlock x:Name="ArrowText" Text="⟶" FontSize="32" FontWeight="Bold" Foreground="#F9FAFB" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                    <TextBlock.RenderTransform>
+                                        <RotateTransform Angle="-20"/>
+                                    </TextBlock.RenderTransform>
+                                </TextBlock>
+                                <Border x:Name="ZoomLabelBorder" Background="#22C55E" CornerRadius="10" Padding="6,3" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,90,8,0">
+                                    <TextBlock x:Name="BeginnerZoomLabel" Text="Here is your Mods folder" Foreground="#031314" FontWeight="Bold" FontSize="9"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,8,0,0">
+                            <Button x:Name="OverlayPrevButton" Content="Back" Margin="0,0,6,0" Padding="8,5" Cursor="Hand" Background="#111827" Foreground="#E5E7EB" BorderThickness="0" Click="OverlayPrevButton_Click" Visibility="Collapsed"/>
+                            <Button x:Name="OverlayNextButton" Content="Next lesson" Margin="0,0,6,0" Padding="8,5" Cursor="Hand" Background="#22C55E" Foreground="#022C22" FontWeight="Bold" BorderThickness="0" Click="OverlayNextButton_Click"/>
+                            <Button x:Name="BeginnerCloseButton" Content="Close" Padding="8,5" Cursor="Hand" Background="#111827" Foreground="#E5E7EB" BorderThickness="0" Click="CloseBeginnerGuideOverlay_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

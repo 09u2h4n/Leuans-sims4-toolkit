@@ -1,0 +1,135 @@
+﻿<Window x:Class="ModernDesign.MVVM.View.TutorialWelcomeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Welcome Tutorial"
+        Height="500" Width="700"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        AllowsTransparency="True">
+
+    <Border Background="#1E293B" CornerRadius="16" BorderBrush="#334155" BorderThickness="1">
+        <Grid Margin="40">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,30">
+                <TextBlock x:Name="WelcomeTitle"
+                           Text="👋 Welcome to Leuan's Sims 4 ToolKit!"
+                           FontSize="32"
+                           FontWeight="Bold"
+                           Foreground="#F8FAFC"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           Margin="0,0,0,15"/>
+
+                <TextBlock x:Name="WelcomeSubtitle"
+                           Text="Let's get you started with a quick tutorial"
+                           FontSize="16"
+                           Foreground="#94A3B8"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Content -->
+            <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock x:Name="QuestionText"
+                           Text="Do you already have The Sims 4 installed on your PC?"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           Foreground="#F8FAFC"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,40"
+                           MaxWidth="500"/>
+
+                <!-- Buttons -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="YesBtn"
+                            Content="✓ Yes, I have it"
+                            Width="200"
+                            Height="60"
+                            Margin="0,0,20,0"
+                            Background="#22C55E"
+                            Foreground="White"
+                            FontSize="16"
+                            FontWeight="SemiBold"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            Click="YesBtn_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#22C55E"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    CornerRadius="12"
+                                                    Padding="20,15">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#16A34A"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button x:Name="NoBtn"
+                            Content="✗ No, I need it"
+                            Width="200"
+                            Height="60"
+                            Background="#3B82F6"
+                            Foreground="White"
+                            FontSize="16"
+                            FontWeight="SemiBold"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            Click="NoBtn_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#3B82F6"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    CornerRadius="12"
+                                                    Padding="20,15">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#2563EB"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Footer -->
+            <TextBlock Grid.Row="2"
+                       x:Name="SkipText"
+                       Text="You can skip this tutorial anytime by pressing ESC"
+                       FontSize="12"
+                       Foreground="#64748B"
+                       HorizontalAlignment="Center"
+                       Margin="0,20,0,0"/>
+        </Grid>
+    </Border>
+</Window>

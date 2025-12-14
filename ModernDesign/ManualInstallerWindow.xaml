@@ -1,0 +1,189 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+        xmlns:av="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        mc:Ignorable="av" 
+        x:Class="ModernDesign.MVVM.View.ManualInstallerWindow"
+        Title="Leuan | Manual DLC Installation Guide" 
+        Height="691" 
+        Width="1174"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStartupLocation="CenterScreen" 
+        Icon="/Icono_TLK.ico">
+
+    <Window.Resources>
+        <!-- Primary Button Style -->
+        <Style x:Key="ActionButton" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="#0A6BF2"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="bg" Background="{TemplateBinding Background}" 
+                                CornerRadius="12" Padding="20,14">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bg" Property="Background" Value="#3EC7E8"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="bg" Property="Background" Value="#404040"/>
+                                <Setter Property="Foreground" Value="#808080"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Secondary Button Style -->
+        <Style x:Key="SecondaryButton" TargetType="{x:Type Button}" BasedOn="{StaticResource ActionButton}">
+            <Setter Property="Background" Value="#30FFFFFF"/>
+        </Style>
+
+        <!-- Step Card Style -->
+        <Style x:Key="StepCard" TargetType="Border">
+            <Setter Property="Background" Value="#15FFFFFF"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="30"/>
+            <Setter Property="Margin" Value="0,0,0,25"/>
+        </Style>
+    </Window.Resources>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="40" ResizeBorderThickness="6" 
+                            CornerRadius="0" GlassFrameThickness="0" UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+
+    <Border CornerRadius="16">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#0F172A" Offset="0"/>
+                <GradientStop Color="#1E293B" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.Background>
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="30" ShadowDepth="0" Opacity="0.5"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- HEADER -->
+            <Border Grid.Row="0" Padding="25,15">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                                WindowChrome.IsHitTestVisibleInChrome="True">
+                        <Button x:Name="BackBtn" Width="40" Height="40"
+                                Background="Transparent" Foreground="White" 
+                                BorderThickness="0" Cursor="Hand"
+                                Click="BackBtn_Click" ToolTip="Back to main menu">
+                            <Button.Template>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="bg" Background="Transparent" CornerRadius="10" Padding="8">
+                                        <TextBlock Text="←" FontSize="20" FontWeight="Bold"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="bg" Property="Background" Value="#20FFFFFF"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                        <TextBlock Text="📖  Step-by-Step Installation Guide" Foreground="White" FontSize="18" 
+                                   FontWeight="SemiBold" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                    </StackPanel>
+
+                    <Button x:Name="CloseBtn" HorizontalAlignment="Right" Width="40" Height="40"
+                            Background="Transparent" Foreground="White" BorderThickness="0" 
+                            Cursor="Hand" Click="CloseBtn_Click"
+                            WindowChrome.IsHitTestVisibleInChrome="True">
+                        <Button.Template>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border x:Name="bg" Background="Transparent" CornerRadius="10" Padding="8">
+                                    <TextBlock Text="✕" FontSize="18" FontWeight="Bold"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bg" Property="Background" Value="#EF4444"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- MAIN CONTENT - TUTORIAL STEPS -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" 
+                          WindowChrome.IsHitTestVisibleInChrome="True">
+                <StackPanel x:Name="TutorialContainer" Margin="40,10,40,20">
+
+                    <!-- Welcome Message -->
+                    <Border Background="#20FFFFFF" CornerRadius="16" Padding="25" Margin="0,0,0,30">
+                        <StackPanel>
+                            <TextBlock x:Name="WelcomeTitle" Text="👋 Welcome to Manual Installation!" 
+                                       Foreground="White" FontSize="22" FontWeight="Bold" 
+                                       HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                            <TextBlock x:Name="WelcomeDescription" 
+                                       Text="Follow these simple steps to install your DLCs manually. Take your time and read each step carefully!"
+                                       Foreground="#94A3B8" FontSize="14" TextAlignment="Center" 
+                                       TextWrapping="Wrap" LineHeight="22"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Steps will be added here dynamically from code-behind -->
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- FOOTER - NAVIGATION -->
+            <Border Grid.Row="2" Background="#10FFFFFF" Padding="30,20">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="PrevBtn" Grid.Column="0" 
+                            Content="← Previous Step" 
+                            Height="50" FontSize="15" MinWidth="160"
+                            Style="{StaticResource SecondaryButton}" 
+                            Click="PrevBtn_Click" 
+                            IsEnabled="False"
+                            WindowChrome.IsHitTestVisibleInChrome="True"/>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" 
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock x:Name="StepIndicator" Text="Step 1 of 6" 
+                                   Foreground="#3EC7E8" FontSize="16" FontWeight="Bold"/>
+                    </StackPanel>
+
+                    <Button x:Name="NextBtn" Grid.Column="2" 
+                            Content="Next Step →" 
+                            Height="50" FontSize="15" MinWidth="160"
+                            Style="{StaticResource ActionButton}" 
+                            Click="NextBtn_Click"
+                            WindowChrome.IsHitTestVisibleInChrome="True"/>
+                </Grid>
+            </Border>
+
+        </Grid>
+    </Border>
+
+</Window>

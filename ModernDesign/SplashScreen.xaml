@@ -1,0 +1,90 @@
+﻿<Window x:Class="ModernDesign.SplashScreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        Width="800"
+        Height="500"
+        WindowStartupLocation="CenterScreen" Cursor="">
+
+    <Grid>
+        <!-- Logo centrado -->
+        <Grid Margin="-83,54,0,82" HorizontalAlignment="Center">
+            <Image x:Name="Logo"
+                   Source="/LogoMain.png"
+                   VerticalAlignment="Top"
+                   Height="412"
+                   Margin="93,-28,0,0"
+                   RenderTransformOrigin="0.195,0.517"
+                   HorizontalAlignment="Left"
+                   Opacity="0">
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform AngleY="-0.171"/>
+                        <RotateTransform/>
+                        <TranslateTransform Y="-0.814"/>
+                    </TransformGroup>
+                </Image.RenderTransform>
+
+                <!-- Fade IN del logo; cuando termina, recién empieza la carga -->
+                <Image.Triggers>
+                    <EventTrigger RoutedEvent="Image.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                 From="0" To="1"
+                                                 Duration="0:0:1"
+                                                 Completed="LogoFadeIn_Completed"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Image.Triggers>
+            </Image>
+        </Grid>
+
+        <!-- Barra de carga abajo -->
+        <StackPanel VerticalAlignment="Bottom" Margin="40,0,40,40">
+            <TextBlock x:Name="StatusText"
+                       Text="Waiting to start..."
+                       Foreground="White"
+                       FontSize="14"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       Margin="0,0,0,4" FontWeight="Bold" FontStyle="Italic" FontFamily="Bahnschrift">
+                <TextBlock.Effect>
+                    <DropShadowEffect/>
+                </TextBlock.Effect>
+            </TextBlock>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="79*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <ProgressBar x:Name="LoadingProgressBar"
+                             Height="8"
+                             Minimum="0"
+                             Maximum="100"
+                             Value="0"
+                             VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+
+                <TextBlock x:Name="ProgressPercentText"
+                           Text="0%"
+                           Foreground="White"
+                           FontSize="11"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Top"
+                           Margin="0,-18,0,0" Grid.ColumnSpan="2" FontFamily="Bahnschrift" FontStyle="Italic">
+                    <TextBlock.Effect>
+                        <DropShadowEffect/>
+                    </TextBlock.Effect>
+                </TextBlock>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>

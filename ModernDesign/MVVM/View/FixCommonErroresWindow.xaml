@@ -1,0 +1,99 @@
+﻿<Window x:Class="ModernDesign.MVVM.View.FixCommonErrorsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Fix Common Errors"
+        Height="550" Width="700"
+        WindowStartupLocation="CenterOwner"
+        Background="#0F172A"
+        ResizeMode="NoResize">
+
+    <Window.Resources>
+        <Style x:Key="TitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#F9FAFB"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style x:Key="BodyStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#E5E7EB"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock x:Name="TitleText" Text="🔧 Fix Common Errors" Style="{StaticResource TitleStyle}" FontSize="22"/>
+            <TextBlock x:Name="DescText" Text="This tool will temporarily disable ALL your mods by renaming them" Style="{StaticResource BodyStyle}" FontSize="12" Margin="0,8,0,0"/>
+        </StackPanel>
+
+        <!-- CONTENT -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!-- Status -->
+                <Border x:Name="StatusBorder" Background="#064E3B" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                    <TextBlock x:Name="StatusText" Text="📁 Detecting Mods folder..." Style="{StaticResource BodyStyle}" Foreground="#6EE7B7" FontSize="12"/>
+                </Border>
+
+                <!-- Warning -->
+                <Border Background="#7F1D1D" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                    <TextBlock x:Name="WarningText" Text="⚠️ WARNING: All files will be renamed" Style="{StaticResource BodyStyle}" Foreground="#FCA5A5" FontSize="11"/>
+                </Border>
+
+                <!-- Recommendation -->
+                <Border Background="#1E293B" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                    <TextBlock x:Name="RecommendationText" Text="💡 Recommendation: Activate mods one by one" Style="{StaticResource BodyStyle}" FontSize="11"/>
+                </Border>
+
+                <!-- Instructions -->
+                <TextBlock Text="📋 How it works:" Style="{StaticResource TitleStyle}" FontSize="14" Margin="0,10,0,10"/>
+
+                <Border Background="#1E293B" CornerRadius="10" Padding="12" Margin="0,0,0,8">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="1" Foreground="#22C55E" FontWeight="Bold" FontSize="14" Margin="0,0,10,0" FontFamily="Bahnschrift Light"/>
+                        <TextBlock x:Name="Step1Text" Text="Click 'Disable All Mods' to rename all .package and .ts4script files" Style="{StaticResource BodyStyle}" FontSize="11"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="#1E293B" CornerRadius="10" Padding="12" Margin="0,0,0,8">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="2" Foreground="#38BDF8" FontWeight="Bold" FontSize="14" Margin="0,0,10,0" FontFamily="Bahnschrift Light"/>
+                        <TextBlock x:Name="Step2Text" Text="Test your game without mods to see if the problem persists" Style="{StaticResource BodyStyle}" FontSize="11"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="#1E293B" CornerRadius="10" Padding="12" Margin="0,0,0,8">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="3" Foreground="#A78BFA" FontWeight="Bold" FontSize="14" Margin="0,0,10,0" FontFamily="Bahnschrift Light"/>
+                        <TextBlock x:Name="Step3Text" Text="Manually rename mods back one by one to identify the problematic one" Style="{StaticResource BodyStyle}" FontSize="11"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="#1E293B" CornerRadius="10" Padding="12" Margin="0,0,0,8">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="4" Foreground="#EAB308" FontWeight="Bold" FontSize="14" Margin="0,0,10,0" FontFamily="Bahnschrift Light"/>
+                        <TextBlock x:Name="Step4Text" Text="Or use 'Enable All Mods' to reactivate all at once" Style="{StaticResource BodyStyle}" FontSize="11"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Action Buttons -->
+                <StackPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Center">
+                    <Button x:Name="DisableAllButton" Content="🚫 Disable All Mods" Padding="16,10" Margin="0,0,10,0" Background="#EF4444" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="DisableAllButton_Click"/>
+                    <Button x:Name="EnableAllButton" Content="✅ Enable All Mods" Padding="16,10" Margin="0,0,10,0" Background="#22C55E" Foreground="#0F172A" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="EnableAllButton_Click"/>
+                    <Button x:Name="SelectFolderButton" Content="📁" Padding="10,10" Background="#6366F1" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="SelectFolderButton_Click" ToolTip="Select Mods folder manually"/>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- FOOTER -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button x:Name="CloseButton" Content="Close" Padding="12,6" Background="#374151" Foreground="White" BorderThickness="0" Cursor="Hand" Click="CloseButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

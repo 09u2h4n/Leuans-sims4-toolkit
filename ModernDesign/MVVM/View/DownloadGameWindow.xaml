@@ -1,0 +1,278 @@
+﻿<Window x:Class="ModernDesign.MVVM.View.DownloadGameWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Download The Sims 4"
+        MinHeight="600" MinWidth="700"
+        Height="600" Width="800"
+        WindowStyle="None"
+        ResizeMode="CanResize"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        AllowsTransparency="True">
+
+    <Border Background="#1E293B" CornerRadius="12" BorderBrush="#334155" BorderThickness="1">
+        <Grid Margin="15,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,10">
+                <TextBlock x:Name="HeaderTitle"
+                           Text="📦 Download The Sims 4"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           Foreground="#F8FAFC"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,5"/>
+
+                <TextBlock x:Name="HeaderSubtitle"
+                           Text="Complete base game + all updates (Cracked Version)"
+                           FontSize="11"
+                           Foreground="#94A3B8"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"/>
+            </StackPanel>
+
+            <!-- Content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" Margin="0,0,0,8">
+                <StackPanel>
+                    <!-- Game Info Card -->
+                    <Border Background="#0F172A" CornerRadius="8" Padding="12,10" Margin="0,0,0,8">
+                        <StackPanel>
+                            <TextBlock x:Name="InfoTitle"
+                                       Text="📋 What's Included:"
+                                       FontSize="13"
+                                       FontWeight="Bold"
+                                       Foreground="#F8FAFC"
+                                       Margin="0,0,0,8"/>
+
+                            <StackPanel Margin="6,0,0,0">
+                                <TextBlock x:Name="Info1" Text="✓ The Sims 4 Base Game"
+                                           FontSize="11" Foreground="#CBD5E1" Margin="0,0,0,3"/>
+                                <TextBlock x:Name="Info2" Text="✓ Support for All Updates"
+                                           FontSize="11" Foreground="#CBD5E1" Margin="0,0,0,3"/>
+                                <TextBlock x:Name="Info3" Text="✓ Pre-configured and Ready"
+                                           FontSize="11" Foreground="#CBD5E1" Margin="0,0,0,3"/>
+                                <TextBlock x:Name="Info4" Text="✓ No Origin/EA App Required"
+                                           FontSize="11" Foreground="#CBD5E1" Margin="0,0,0,3"/>
+                                <TextBlock x:Name="Info5" Text="✓ Portable (No Installation)"
+                                           FontSize="11" Foreground="#CBD5E1"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Warning Card -->
+                    <Border Background="#0F172A" BorderBrush="#F59E0B" BorderThickness="2" CornerRadius="8" Padding="10,8" Margin="0,0,0,8">
+                        <StackPanel>
+                            <TextBlock x:Name="WarningTitle"
+                                       Text="⚠️ Important Notice"
+                                       FontSize="12"
+                                       FontWeight="Bold"
+                                       Foreground="#FBBF24"
+                                       Margin="0,0,0,6"/>
+
+                            <TextBlock x:Name="WarningText"
+                                       TextWrapping="Wrap"
+                                       FontSize="10"
+                                       Foreground="#FDE68A"
+                                       LineHeight="14">
+                                <Run Text="This is a cracked/portable version. After downloading, update it using the DLC Updater. Make sure you have enough disk space."/>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Download Parts Card -->
+                    <Border Background="#0F172A" CornerRadius="8" Padding="12,10" Margin="0,0,0,8">
+                        <StackPanel>
+                            <TextBlock x:Name="PartsTitle"
+                                       Text="📥 Download Parts (7 files):"
+                                       FontSize="13"
+                                       FontWeight="Bold"
+                                       Foreground="#F8FAFC"
+                                       Margin="0,0,0,8"/>
+
+                            <TextBlock x:Name="PartsInfo"
+                                       Text="Download ALL 7 parts to extract:"
+                                       FontSize="10"
+                                       Foreground="#94A3B8"
+                                       Margin="0,0,0,6"
+                                       TextWrapping="Wrap"/>
+
+                            <StackPanel Margin="6,0,0,0">
+                                <TextBlock Text="Part 1: The Sims 4.zip (~10 GB)"
+                                           FontSize="10" Foreground="#60A5FA" Margin="0,0,0,2" FontWeight="SemiBold"/>
+                                <TextBlock Text="Part 2: The Sims 4.z01 (~10 GB)"
+                                           FontSize="10" Foreground="#60A5FA" Margin="0,0,0,2" FontWeight="SemiBold"/>
+                                <TextBlock Text="Part 3: The Sims 4.z02 (~10 GB)"
+                                           FontSize="10" Foreground="#60A5FA" Margin="0,0,0,2" FontWeight="SemiBold"/>
+                                <TextBlock Text="Part 4: The Sims 4.z03 (~10 GB)"
+                                           FontSize="10" Foreground="#60A5FA" Margin="0,0,0,2" FontWeight="SemiBold"/>
+                                <TextBlock Text="Part 5: The Sims 4.z04 (~10 GB)"
+                                           FontSize="10" Foreground="#60A5FA" Margin="0,0,0,2" FontWeight="SemiBold"/>
+                                <TextBlock Text="Part 6: The Sims 4.z05 (~10 GB)"
+                                           FontSize="10" Foreground="#60A5FA" Margin="0,0,0,2" FontWeight="SemiBold"/>
+                                <TextBlock Text="Part 7: The Sims 4.z06 (~10 GB)"
+                                           FontSize="10" Foreground="#60A5FA" Margin="0,0,0,2" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Requirements Card -->
+                    <Border Background="#0F172A" CornerRadius="8" Padding="12,10" Margin="0,0,0,8">
+                        <StackPanel>
+                            <TextBlock x:Name="ReqTitle"
+                                       Text="💾 Requirements:"
+                                       FontSize="13"
+                                       FontWeight="Bold"
+                                       Foreground="#F8FAFC"
+                                       Margin="0,0,0,8"/>
+
+                            <StackPanel Margin="6,0,0,0">
+                                <TextBlock x:Name="Req1" Text="• Download: ~70 GB (7 parts)"
+                                           FontSize="11" Foreground="#FBBF24" Margin="0,0,0,3" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="Req2" Text="• Disk Space: ~100 GB"
+                                           FontSize="11" Foreground="#FBBF24" Margin="0,0,0,3" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="Req3" Text="• Stable Internet Connection"
+                                           FontSize="11" Foreground="#CBD5E1" Margin="0,0,0,3"/>
+                                <TextBlock x:Name="Req4" Text="• Time: 3-8 hours"
+                                           FontSize="11" Foreground="#CBD5E1"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Extraction Instructions Card -->
+                    <Border Background="#1E3A8A" BorderBrush="#3B82F6" BorderThickness="1" CornerRadius="8" Padding="10,8" Margin="0,0,0,8">
+                        <StackPanel>
+                            <TextBlock x:Name="ExtractTitle"
+                                       Text="📂 How to Extract:"
+                                       FontSize="12"
+                                       FontWeight="Bold"
+                                       Foreground="#93C5FD"
+                                       Margin="0,0,0,6"/>
+
+                            <TextBlock x:Name="ExtractInstructions"
+                                       TextWrapping="Wrap"
+                                       FontSize="10"
+                                       Foreground="#BFDBFE"
+                                       LineHeight="14">
+                                <Run Text="1. Download ALL 7 parts to SAME folder"/><LineBreak/>
+                                <Run Text="2. Right-click 'The Sims 4.zip' (Part 1)"/><LineBreak/>
+                                <Run Text="3. Select 'Extract Here'"/><LineBreak/>
+                                <Run Text="4. Wait for extraction"/><LineBreak/>
+                                <Run Text="5. Run the game!"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Supporter Tip Card -->
+                    <Border Background="#1E3A8A" BorderBrush="#3B82F6" BorderThickness="1" CornerRadius="8" Padding="10,8">
+                        <StackPanel>
+                            <TextBlock x:Name="TipTitle"
+                                       Text="💡 Did you know?"
+                                       FontSize="12"
+                                       FontWeight="Bold"
+                                       Foreground="#93C5FD"
+                                       Margin="0,0,0,6"/>
+
+                            <TextBlock TextWrapping="Wrap" FontSize="10" Foreground="#BFDBFE" LineHeight="14">
+                                <Run x:Name="TipText" Text="You can skip downloads and extract files directly to desktop!"/>
+                                <LineBreak/>
+                                <Hyperlink x:Name="SeeHowLink" 
+                                           Foreground="#60A5FA" 
+                                           TextDecorations="Underline"
+                                           Click="SeeHowLink_Click"
+                                           Cursor="Hand">
+                                    <Run x:Name="SeeHowText" Text="See how!"/>
+                                </Hyperlink>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Buttons -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="DownloadBtn"
+                        Grid.Column="0"
+                        Content="⬇️ Download All Parts"
+                        Height="40"
+                        Margin="0,0,6,0"
+                        Background="#22C55E"
+                        Foreground="White"
+                        FontSize="13"
+                        FontWeight="Bold"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="DownloadBtn_Click">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#22C55E"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="8"
+                                                Padding="12,8">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#16A34A"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Button x:Name="CancelBtn"
+                        Grid.Column="1"
+                        Content="Cancel"
+                        Width="100"
+                        Height="40"
+                        Background="#64748B"
+                        Foreground="White"
+                        FontSize="12"
+                        FontWeight="SemiBold"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="CancelBtn_Click">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#64748B"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="8"
+                                                Padding="12,8">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#475569"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

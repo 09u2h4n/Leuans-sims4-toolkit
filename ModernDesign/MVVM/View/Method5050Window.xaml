@@ -1,0 +1,118 @@
+﻿<Window x:Class="ModernDesign.MVVM.View.Method5050Window"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="50/50 Method"
+        Height="620" Width="750"
+        WindowStartupLocation="CenterOwner"
+        Background="#0F172A"
+        ResizeMode="NoResize">
+
+    <Window.Resources>
+        <Style x:Key="TitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#F9FAFB"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style x:Key="BodyStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#E5E7EB"/>
+            <Setter Property="FontFamily" Value="Bahnschrift Light"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock x:Name="TitleText" Text="🔎 50/50 Method" Style="{StaticResource TitleStyle}" FontSize="22"/>
+            <TextBlock x:Name="DescText" Text="Find problematic mods quickly by disabling half of your mods at a time" Style="{StaticResource BodyStyle}" FontSize="12" Margin="0,8,0,0"/>
+        </StackPanel>
+
+        <!-- CONTENT -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!-- Status -->
+                <Border x:Name="StatusBorder" Background="#064E3B" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                    <TextBlock x:Name="StatusText" Text="📁 Detecting Mods folder..." Style="{StaticResource BodyStyle}" Foreground="#6EE7B7" FontSize="12"/>
+                </Border>
+
+                <!-- Mod Count -->
+                <Border Background="#1E293B" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                    <TextBlock x:Name="ModCountText" Text="📊 Active mods: 0 | Disabled: 0" Style="{StaticResource BodyStyle}" FontSize="12"/>
+                </Border>
+
+                <!-- Iteration Counter -->
+                <Border Background="#6366F1" CornerRadius="10" Padding="12" Margin="0,0,0,15">
+                    <TextBlock x:Name="IterationText" Text="Current iteration: 1" Style="{StaticResource TitleStyle}" FontSize="13" Foreground="White" HorizontalAlignment="Center"/>
+                </Border>
+
+                <!-- What is 50/50 Method -->
+                <TextBlock x:Name="WhatIsText" Text="What is the 50/50 Method?" Style="{StaticResource TitleStyle}" FontSize="14" Margin="0,10,0,10"/>
+
+                <Border Background="#1E293B" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                    <TextBlock x:Name="ExplanationText" Text="It's an efficient technique to identify problematic mods..." Style="{StaticResource BodyStyle}" FontSize="11"/>
+                </Border>
+
+                <!-- Visual Guide -->
+                <TextBlock Text="📊 Visual Guide:" Style="{StaticResource TitleStyle}" FontSize="14" Margin="0,10,0,10"/>
+
+                <Border Background="#1E293B" CornerRadius="10" Padding="15" Margin="0,0,0,8">
+                    <StackPanel>
+                        <TextBlock Text="Iteration 1" Foreground="#22C55E" FontWeight="Bold" FontSize="12" FontFamily="Bahnschrift Light"/>
+                        <TextBlock Text="🟢🟢🟢🟢 🔴🔴🔴🔴  →  50% disabled" Style="{StaticResource BodyStyle}" FontSize="11" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="#1E293B" CornerRadius="10" Padding="15" Margin="0,0,0,8">
+                    <StackPanel>
+                        <TextBlock Text="Iteration 2" Foreground="#38BDF8" FontWeight="Bold" FontSize="12" FontFamily="Bahnschrift Light"/>
+                        <TextBlock Text="🟢🟢 🔴🔴  →  50% of remaining disabled" Style="{StaticResource BodyStyle}" FontSize="11" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="#1E293B" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock Text="Iteration 3" Foreground="#A78BFA" FontWeight="Bold" FontSize="12" FontFamily="Bahnschrift Light"/>
+                        <TextBlock Text="🟢 🔴  →  Found the problematic mod!" Style="{StaticResource BodyStyle}" FontSize="11" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Tips -->
+                <Border Background="#7C3AED" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock Text="💡 Tips:" Style="{StaticResource TitleStyle}" FontSize="12" Foreground="White"/>
+                        <TextBlock Text="• After each iteration, test your game" Style="{StaticResource BodyStyle}" FontSize="10" Foreground="#E9D5FF" Margin="0,5,0,2"/>
+                        <TextBlock Text="• If error persists → problem is in active mods, disable half again" Style="{StaticResource BodyStyle}" FontSize="10" Foreground="#E9D5FF" Margin="0,0,0,2"/>
+                        <TextBlock Text="• If error disappears → problem is in disabled mods, enable all and try again" Style="{StaticResource BodyStyle}" FontSize="10" Foreground="#E9D5FF"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Action Buttons -->
+                <StackPanel Margin="0,10,0,0">
+                    <Button x:Name="DisableHalfButton" Content="🔄 Disable 50% of Mods" Padding="16,12" Margin="0,0,0,10" Background="#F97316" Foreground="White" FontWeight="Bold" FontSize="14" BorderThickness="0" Cursor="Hand" Click="DisableHalfButton_Click" HorizontalAlignment="Stretch"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button x:Name="EnableAllButton" Content="✅ Enable All" Padding="12,10" Margin="0,0,5,0" Background="#22C55E" Foreground="#0F172A" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="EnableAllButton_Click" Grid.Column="0"/>
+                        <Button x:Name="ResetButton" Content="🔁 Reset" Padding="12,10" Margin="5,0,0,0" Background="#6366F1" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="ResetButton_Click" Grid.Column="1"/>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- FOOTER -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button x:Name="SelectFolderButton" Content="📁 Select Folder" Padding="12,6" Margin="0,0,8,0" Background="#6366F1" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="SelectFolderButton_Click"/>
+            <Button x:Name="CloseButton" Content="Close" Padding="12,6" Background="#374151" Foreground="White" BorderThickness="0" Cursor="Hand" Click="CloseButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
