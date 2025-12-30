@@ -1,7 +1,3 @@
-// The toolkit does not use this github file specifically, but it uses the exact same values, it uses an internal link to get them (see the sourcecode)
-// the internal link is: https://zeroauno.blob.core.windows.net/leuan/TheSims4/Offline/Updater/leuan_steam_database.json
-// and can be backed up by the source code.
-
 {
     "info": {
         "game": "The Sims 4",
