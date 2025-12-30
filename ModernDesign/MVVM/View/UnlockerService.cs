@@ -19,7 +19,7 @@ namespace ModernDesign.MVVM.View
         private static readonly string _unlockerFolder;
 
         // Unlocker package URL (.zip with setup + config + g_The Sims 4.ini)
-        private const string UnlockerPackageUrl = "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Unlocker.zip";
+        private const string UnlockerPackageUrl = "https://download1474.mediafire.com/rnmz6djhytpgIgY0HS1DObbXgJF-hzUiljCHgQMrO4vopfmi2d7gGYXK7mxtGXeh-VdXyqzBsPYfZs0eRjcUikpiGGh1VQEojtmOmyKF6S6nutsR8Lc6dlQJ7oc7vYQERz24EXWjlvQ9lC7sVKwhzol7bvNx2x6RjtCCD-aunFEA/2u3eivbmflyugj5/Unlocker.zip";
 
         // AppData folder structure
         private const string CommonDir = @"anadius\EA DLC Unlocker v2";
@@ -159,8 +159,8 @@ namespace ModernDesign.MVVM.View
                 FileName = batPath,
                 Arguments = "auto",
                 WorkingDirectory = _unlockerFolder,
-                UseShellExecute = true, // Required for .bat files to run properly
-                CreateNoWindow = false,
+                UseShellExecute = false,
+                CreateNoWindow = true,
                 WindowStyle = ProcessWindowStyle.Hidden
             };
 

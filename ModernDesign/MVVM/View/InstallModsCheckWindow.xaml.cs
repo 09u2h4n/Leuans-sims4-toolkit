@@ -176,7 +176,7 @@ namespace ModernDesign.MVVM.View
         {
             if (!string.IsNullOrEmpty(_modsFolderPath) && Directory.Exists(_modsFolderPath))
             {
-                try { Process.Start(new ProcessStartInfo { FileName = _modsFolderPath, UseShellExecute = true }); }
+                try { Process.Start(new ProcessStartInfo { FileName = "explorer.exe", Arguments = _modsFolderPath, UseShellExecute = false }); }
                 catch (Exception ex)
                 {
                     System.Windows.MessageBox.Show(LanguageManager.IsSpanish ? $"No se pudo abrir la carpeta:\n{ex.Message}" : $"Could not open folder:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);

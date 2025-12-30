@@ -27,10 +27,8 @@ namespace ModernDesign.MVVM.View
         public SemiAutoInstallerWindow()
         {
             InitializeComponent();
-
             // Temp folder for extraction
             _tempExtractionFolder = Path.Combine(Path.GetTempPath(), "LeuansSims4Toolkit_SemiAuto");
-
             if (!Directory.Exists(_tempExtractionFolder))
             {
                 Directory.CreateDirectory(_tempExtractionFolder);
@@ -44,9 +42,9 @@ namespace ModernDesign.MVVM.View
                     // If we can't mark it as hidden, it's not critical
                 }
             }
-
             Loaded += async (s, e) =>
             {
+
                 await AutoDetectSimsPath();
                 ApplyLanguage();
             };

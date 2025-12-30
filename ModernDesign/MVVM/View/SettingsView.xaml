@@ -314,7 +314,7 @@
                                            Style="{StaticResource BodyTextBlock}"
                                            FontSize="12"/>
                                 <TextBlock x:Name="CurrentVersion"
-                                           Text="1.3.0"
+                                           Text="1.3.5"
                                            Foreground="#93C5FD"
                                            FontFamily="Bahnschrift Light"
                                            FontWeight="SemiBold"

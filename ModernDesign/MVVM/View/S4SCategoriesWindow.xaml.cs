@@ -214,10 +214,10 @@ namespace ModernDesign.MVVM.View
                 // Abrir carpeta
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = targetFolder,
-                    UseShellExecute = true
+                    FileName = "explorer.exe",
+                    Arguments = targetFolder,
+                    UseShellExecute = false
                 });
-
                 MessageBox.Show(
                     es ? $"¡Herramientas descargadas y extraídas exitosamente!\n\nUbicación: {targetFolder}"
                        : $"Tools downloaded and extracted successfully!\n\nLocation: {targetFolder}",

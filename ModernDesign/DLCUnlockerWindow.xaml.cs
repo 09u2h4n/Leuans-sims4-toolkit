@@ -88,7 +88,7 @@ namespace ModernDesign.MVVM.View
                 using (var httpClient = new HttpClient())
                 {
                     string remoteContent = await httpClient.GetStringAsync(
-                        "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Utility/Updated%20-%20g_The%20Sims%204.ini");
+                        "https://zeroauno.blob.core.windows.net/leuan/Public/links.ini?sp=r&st=2025-12-29T23:45:43Z&se=2026-02-28T08:00:43Z&spr=https&sv=2024-11-04&sr=b&sig=8BPnZQivztM%2FNt88BVh%2F1ZMKlhP4u8HzWbCfXXCZcy0%3D");
 
                     if (localContent.Trim() == remoteContent.Trim())
                         return;
@@ -327,7 +327,12 @@ namespace ModernDesign.MVVM.View
 
         private void OtherOS_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
-            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "explorer.exe",
+                Arguments = e.Uri.AbsoluteUri,
+                UseShellExecute = false
+            });
             e.Handled = true;
         }
 

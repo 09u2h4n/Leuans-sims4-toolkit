@@ -307,40 +307,8 @@
                     </Border>
 
                     <!-- Install Base Game Card -->
-                    <Border x:Name="InstallBaseGameCard" Width="195" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="InstallBaseGameCard_Click">
-                        <Grid Margin="10">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Border Grid.Row="0" Width="36" Height="36" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,8"
-                                Background="#92400E" BorderBrush="#FBBF24" BorderThickness="1">
-                                <TextBlock Text="💿" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
-                                <TextBlock x:Name="InstallBaseGameTitle" Text="Install Base Game" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
-                                <TextBlock x:Name="InstallBaseGameDesc" Text="Download and install The Sims 4" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
 
                     <!-- Repair Your Game Card -->
-                    <Border x:Name="RepairGameCard" Width="195" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="RepairGameCard_Click">
-                        <Grid Margin="10">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Border Grid.Row="0" Width="36" Height="36" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,8"
-                                Background="#92400E" BorderBrush="#FBBF24" BorderThickness="1">
-                                <TextBlock Text="🔧" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
-                                <TextBlock x:Name="RepairGameTitle" Text="Repair Your Game" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
-                                <TextBlock x:Name="RepairGameDesc" Text="Fix corrupted or missing files" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
 
                     <!-- Language Selector Card -->
                     <Border x:Name="LanguageSelectorCard" Width="195" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="LanguageSelector_Click">
@@ -361,22 +329,6 @@
                     </Border>
 
                     <!-- Cracking Tool Card -->
-                    <Border x:Name="CrackingToolCard" Width="195" Height="105" CornerRadius="8" Margin="4" Style="{StaticResource GuideCard}" MouseLeftButtonUp="CrackingToolCard_Click">
-                        <Grid Margin="10">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Border Grid.Row="0" Width="36" Height="36" CornerRadius="8" HorizontalAlignment="Left" Margin="0,0,0,8"
-                                Background="#92400E" BorderBrush="#FBBF24" BorderThickness="1">
-                                <TextBlock Text="🔓" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <StackPanel Grid.Row="1" VerticalAlignment="Top">
-                                <TextBlock x:Name="CrackingToolTitle1" Text="Cracking Tool" Style="{StaticResource TitleTextBlock}" FontSize="13"/>
-                                <TextBlock x:Name="CrackingToolDesc1" Text="Make a legit copy a cracked version" Style="{StaticResource BodyTextBlock}" FontSize="10" Margin="0,3,0,0"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
                 </UniformGrid>
 
                 <!-- SECTION: MANAGERS -->

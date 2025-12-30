@@ -27,7 +27,7 @@ namespace ModernDesign.MVVM.View
         {
             try
             {
-                string url = "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Utility/links.txt";
+                string url = "https://zeroauno.blob.core.windows.net/leuan/Public/links.txt?sp=r&st=2025-12-29T23:45:43Z&se=2026-02-28T08:00:43Z&spr=https&sv=2024-11-04&sr=b&sig=8BPnZQivztM%2FNt88BVh%2F1ZMKlhP4u8HzWbCfXXCZcy0%3D";
                 string content = await _httpClient.GetStringAsync(url);
 
                 // Parsear el contenido
@@ -154,8 +154,9 @@ namespace ModernDesign.MVVM.View
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = _legitInstallUrl, // ✅ USA EL LINK DINÁMICO
-                    UseShellExecute = true
+                    FileName = "explorer.exe",
+                    Arguments = _legitInstallUrl, //  USA EL LINK DINÁMICO
+                    UseShellExecute = false
                 });
             }
             catch (Exception ex)

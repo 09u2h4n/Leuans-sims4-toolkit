@@ -154,7 +154,7 @@ namespace ModernDesign.MVVM.View
                 {
                     FileName = _languageExePath,
                     WorkingDirectory = _languageSelectorPath,
-                    UseShellExecute = true
+                    UseShellExecute = false
                 });
             }
             catch (Exception ex)
@@ -189,7 +189,7 @@ namespace ModernDesign.MVVM.View
                 ChangeLanguageBtn.IsEnabled = false;
 
                 // URL del Language.exe
-                string downloadUrl = "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Utility/Language.exe";
+                string downloadUrl = "https://download1078.mediafire.com/0sxcwhinr0bggwJdM7F-nXEEMTX1Nrw56ZHdRGEv3YpsGSFdUU44xY5avveSSXzXNcPi1EpM3RsUdNfsbNTRNidwQYSoylhrAKIL5oOxYSZQpAVP0jWgbKKeCCdwfLvFKpN--XOlJt4X5X_sE6l2zQ7_oFpm0AMF4JnnbaLfPyzI/0skjnm0m5dx3dtf/Language.exe";
 
                 // Descargar
                 using (var response = await _httpClient.GetAsync(downloadUrl))
@@ -217,7 +217,7 @@ namespace ModernDesign.MVVM.View
                     {
                         FileName = _languageExePath,
                         WorkingDirectory = _languageSelectorPath,
-                        UseShellExecute = true
+                        UseShellExecute = false
                     });
                 }
             }

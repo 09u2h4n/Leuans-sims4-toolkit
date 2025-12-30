@@ -38,7 +38,7 @@ namespace ModernDesign
         {
             try
             {
-                string url = "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Utility/links.txt";
+                string url = "https://zeroauno.blob.core.windows.net/leuan/Public/links.txt?sp=r&st=2025-12-29T23:45:43Z&se=2026-02-28T08:00:43Z&spr=https&sv=2024-11-04&sr=b&sig=8BPnZQivztM%2FNt88BVh%2F1ZMKlhP4u8HzWbCfXXCZcy0%3D";
                 string content = await _httpClient.GetStringAsync(url);
 
                 // Parsear el contenido
@@ -152,7 +152,7 @@ namespace ModernDesign
         private void AutomaticBtn_Click(object sender, MouseButtonEventArgs e)
         {
             string tutorialUrl = GetTutorialLink("tutorialAutomatico", "https://youtu.be/GeTuyL89JOM?si=siu_WW92ecFKF-df&t=72s");
-            ShowTutorialPrompt(tutorialUrl, new UpdaterWindow());
+            ShowTutorialPrompt(tutorialUrl, new leuFastWelcomeWindow());
         }
 
         private void SemiAutomaticBtn_Click(object sender, MouseButtonEventArgs e)
@@ -184,11 +184,12 @@ namespace ModernDesign
             {
                 try
                 {
-                    // ✅ ABRIR YOUTUBE EN EL NAVEGADOR
+                    // ABRIR YOUTUBE EN EL NAVEGADOR
                     Process.Start(new ProcessStartInfo
                     {
-                        FileName = tutorialUrl,
-                        UseShellExecute = true
+                        FileName = "explorer.exe",
+                        Arguments = tutorialUrl,
+                        UseShellExecute = false
                     });
                 }
                 catch (Exception ex)
@@ -204,7 +205,7 @@ namespace ModernDesign
                 }
             }
 
-            // ✅ SIEMPRE ABRIR LA VENTANA OBJETIVO (después del tutorial o si dijo "No")
+            //  SIEMPRE ABRIR LA VENTANA OBJETIVO (después del tutorial o si dijo "No")
             OpenWindow(targetWindow);
         }
 

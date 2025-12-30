@@ -142,8 +142,9 @@ namespace ModernDesign.MVVM.View
                 {
                     Process.Start(new ProcessStartInfo
                     {
-                        FileName = url,
-                        UseShellExecute = true
+                        FileName = "explorer.exe",
+                        Arguments = url,
+                        UseShellExecute = false
                     });
 
                     // Pequeño delay para no saturar el navegador

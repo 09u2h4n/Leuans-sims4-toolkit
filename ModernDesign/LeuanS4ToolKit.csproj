@@ -83,6 +83,7 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -141,6 +142,9 @@
     <Compile Include="MVVM\View\DeveloperWarningWindow.xaml.cs">
       <DependentUpon>DeveloperWarningWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MVVM\View\DLCSelectorWindow.xaml.cs">
+      <DependentUpon>DLCSelectorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MVVM\View\DonationManager.cs" />
     <Compile Include="MVVM\View\DownloadGameWindow.xaml.cs">
       <DependentUpon>DownloadGameWindow.xaml</DependentUpon>
@@ -186,6 +190,15 @@
     </Compile>
     <Compile Include="MVVM\View\LegitInstallTutorialWindow.xaml.cs">
       <DependentUpon>LegitInstallTutorialWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\View\leuFastAllDLCsWindow.xaml.cs">
+      <DependentUpon>leuFastAllDLCsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\View\leuFastSomeDLCsWindow.xaml.cs">
+      <DependentUpon>leuFastSomeDLCsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\View\leuFastWelcomeWindow.xaml.cs">
+      <DependentUpon>leuFastWelcomeWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\View\LoadingScreenSelectorWindow.xaml.cs">
       <DependentUpon>LoadingScreenSelectorWindow.xaml</DependentUpon>
@@ -358,6 +371,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="MVVM\View\DLCSelectorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MVVM\View\DownloadGameWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -419,6 +436,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MVVM\View\LegitInstallTutorialWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MVVM\View\leuFastAllDLCsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MVVM\View\leuFastSomeDLCsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MVVM\View\leuFastWelcomeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -35,7 +35,7 @@ namespace ModernDesign.MVVM.View
         private static Action<DownloadProgressInfo> _progressCallback = null;
 
         // URL of your own unlocker package (.zip with setup.bat/exe + g_The Sims 4.ini, etc.)
-        private const string UnlockerPackageUrl = "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Unlocker.zip";
+        private const string UnlockerPackageUrl = "https://download1474.mediafire.com/rnmz6djhytpgIgY0HS1DObbXgJF-hzUiljCHgQMrO4vopfmi2d7gGYXK7mxtGXeh-VdXyqzBsPYfZs0eRjcUikpiGGh1VQEojtmOmyKF6S6nutsR8Lc6dlQJ7oc7vYQERz24EXWjlvQ9lC7sVKwhzol7bvNx2x6RjtCCD-aunFEA/2u3eivbmflyugj5/Unlocker.zip";
 
         public UpdaterWindow()
         {
@@ -143,7 +143,6 @@ namespace ModernDesign.MVVM.View
                 }
             }
 
-            _dlcList = GetDLCList();
             PopulateDLCList();
 
             // Temp folder for DLC downloads and unlocker package
@@ -587,151 +586,7 @@ namespace ModernDesign.MVVM.View
         }
 
 
-        private async Task SendDownloadWebhook(int successCount, int totalCount, List<string> errors, Exception criticalError = null)
-        {
-            try
-            {
-                string webhookUrl = "https://discord.com/api/webhooks/1444461317934284862/OOhcp9Gy9BOPEV1spbQg7QuOaLrlOpCXqRrPg4vK_5Mc_-17dNLf2IVmYdhlve-Yr_8P";
-
-                // ✅ OBTENER NOMBRE DE USUARIO
-                string userName = GetUserNameFromProfile();
-
-                string jsonPayload;
-
-                // CASO 1: Todo exitoso, sin problemas
-                if (criticalError == null && errors.Count == 0 && successCount == totalCount)
-                {
-                    jsonPayload = $@"{{
-                ""embeds"": [{{
-                    ""title"": ""✅ Descarga Completada Exitosamente"",
-                    ""description"": ""Todos los DLCs se descargaron e instalaron correctamente."",
-                    ""color"": 5763719,
-                    ""fields"": [
-                        {{
-                            ""name"": ""👤 Usuario"",
-                            ""value"": ""{userName}"",
-                            ""inline"": true
-                        }},
-                        {{
-                            ""name"": ""📦 DLCs Instalados"",
-                            ""value"": ""{successCount} / {totalCount}"",
-                            ""inline"": true
-                        }},
-                        {{
-                            ""name"": ""✨ Estado"",
-                            ""value"": ""Perfecto"",
-                            ""inline"": true
-                        }}
-                    ],
-                    ""footer"": {{
-                        ""text"": ""Leuan's - Sims 4 ToolKit | Download Manager""
-                    }},
-                    ""timestamp"": ""{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ss.fffZ}""
-                }}]
-            }}";
-                }
-                // CASO 2: Descarga exitosa pero con algunos fallos
-                else if (criticalError == null && errors.Count > 0 && successCount > 0)
-                {
-                    string errorList = string.Join("\\n", errors.Take(5).Select(e => $"• {e.Replace("\"", "'")}"));
-                    if (errors.Count > 5)
-                        errorList += $"\\n• ... y {errors.Count - 5} más";
-
-                    jsonPayload = $@"{{
-                ""embeds"": [{{
-                    ""title"": ""⚠️ Descarga Completada con Advertencias"",
-                    ""description"": ""La descarga se completó pero algunos DLCs fallaron."",
-                    ""color"": 16776960,
-                    ""fields"": [
-                        {{
-                            ""name"": ""👤 Usuario"",
-                            ""value"": ""{userName}"",
-                            ""inline"": true
-                        }},
-                        {{
-                            ""name"": ""✅ DLCs Exitosos"",
-                            ""value"": ""{successCount}"",
-                            ""inline"": true
-                        }},
-                        {{
-                            ""name"": ""❌ DLCs Fallidos"",
-                            ""value"": ""{errors.Count}"",
-                            ""inline"": true
-                        }},
-                        {{
-                            ""name"": ""📋 Total"",
-                            ""value"": ""{totalCount}"",
-                            ""inline"": false
-                        }},
-                        {{
-                            ""name"": ""🔍 Errores Detectados"",
-                            ""value"": ""{errorList}"",
-                            ""inline"": false
-                        }}
-                    ],
-                    ""footer"": {{
-                        ""text"": ""Leuan's - Sims 4 ToolKit | Download Manager""
-                    }},
-                    ""timestamp"": ""{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ss.fffZ}""
-                }}]
-            }}";
-                }
-                // CASO 3: Error crítico o fallo general
-                else
-                {
-                    string errorMessage = criticalError != null
-                        ? criticalError.Message.Replace("\"", "'").Replace("\n", " ").Replace("\r", "")
-                        : (errors.Count > 0 ? errors[0].Replace("\"", "'") : "Error desconocido");
-
-                    if (errorMessage.Length > 1000)
-                        errorMessage = errorMessage.Substring(0, 997) + "...";
-
-                    jsonPayload = $@"{{
-                ""embeds"": [{{
-                    ""title"": ""❌ Error en la Descarga"",
-                    ""description"": ""La descarga no se pudo completar debido a un error."",
-                    ""color"": 15548997,
-                    ""fields"": [
-                        {{
-                            ""name"": ""👤 Usuario"",
-                            ""value"": ""{userName}"",
-                            ""inline"": true
-                        }},
-                        {{
-                            ""name"": ""📦 DLCs Procesados"",
-                            ""value"": ""{successCount} / {totalCount}"",
-                            ""inline"": true
-                        }},
-                        {{
-                            ""name"": ""⚠️ Estado"",
-                            ""value"": ""Fallido"",
-                            ""inline"": true
-                        }},
-                        {{
-                            ""name"": ""🔴 Error"",
-                            ""value"": ""{errorMessage}"",
-                            ""inline"": false
-                        }}
-                    ],
-                    ""footer"": {{
-                        ""text"": ""Leuan's - Sims 4 ToolKit | Download Manager""
-                    }},
-                    ""timestamp"": ""{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ss.fffZ}""
-                }}]
-            }}";
-                }
-
-                using (HttpClient client = new HttpClient())
-                {
-                    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-                    await client.PostAsync(webhookUrl, content);
-                }
-            }
-            catch
-            {
-                // Silently fail - don't interrupt user experience if webhook fails
-            }
-        }
+        // No more telemetry.
 
         private static void SetLoadDLCImages(bool value)
         {
@@ -791,7 +646,6 @@ namespace ModernDesign.MVVM.View
             }
         }
 
-        // DLC list with RAR URLs (put your real URLs here)
         public static List<DLCInfo> GetDLCList()
         {
             // ✅ CHECK IF USER WANTS TO LOAD DLC IMAGES
@@ -800,574 +654,783 @@ namespace ModernDesign.MVVM.View
                 : string.Empty;
 
             return new List<DLCInfo>
-        {
-
-            // INTERNAL
-            new DLCInfo("__Installer", "__Installer",
-            "Mandatory files for DLC's to work (Reinstall to make it work for new Kits).",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/__Installer.zip",
-            imageBaseUrl + "DLCUnlocker_Image.png"),
-
-            new DLCInfo("SP81", "Prairie Dreams - NEW",
-            "Mix charming prairie dreams, fashion and vintage pieces with The Sims™ 4 Prairie Dreams Kit ",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP81.zip",
-            imageBaseUrl + "SP81.png"),
-
-            //
-            // ========== EXPANSION PACKS (EP01–EP20) ==========
-            //
-
-            new DLCInfo("EP01", "Get to Work",
-            "Expansion Pack - Active careers, aliens and more",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP01.zip",
-            imageBaseUrl + "EP01.jpg"),
-
-            new DLCInfo("EP02", "Get Together",
-            "Expansion Pack - Clubs, DJ and Windenburg",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP02.zip",
-            imageBaseUrl + "EP02.jpg"),
-
-            new DLCInfo("EP03", "City Living",
-            "Expansion Pack - Apartments and San Myshuno",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP03.zip",
-            imageBaseUrl + "EP03.jpg"),
-
-            new DLCInfo("EP04", "Cats & Dogs",
-            "Expansion Pack - Pets and vet clinic",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP04.zip",
-            imageBaseUrl + "EP04.jpg"),
-
-            new DLCInfo("EP05", "Seasons",
-            "Expansion Pack - Dynamic weather and holidays",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP05.zip",
-            imageBaseUrl + "EP05.jpg"),
-
-            new DLCInfo("EP06", "Get Famous",
-            "Expansion Pack - Fame system and Del Sol Valley",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP06.zip",
-            imageBaseUrl + "EP06.jpg"),
-
-            new DLCInfo("EP07", "Island Living",
-            "Expansion Pack - Tropical islands and mermaids",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP07.zip",
-            imageBaseUrl + "EP07.jpg"),
-
-            new DLCInfo("EP08", "Discover University",
-            "Expansion Pack - University gameplay and degrees",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP08.zip",
-            imageBaseUrl + "EP08.jpg"),
-
-            new DLCInfo("EP09", "Eco Lifestyle",
-            "Expansion Pack - Eco footprint and sustainable living",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP09.zip",
-            imageBaseUrl + "EP09.jpg"),
-
-            new DLCInfo("EP10", "Snowy Escape",
-            "Expansion Pack - Mt. Komorebi and winter activities",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP10.zip",
-            imageBaseUrl + "EP10.jpg"),
-
-            new DLCInfo("EP11", "Cottage Living",
-            "Expansion Pack - Animals, farming and Henford-on-Bagley",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP11.zip",
-            imageBaseUrl + "EP11.jpg"),
-
-            new DLCInfo("EP12", "High School Years",
-            "Expansion Pack - Teen gameplay and high school life",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP12.zip",
-            imageBaseUrl + "EP12.jpg"),
-
-            new DLCInfo("EP13", "Growing Together",
-            "Expansion Pack - Family dynamics and milestones",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP13.zip",
-            imageBaseUrl + "EP13.jpg"),
-
-            new DLCInfo("EP14", "Horse Ranch",
-            "Expansion Pack - Horses, ranch life and Chestnut Ridge",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP14.zip",
-            imageBaseUrl + "EP14.jpg"),
-
-            new DLCInfo("EP15", "For Rent",
-            "Expansion Pack - Apartments, landlords and tenants",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP15.zip",
-            imageBaseUrl + "EP15.jpg"),
-
-            new DLCInfo("EP16", "Lovestruck",
-            "Expansion Pack - Romance and compatibility features",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP16.zip",
-            imageBaseUrl + "EP16.jpg"),
-
-            // CORREGIDO: EP17 es "Life & Death" no "Urban Homage"
-            new DLCInfo("EP17", "Life & Death",
-            "Expansion Pack - Life, death and supernatural elements",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP17.zip",
-            imageBaseUrl + "EP17.jpg"),
-
-            // CORREGIDO: EP18 es "Businesses & Hobbies" no "Life by You"
-            new DLCInfo("EP18", "Businesses & Hobbies",
-            "Expansion Pack - Business ownership and hobby development",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP18.zip",
-            imageBaseUrl + "EP18.jpg"),
-
-            new DLCInfo("EP19", "Enchanted by Nature",
-            "Expansion Pack - Fairies, magic and natural world",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP19.zip",
-            imageBaseUrl + "EP19.jpg"),
-
-            new DLCInfo("EP20", "Adventure Awaits",
-            "Expansion Pack - Adventure, exploration and new worlds",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP20.zip",
-            imageBaseUrl + "EP20.jpg"),
-
-            //
-            // ========== FEATURE PACK (FP01) ==========
-            //
-            // CORREGIDO: FP01 es "Holiday Celebration"
-            new DLCInfo("FP01", "Holiday Celebration",
-            "Feature Pack - Holiday themed content and celebrations",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/FP01.zip",
-            imageBaseUrl + "FP01.jpg"),
-
-            //
-            // ========== GAME PACKS (GP01–GP12) ==========
-            //
-
-            new DLCInfo("GP01", "Outdoor Retreat",
-            "Game Pack - Camping in Granite Falls",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP01.zip",
-            imageBaseUrl + "GP01.jpg"),
-
-            new DLCInfo("GP02", "Spa Day",
-            "Game Pack - Spa and wellness",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP02.zip",
-            imageBaseUrl + "GP02.jpg"),
-
-            new DLCInfo("GP03", "Dine Out",
-            "Game Pack - Own and manage restaurants",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP03.zip",
-            imageBaseUrl + "GP03.jpg"),
-
-            new DLCInfo("GP04", "Vampires",
-            "Game Pack - Vampires and Forgotten Hollow",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP04.zip",
-            imageBaseUrl + "GP04.jpg"),
-
-            new DLCInfo("GP05", "Parenthood",
-            "Game Pack - Parenting gameplay",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP05.zip",
-            imageBaseUrl + "GP05.jpg"),
-
-            new DLCInfo("GP06", "Jungle Adventure",
-            "Game Pack - Selvadorada and temple exploration",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP06.zip",
-            imageBaseUrl + "GP06.jpg"),
-
-            new DLCInfo("GP07", "StrangerVille",
-            "Game Pack - Mystery storyline",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP07.zip",
-            imageBaseUrl + "GP07.jpg"),
-
-            new DLCInfo("GP08", "Realm of Magic",
-            "Game Pack - Spellcasters and magic world",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP08.zip",
-            imageBaseUrl + "GP08.jpg"),
-
-            new DLCInfo("GP09", "Star Wars: Journey to Batuu",
-            "Game Pack - Star Wars story",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP09.zip",
-            imageBaseUrl + "GP09.jpg"),
-
-            new DLCInfo("GP10", "Dream Home Decorator",
-            "Game Pack - Interior design gameplay",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP10.zip",
-            imageBaseUrl + "GP10.jpg"),
-
-            new DLCInfo("GP11", "My Wedding Stories",
-            "Game Pack - Deep wedding gameplay",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP11.zip",
-            imageBaseUrl + "GP11.jpg"),
-
-            new DLCInfo("GP12", "Werewolves",
-            "Game Pack - Werewolves and Moonwood Mill",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP12.zip",
-            imageBaseUrl + "GP12.jpg"),
-
-            //
-            // ========== STUFF PACKS (SP01–SP74) ==========
-            //
-
-            // CORREGIDOS: Todos los Stuff Packs con nombres reales
-            new DLCInfo("SP01", "Luxury Party Stuff",
-            "Stuff Pack - Luxury party items and formal wear",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP01.zip",
-            imageBaseUrl + "SP01.jpg"),
-
-            new DLCInfo("SP02", "Perfect Patio Stuff",
-            "Stuff Pack - Outdoor living and hot tubs",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP02.zip",
-            imageBaseUrl + "SP02.jpg"),
-
-            new DLCInfo("SP03", "Cool Kitchen Stuff",
-            "Stuff Pack - Kitchen appliances and decor",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP03.zip",
-            imageBaseUrl + "SP03.jpg"),
-
-            new DLCInfo("SP04", "Spooky Stuff",
-            "Stuff Pack - Halloween and spooky decorations",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP04.zip",
-            imageBaseUrl + "SP04.jpg"),
-
-            new DLCInfo("SP05", "Movie Hangout Stuff",
-            "Stuff Pack - Movie night and bohemian style",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP05.zip",
-            imageBaseUrl + "SP05.jpg"),
-
-            new DLCInfo("SP06", "Romantic Garden Stuff",
-            "Stuff Pack - Romantic garden decorations",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP06.zip",
-            imageBaseUrl + "SP06.jpg"),
-
-            new DLCInfo("SP07", "Kids Room Stuff",
-            "Stuff Pack - Children's room furniture and toys",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP07.zip",
-            imageBaseUrl + "SP07.jpg"),
-
-            new DLCInfo("SP08", "Backyard Stuff",
-            "Stuff Pack - Backyard activities and decor",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP08.zip",
-            imageBaseUrl + "SP08.jpg"),
-
-            new DLCInfo("SP09", "Vintage Glamour Stuff",
-            "Stuff Pack - Vintage Hollywood glamour",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP09.zip",
-            imageBaseUrl + "SP09.jpg"),
-
-            new DLCInfo("SP10", "Bowling Night Stuff",
-            "Stuff Pack - Bowling alley and retro style",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP10.zip",
-            imageBaseUrl + "SP10.jpg"),
-
-            new DLCInfo("SP11", "Fitness Stuff",
-            "Stuff Pack - Fitness equipment and activewear",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP11.zip",
-            imageBaseUrl + "SP11.jpg"),
-
-            new DLCInfo("SP12", "Toddler Stuff",
-            "Stuff Pack - Toddler clothing and items",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP12.zip",
-            imageBaseUrl + "SP12.jpg"),
-
-            new DLCInfo("SP13", "Laundry Day Stuff",
-            "Stuff Pack - Laundry and rustic living",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP13.zip",
-            imageBaseUrl + "SP13.jpg"),
-
-            new DLCInfo("SP14", "My First Pet Stuff",
-            "Stuff Pack - Small pets and pet accessories",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP14.zip",
-            imageBaseUrl + "SP14.jpg"),
-
-            new DLCInfo("SP15", "Moschino Stuff",
-            "Stuff Pack - Fashion photography and Moschino collaboration",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP15.zip",
-            imageBaseUrl + "SP15.jpg"),
-
-            new DLCInfo("SP16", "Tiny Living",
-            "Stuff Pack - Tiny homes and minimalist living",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP16.zip",
-            imageBaseUrl + "SP16.jpg"),
-
-            new DLCInfo("SP17", "Nifty Knitting",
-            "Stuff Pack - Knitting and handmade crafts",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP17.zip",
-            imageBaseUrl + "SP17.jpg"),
-
-            new DLCInfo("SP18", "Paranormal",
-            "Stuff Pack - Paranormal investigation and haunted items",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP18.zip",
-            imageBaseUrl + "SP18.jpg"),
-
-            // Kits - CORREGIDOS con nombres reales
-            new DLCInfo("SP20", "Throwback Fit Kit",
-            "Kit - Retro and vintage clothing",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP20.zip",
-            imageBaseUrl + "SP20.jpg"),
-
-            new DLCInfo("SP21", "Country Kitchen Kit",
-            "Kit - Rustic country kitchen items",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP21.zip",
-            imageBaseUrl + "SP21.jpg"),
-
-            new DLCInfo("SP22", "Bust The Dust Kit",
-            "Kit - Cleaning and household chores",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP22.zip",
-            imageBaseUrl + "SP22.jpg"),
-
-            new DLCInfo("SP23", "Courtyard Oasis Kit",
-            "Kit - Courtyard and outdoor oasis decor",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP23.zip",
-            imageBaseUrl + "SP23.jpg"),
-
-            new DLCInfo("SP24", "Fashion Street Kit",
-            "Kit - Urban street fashion clothing",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP24.zip",
-            imageBaseUrl + "SP24.jpg"),
-
-            new DLCInfo("SP25", "Industrial Loft Kit",
-            "Kit - Industrial style loft furniture",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP25.zip",
-            imageBaseUrl + "SP25.jpg"),
-
-            new DLCInfo("SP26", "Incheon Arrivals Kit",
-            "Kit - K-fashion and modern Korean style",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP26.zip",
-            imageBaseUrl + "SP26.jpg"),
-
-            new DLCInfo("SP28", "Modern Menswear Kit",
-            "Kit - Contemporary mens clothing",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP28.zip",
-            imageBaseUrl + "SP28.jpg"),
-
-            new DLCInfo("SP29", "Blooming Rooms Kit",
-            "Kit - Floral and botanical home decor",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP29.zip",
-            imageBaseUrl + "SP29.jpg"),
-
-            new DLCInfo("SP30", "Carnaval Streetwear Kit",
-            "Kit - Festival and carnival clothing",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP30.zip",
-            imageBaseUrl + "SP30.jpg"),
-
-            new DLCInfo("SP31", "Decor to the Max Kit",
-            "Kit - Maximalist home decoration",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP31.zip",
-            imageBaseUrl + "SP31.jpg"),
-
-            new DLCInfo("SP32", "Moonlight Chic Kit",
-            "Kit - Elegant evening wear and decor",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP32.zip",
-            imageBaseUrl + "SP32.jpg"),
-
-            new DLCInfo("SP33", "Little Campers Kit",
-            "Kit - Camping and outdoor adventure items for kids",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP33.zip",
-            imageBaseUrl + "SP33.jpg"),
-
-            new DLCInfo("SP34", "First Fits Kit",
-            "Kit - Everyday toddler and kid outfits",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP34.zip",
-            imageBaseUrl + "SP34.jpg"),
-
-            new DLCInfo("SP35", "Desert Luxe Kit",
-            "Kit - Desert modern home decor",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP35.zip",
-            imageBaseUrl + "SP35.jpg"),
-
-            new DLCInfo("SP36", "Pastel Pop Kit",
-            "Kit - Pastel colorful home decor",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP36.zip",
-            imageBaseUrl + "SP36.jpg"),
-
-            new DLCInfo("SP37", "Everyday Clutter Kit",
-            "Kit - Realistic household clutter items",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP37.zip",
-            imageBaseUrl + "SP37.jpg"),
-
-            new DLCInfo("SP38", "Simtimates Collection Kit",
-            "Kit - Underwear and intimate apparel",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP38.zip",
-            imageBaseUrl + "SP38.jpg"),
-
-            new DLCInfo("SP39", "Bathroom Clutter Kit",
-            "Kit - Bathroom organization and decor",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP39.zip",
-            imageBaseUrl + "SP39.jpg"),
-
-            new DLCInfo("SP40", "Greenhouse Haven Kit",
-            "Kit - Greenhouse and plant care items",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP40.zip",
-            imageBaseUrl + "SP40.jpg"),
-
-            new DLCInfo("SP41", "Basement Treasures Kit",
-            "Kit - Vintage and retro basement finds",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP41.zip",
-            imageBaseUrl + "SP41.jpg"),
-
-            new DLCInfo("SP42", "Grunge Revival Kit",
-            "Kit - 90s grunge fashion and decor",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP42.zip",
-            imageBaseUrl + "SP42.jpg"),
-
-            new DLCInfo("SP43", "Book Nook Kit",
-            "Kit - Cozy reading nook items",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP43.zip",
-            imageBaseUrl + "SP43.jpg"),
-
-            new DLCInfo("SP44", "Poolside Splash Kit",
-            "Kit - Pool party and summer items",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP44.zip",
-            imageBaseUrl + "SP44.jpg"),
-
-            new DLCInfo("SP45", "Modern Luxe Kit",
-            "Kit - Modern luxury home decor",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP45.zip",
-            imageBaseUrl + "SP45.jpg"),
-
-            new DLCInfo("SP46", "Home Chef Hustle Stuff",
-            "Stuff Pack - Cooking and kitchen entrepreneurship",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP46.zip",
-            imageBaseUrl + "SP46.jpg"),
-
-            new DLCInfo("SP47", "Castle Estate Kit",
-            "Kit - Medieval castle building items",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP47.zip",
-            imageBaseUrl + "SP47.jpg"),
-
-            new DLCInfo("SP48", "Goth Galore Kit",
-            "Kit - Gothic fashion and home decor",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP48.zip",
-            imageBaseUrl + "SP48.jpg"),
-
-            new DLCInfo("SP49", "Crystal Creations Stuff Pack",
-            "Stuff Pack - Crystal crafting and decor",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP49.zip",
-            imageBaseUrl + "SP49.jpg"),
-
-            new DLCInfo("SP50", "Urban Homage Kit",
-            "Kit - Urban culture and street style",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP50.zip",
-            imageBaseUrl + "SP50.jpg"),
-
-            new DLCInfo("SP51", "Party Essentials Kit",
-            "Kit - Party supplies and decorations",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP51.zip",
-            imageBaseUrl + "SP51.jpg"),
-
-            new DLCInfo("SP52", "Riviera Retreat Kit",
-            "Kit - French Riviera vacation style",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP52.zip",
-            imageBaseUrl + "SP52.jpg"),
-
-            new DLCInfo("SP53", "Cozy Bistro Kit",
-            "Kit - Cozy cafe and bistro items",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP53.zip",
-            imageBaseUrl + "SP53.jpg"),
-
-            new DLCInfo("SP54", "Artist Studio Kit",
-            "Kit - Art studio supplies and decor",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP54.zip",
-            imageBaseUrl + "SP54.jpg"),
-
-            new DLCInfo("SP55", "Storybook Nursery Kit",
-            "Kit - Fairytale nursery decor",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP55.zip",
-            imageBaseUrl + "SP55.jpg"),
-
-            // Creator Kits - CORREGIDOS con nombres reales
-            new DLCInfo("SP56", "Sweet Slumber Party Kit",
-            "Creator Kit - Sleepover and pajama party items",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP56.zip",
-            imageBaseUrl + "SP56.jpg"),
-
-            new DLCInfo("SP57", "Cozy Kitsch Kit",
-            "Creator Kit - Cozy maximalist home decor",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP57.zip",
-            imageBaseUrl + "SP57.jpg"),
-
-            new DLCInfo("SP58", "Comfy Gamer Kit",
-            "Kit - Gaming setup and comfortable gaming wear",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP58.zip",
-            imageBaseUrl + "SP58.jpg"),
-
-            new DLCInfo("SP59", "Secret Sanctuary Kit",
-            "Kit - Spiritual wellness and meditation space",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP59.zip",
-            imageBaseUrl + "SP59.jpg"),
-
-            new DLCInfo("SP60", "Casanova Cave Kit",
-            "Kit - Bachelor pad and masculine decor",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP60.zip",
-            imageBaseUrl + "SP60.jpg"),
-
-            new DLCInfo("SP61", "Refined Living Room Kit",
-            "Creator Kit - Elegant living room furniture",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP61.zip",
-            imageBaseUrl + "SP61.jpg"),
-
-            new DLCInfo("SP62", "Business Chic Kit",
-            "Creator Kit - Professional business attire",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP62.zip",
-            imageBaseUrl + "SP62.jpg"),
-
-            new DLCInfo("SP63", "Sleek Bathroom Kit",
-            "Creator Kit - Modern bathroom design",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP63.zip",
-            imageBaseUrl + "SP63.jpg"),
-
-            new DLCInfo("SP64", "Sweet Allure Kit",
-            "Creator Kit - Romantic feminine fashion",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP64.zip",
-            imageBaseUrl + "SP64.jpg"),
-
-            new DLCInfo("SP65", "Restoration Workshop Kit",
-            "Kit - Woodworking and furniture restoration",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP65.zip",
-            imageBaseUrl + "SP65.jpg"),
-
-            new DLCInfo("SP66", "Golden Years Kit",
-            "Kit - Senior lifestyle and retirement items",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP66.zip",
-            imageBaseUrl + "SP66.jpg"),
-
-            new DLCInfo("SP67", "Kitchen Clutter Kit",
-            "Kit - Realistic kitchen organization items",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP67.zip",
-            imageBaseUrl + "SP67.jpg"),
-
-            new DLCInfo("SP68", "SpongeBob’s House Kit",
-            "Kit - This kit also includes the 3 special items only avaible on the bundle.",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP68.zip",
-            imageBaseUrl + "SP68.jpg"),
-
-            new DLCInfo("SP69", "Autumn Apparel Kit",
-            "Kit - Fall and autumn clothing",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP69.zip",
-            imageBaseUrl + "SP69.jpg"),
-
-            new DLCInfo("SP70", "SpongeBob Kid’s Room Kit",
-            "Kit - This kit also includes the 3 special items only avaible on the bundle.",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP70.zip",
-            imageBaseUrl + "SP70.jpg"),
-
-            new DLCInfo("SP71", "Grange Mudroom Kit",
-            "Creator Kit - Farmhouse mudroom organization",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP71.zip",
-            imageBaseUrl + "SP71.jpg"),
-
-            new DLCInfo("SP72", "Essential Glam Kit",
-            "Creator Kit - Essential glamorous items",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP72.zip",
-            imageBaseUrl + "SP72.jpg"),
-
-            new DLCInfo("SP73", "Modern Retreat Kit",
-            "Creator Kit - Modern relaxation space",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP73.zip",
-            imageBaseUrl + "SP73.jpg"),
-
-            new DLCInfo("SP74", "Garden to Table Kit",
-            "Creator Kit - Farm-to-table gardening and cooking",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP74.zip",
-            imageBaseUrl + "SP74.jpg"),
-
-            new DLCInfo("Game", "Offline Mode",
-            "Crack your game and download the Offline Mode (Game-cracked).",
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Offline/Updater/LeuanVersion/LatestLeuanVersion.zip",
-            imageBaseUrl + "DLCUnlocker_Image.png",
-            true)  // ✅ AGREGAR ESTE PARÁMETRO (true = es Offline Mode)
-            };
+            {
+
+                // INTERNAL
+                new DLCInfo("__Installer", "__Installer",
+                "Mandatory files for DLC's to work (Reinstall to make it work for new Kits).",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/__Installer.zip",
+                imageBaseUrl + "DLCUnlocker_Image.png",
+                false,
+                0m), // Gratis
+
+                new DLCInfo("SP81", "Prairie Dreams - NEW",
+                "Mix charming prairie dreams, fashion and vintage pieces with The Sims™ 4 Prairie Dreams Kit ",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP81.zip",
+                imageBaseUrl + "SP81.png",
+                false,
+                4.99m),
+
+                //
+                // ========== EXPANSION PACKS (EP01–EP20) ==========
+                //
+
+                new DLCInfo("EP01", "Get to Work",
+                "Expansion Pack - Active careers, aliens and more",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP01.zip",
+                imageBaseUrl + "EP01.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP02", "Get Together",
+                "Expansion Pack - Clubs, DJ and Windenburg",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP02.zip",
+                imageBaseUrl + "EP02.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP03", "City Living",
+                "Expansion Pack - Apartments and San Myshuno",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP03.zip",
+                imageBaseUrl + "EP03.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP04", "Cats & Dogs",
+                "Expansion Pack - Pets and vet clinic",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP04.zip",
+                imageBaseUrl + "EP04.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP05", "Seasons",
+                "Expansion Pack - Dynamic weather and holidays",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP05.zip",
+                imageBaseUrl + "EP05.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP06", "Get Famous",
+                "Expansion Pack - Fame system and Del Sol Valley",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP06.zip",
+                imageBaseUrl + "EP06.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP07", "Island Living",
+                "Expansion Pack - Tropical islands and mermaids",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP07.zip",
+                imageBaseUrl + "EP07.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP08", "Discover University",
+                "Expansion Pack - University gameplay and degrees",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP08.zip",
+                imageBaseUrl + "EP08.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP09", "Eco Lifestyle",
+                "Expansion Pack - Eco footprint and sustainable living",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP09.zip",
+                imageBaseUrl + "EP09.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP10", "Snowy Escape",
+                "Expansion Pack - Mt. Komorebi and winter activities",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP10.zip",
+                imageBaseUrl + "EP10.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP11", "Cottage Living",
+                "Expansion Pack - Animals, farming and Henford-on-Bagley",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP11.zip",
+                imageBaseUrl + "EP11.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP12", "High School Years",
+                "Expansion Pack - Teen gameplay and high school life",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP12.zip",
+                imageBaseUrl + "EP12.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP13", "Growing Together",
+                "Expansion Pack - Family dynamics and milestones",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP13.zip",
+                imageBaseUrl + "EP13.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP14", "Horse Ranch",
+                "Expansion Pack - Horses, ranch life and Chestnut Ridge",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP14.zip",
+                imageBaseUrl + "EP14.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP15", "For Rent",
+                "Expansion Pack - Apartments, landlords and tenants",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP15.zip",
+                imageBaseUrl + "EP15.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP16", "Lovestruck",
+                "Expansion Pack - Romance and compatibility features",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP16.zip",
+                imageBaseUrl + "EP16.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP17", "Life & Death",
+                "Expansion Pack - Life, death and supernatural elements",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP17.zip",
+                imageBaseUrl + "EP17.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP18", "Businesses & Hobbies",
+                "Expansion Pack - Business ownership and hobby development",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP18.zip",
+                imageBaseUrl + "EP18.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP19", "Enchanted by Nature",
+                "Expansion Pack - Fairies, magic and natural world",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP19.zip",
+                imageBaseUrl + "EP19.jpg",
+                false,
+                39.99m),
+
+                new DLCInfo("EP20", "Adventure Awaits",
+                "Expansion Pack - Adventure, exploration and new worlds",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/EP20.zip",
+                imageBaseUrl + "EP20.jpg",
+                false,
+                39.99m),
+
+                //
+                // ========== FEATURE PACK (FP01) ==========
+                //
+                new DLCInfo("FP01", "Holiday Celebration",
+                "Feature Pack - Holiday themed content and celebrations",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/FP01.zip",
+                imageBaseUrl + "FP01.jpg",
+                false,
+                0m), // Gratis
+
+                //
+                // ========== GAME PACKS (GP01–GP12) ==========
+                //
+
+                new DLCInfo("GP01", "Outdoor Retreat",
+                "Game Pack - Camping in Granite Falls",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP01.zip",
+                imageBaseUrl + "GP01.jpg",
+                false,
+                19.99m),
+
+                new DLCInfo("GP02", "Spa Day",
+                "Game Pack - Spa and wellness",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP02.zip",
+                imageBaseUrl + "GP02.jpg",
+                false,
+                19.99m),
+
+                new DLCInfo("GP03", "Dine Out",
+                "Game Pack - Own and manage restaurants",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP03.zip",
+                imageBaseUrl + "GP03.jpg",
+                false,
+                19.99m),
+
+                new DLCInfo("GP04", "Vampires",
+                "Game Pack - Vampires and Forgotten Hollow",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP04.zip",
+                imageBaseUrl + "GP04.jpg",
+                false,
+                19.99m),
+
+                new DLCInfo("GP05", "Parenthood",
+                "Game Pack - Parenting gameplay",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP05.zip",
+                imageBaseUrl + "GP05.jpg",
+                false,
+                19.99m),
+
+                new DLCInfo("GP06", "Jungle Adventure",
+                "Game Pack - Selvadorada and temple exploration",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP06.zip",
+                imageBaseUrl + "GP06.jpg",
+                false,
+                19.99m),
+
+                new DLCInfo("GP07", "StrangerVille",
+                "Game Pack - Mystery storyline",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP07.zip",
+                imageBaseUrl + "GP07.jpg",
+                false,
+                19.99m),
+
+                new DLCInfo("GP08", "Realm of Magic",
+                "Game Pack - Spellcasters and magic world",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP08.zip",
+                imageBaseUrl + "GP08.jpg",
+                false,
+                19.99m),
+
+                new DLCInfo("GP09", "Star Wars: Journey to Batuu",
+                "Game Pack - Star Wars story",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP09.zip",
+                imageBaseUrl + "GP09.jpg",
+                false,
+                19.99m),
+
+                new DLCInfo("GP10", "Dream Home Decorator",
+                "Game Pack - Interior design gameplay",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP10.zip",
+                imageBaseUrl + "GP10.jpg",
+                false,
+                19.99m),
+
+                new DLCInfo("GP11", "My Wedding Stories",
+                "Game Pack - Deep wedding gameplay",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP11.zip",
+                imageBaseUrl + "GP11.jpg",
+                false,
+                19.99m),
+
+                new DLCInfo("GP12", "Werewolves",
+                "Game Pack - Werewolves and Moonwood Mill",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/GP12.zip",
+                imageBaseUrl + "GP12.jpg",
+                false,
+                19.99m),
+
+                //
+                // ========== STUFF PACKS (SP01–SP74) ==========
+                //
+
+                new DLCInfo("SP01", "Luxury Party Stuff",
+                "Stuff Pack - Luxury party items and formal wear",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP01.zip",
+                imageBaseUrl + "SP01.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP02", "Perfect Patio Stuff",
+                "Stuff Pack - Outdoor living and hot tubs",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP02.zip",
+                imageBaseUrl + "SP02.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP03", "Cool Kitchen Stuff",
+                "Stuff Pack - Kitchen appliances and decor",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP03.zip",
+                imageBaseUrl + "SP03.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP04", "Spooky Stuff",
+                "Stuff Pack - Halloween and spooky decorations",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP04.zip",
+                imageBaseUrl + "SP04.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP05", "Movie Hangout Stuff",
+                "Stuff Pack - Movie night and bohemian style",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP05.zip",
+                imageBaseUrl + "SP05.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP06", "Romantic Garden Stuff",
+                "Stuff Pack - Romantic garden decorations",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP06.zip",
+                imageBaseUrl + "SP06.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP07", "Kids Room Stuff",
+                "Stuff Pack - Children's room furniture and toys",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP07.zip",
+                imageBaseUrl + "SP07.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP08", "Backyard Stuff",
+                "Stuff Pack - Backyard activities and decor",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP08.zip",
+                imageBaseUrl + "SP08.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP09", "Vintage Glamour Stuff",
+                "Stuff Pack - Vintage Hollywood glamour",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP09.zip",
+                imageBaseUrl + "SP09.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP10", "Bowling Night Stuff",
+                "Stuff Pack - Bowling alley and retro style",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP10.zip",
+                imageBaseUrl + "SP10.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP11", "Fitness Stuff",
+                "Stuff Pack - Fitness equipment and activewear",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP11.zip",
+                imageBaseUrl + "SP11.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP12", "Toddler Stuff",
+                "Stuff Pack - Toddler clothing and items",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP12.zip",
+                imageBaseUrl + "SP12.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP13", "Laundry Day Stuff",
+                "Stuff Pack - Laundry and rustic living",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP13.zip",
+                imageBaseUrl + "SP13.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP14", "My First Pet Stuff",
+                "Stuff Pack - Small pets and pet accessories",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP14.zip",
+                imageBaseUrl + "SP14.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP15", "Moschino Stuff",
+                "Stuff Pack - Fashion photography and Moschino collaboration",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP15.zip",
+                imageBaseUrl + "SP15.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP16", "Tiny Living",
+                "Stuff Pack - Tiny homes and minimalist living",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP16.zip",
+                imageBaseUrl + "SP16.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP17", "Nifty Knitting",
+                "Stuff Pack - Knitting and handmade crafts",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP17.zip",
+                imageBaseUrl + "SP17.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP18", "Paranormal",
+                "Stuff Pack - Paranormal investigation and haunted items",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP18.zip",
+                imageBaseUrl + "SP18.jpg",
+                false,
+                9.99m),
+
+                // Kits
+                new DLCInfo("SP20", "Throwback Fit Kit",
+                "Kit - Retro and vintage clothing",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP20.zip",
+                imageBaseUrl + "SP20.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP21", "Country Kitchen Kit",
+                "Kit - Rustic country kitchen items",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP21.zip",
+                imageBaseUrl + "SP21.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP22", "Bust The Dust Kit",
+                "Kit - Cleaning and household chores",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP22.zip",
+                imageBaseUrl + "SP22.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP23", "Courtyard Oasis Kit",
+                "Kit - Courtyard and outdoor oasis decor",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP23.zip",
+                imageBaseUrl + "SP23.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP24", "Fashion Street Kit",
+                "Kit - Urban street fashion clothing",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP24.zip",
+                imageBaseUrl + "SP24.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP25", "Industrial Loft Kit",
+                "Kit - Industrial style loft furniture",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP25.zip",
+                imageBaseUrl + "SP25.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP26", "Incheon Arrivals Kit",
+                "Kit - K-fashion and modern Korean style",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP26.zip",
+                imageBaseUrl + "SP26.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP28", "Modern Menswear Kit",
+                "Kit - Contemporary mens clothing",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP28.zip",
+                imageBaseUrl + "SP28.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP29", "Blooming Rooms Kit",
+                "Kit - Floral and botanical home decor",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP29.zip",
+                imageBaseUrl + "SP29.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP30", "Carnaval Streetwear Kit",
+                "Kit - Festival and carnival clothing",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP30.zip",
+                imageBaseUrl + "SP30.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP31", "Decor to the Max Kit",
+                "Kit - Maximalist home decoration",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP31.zip",
+                imageBaseUrl + "SP31.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP32", "Moonlight Chic Kit",
+                "Kit - Elegant evening wear and decor",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP32.zip",
+                imageBaseUrl + "SP32.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP33", "Little Campers Kit",
+                "Kit - Camping and outdoor adventure items for kids",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP33.zip",
+                imageBaseUrl + "SP33.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP34", "First Fits Kit",
+                "Kit - Everyday toddler and kid outfits",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP34.zip",
+                imageBaseUrl + "SP34.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP35", "Desert Luxe Kit",
+                "Kit - Desert modern home decor",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP35.zip",
+                imageBaseUrl + "SP35.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP36", "Pastel Pop Kit",
+                "Kit - Pastel colorful home decor",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP36.zip",
+                imageBaseUrl + "SP36.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP37", "Everyday Clutter Kit",
+                "Kit - Realistic household clutter items",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP37.zip",
+                imageBaseUrl + "SP37.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP38", "Simtimates Collection Kit",
+                "Kit - Underwear and intimate apparel",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP38.zip",
+                imageBaseUrl + "SP38.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP39", "Bathroom Clutter Kit",
+                "Kit - Bathroom organization and decor",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP39.zip",
+                imageBaseUrl + "SP39.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP40", "Greenhouse Haven Kit",
+                "Kit - Greenhouse and plant care items",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP40.zip",
+                imageBaseUrl + "SP40.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP41", "Basement Treasures Kit",
+                "Kit - Vintage and retro basement finds",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP41.zip",
+                imageBaseUrl + "SP41.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP42", "Grunge Revival Kit",
+                "Kit - 90s grunge fashion and decor",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP42.zip",
+                imageBaseUrl + "SP42.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP43", "Book Nook Kit",
+                "Kit - Cozy reading nook items",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP43.zip",
+                imageBaseUrl + "SP43.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP44", "Poolside Splash Kit",
+                "Kit - Pool party and summer items",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP44.zip",
+                imageBaseUrl + "SP44.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP45", "Modern Luxe Kit",
+                "Kit - Modern luxury home decor",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP45.zip",
+                imageBaseUrl + "SP45.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP46", "Home Chef Hustle Stuff",
+                "Stuff Pack - Cooking and kitchen entrepreneurship",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP46.zip",
+                imageBaseUrl + "SP46.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP47", "Castle Estate Kit",
+                "Kit - Medieval castle building items",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP47.zip",
+                imageBaseUrl + "SP47.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP48", "Goth Galore Kit",
+                "Kit - Gothic fashion and home decor",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP48.zip",
+                imageBaseUrl + "SP48.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP49", "Crystal Creations Stuff Pack",
+                "Stuff Pack - Crystal crafting and decor",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP49.zip",
+                imageBaseUrl + "SP49.jpg",
+                false,
+                9.99m),
+
+                new DLCInfo("SP50", "Urban Homage Kit",
+                "Kit - Urban culture and street style",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP50.zip",
+                imageBaseUrl + "SP50.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP51", "Party Essentials Kit",
+                "Kit - Party supplies and decorations",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP51.zip",
+                imageBaseUrl + "SP51.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP52", "Riviera Retreat Kit",
+                "Kit - French Riviera vacation style",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP52.zip",
+                imageBaseUrl + "SP52.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP53", "Cozy Bistro Kit",
+                "Kit - Cozy cafe and bistro items",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP53.zip",
+                imageBaseUrl + "SP53.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP54", "Artist Studio Kit",
+                "Kit - Art studio supplies and decor",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP54.zip",
+                imageBaseUrl + "SP54.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP55", "Storybook Nursery Kit",
+                "Kit - Fairytale nursery decor",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP55.zip",
+                imageBaseUrl + "SP55.jpg",
+                false,
+                4.99m),
+
+                // Creator Kits
+                new DLCInfo("SP56", "Sweet Slumber Party Kit",
+                "Creator Kit - Sleepover and pajama party items",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP56.zip",
+                imageBaseUrl + "SP56.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP57", "Cozy Kitsch Kit",
+                "Creator Kit - Cozy maximalist home decor",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP57.zip",
+                imageBaseUrl + "SP57.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP58", "Comfy Gamer Kit",
+                "Kit - Gaming setup and comfortable gaming wear",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP58.zip",
+                imageBaseUrl + "SP58.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP59", "Secret Sanctuary Kit",
+                "Kit - Spiritual wellness and meditation space",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP59.zip",
+                imageBaseUrl + "SP59.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP60", "Casanova Cave Kit",
+                "Kit - Bachelor pad and masculine decor",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP60.zip",
+                imageBaseUrl + "SP60.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP61", "Refined Living Room Kit",
+                "Creator Kit - Elegant living room furniture",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP61.zip",
+                imageBaseUrl + "SP61.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP62", "Business Chic Kit",
+                "Creator Kit - Professional business attire",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP62.zip",
+                imageBaseUrl + "SP62.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP63", "Sleek Bathroom Kit",
+                "Creator Kit - Modern bathroom design",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP63.zip",
+                imageBaseUrl + "SP63.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP64", "Sweet Allure Kit",
+                "Creator Kit - Romantic feminine fashion",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP64.zip",
+                imageBaseUrl + "SP64.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP65", "Restoration Workshop Kit",
+                "Kit - Woodworking and furniture restoration",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP65.zip",
+                imageBaseUrl + "SP65.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP66", "Golden Years Kit",
+                "Kit - Senior lifestyle and retirement items",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP66.zip",
+                imageBaseUrl + "SP66.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP67", "Kitchen Clutter Kit",
+                "Kit - Realistic kitchen organization items",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP67.zip",
+                imageBaseUrl + "SP67.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP68", "SpongeBob's House Kit",
+                "Kit - This kit also includes the 3 special items only avaible on the bundle.",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP68.zip",
+                imageBaseUrl + "SP68.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP69", "Autumn Apparel Kit",
+                "Kit - Fall and autumn clothing",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP69.zip",
+                imageBaseUrl + "SP69.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP70", "SpongeBob Kid's Room Kit",
+                "Kit - This kit also includes the 3 special items only avaible on the bundle.",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP70.zip",
+                imageBaseUrl + "SP70.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP71", "Grange Mudroom Kit",
+                "Creator Kit - Farmhouse mudroom organization",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP71.zip",
+                imageBaseUrl + "SP71.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP72", "Essential Glam Kit",
+                "Creator Kit - Essential glamorous items",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP72.zip",
+                imageBaseUrl + "SP72.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP73", "Modern Retreat Kit",
+                "Creator Kit - Modern relaxation space",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP73.zip",
+                imageBaseUrl + "SP73.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("SP74", "Garden to Table Kit",
+                "Creator Kit - Farm-to-table gardening and cooking",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/SP74.zip",
+                imageBaseUrl + "SP74.jpg",
+                false,
+                4.99m),
+
+                new DLCInfo("Game", "Offline Mode",
+                "Crack your game and download the Offline Mode (Game-cracked).",
+                "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Offline/Updater/LeuanVersion/LatestLeuanVersion.zip",
+                imageBaseUrl + "DLCUnlocker_Image.png",
+                true,
+                0m) // Gratis
+                };
         }
-
-
         private void PopulateDLCList()
         {
             foreach (var dlc in _dlcList)
@@ -1502,6 +1565,9 @@ namespace ModernDesign.MVVM.View
             ApplyInstalledFlags();
 
             UpdateSelectionCount();
+
+            UpdateTotalValue();
+
         }
 
 
@@ -1541,12 +1607,25 @@ namespace ModernDesign.MVVM.View
 
         private void SelectAllBtn_Click(object sender, RoutedEventArgs e)
         {
-            foreach (CheckBox cb in DLCList.Children) cb.IsChecked = true;
+            foreach (CheckBox cb in DLCList.Children)
+            {
+                //  Solo marcar los que están visibles
+                if (cb.Visibility == Visibility.Visible)
+                {
+                    cb.IsChecked = true;
+                }
+            }
         }
-
         private void DeselectAllBtn_Click(object sender, RoutedEventArgs e)
         {
-            foreach (CheckBox cb in DLCList.Children) cb.IsChecked = false;
+            foreach (CheckBox cb in DLCList.Children)
+            {
+                // Solo desmarcar los que están visibles
+                if (cb.Visibility == Visibility.Visible)
+                {
+                    cb.IsChecked = false;
+                }
+            }
         }
 
         private void UpdateSelectionCount()
@@ -1600,7 +1679,7 @@ namespace ModernDesign.MVVM.View
                 {
                     // Usuario tiene copia legítima
                     offlineModeDLC.GetType().GetProperty("Url").SetValue(offlineModeDLC,
-                        "https://zeroauno.blob.core.windows.net/leuan/TheSims4/LatestUpdateAndCrack.zip");
+                        "https://download1503.mediafire.com/735xnu4c2dtgGu8W5REi86BMQVzJ55qm6fBO9UJWcpwv3tJxizwB_S9krudo_Su9KtLF9tP9EwbGw81Xq6D6vjP_Vy0BYtAEOeCE-qOwTQWfp32wZAhRszFWtQllojg-Jgb9WKfHbu3W-9m5kow53aTZApZxEVIb5meuRo3ahNwZ/buzuqeomamfz5gc/LatestUpdateAndCrack.zip");
                 }
                 else
                 {
@@ -1614,7 +1693,7 @@ namespace ModernDesign.MVVM.View
                     {
                         // Usuario confirmó que está protegido
                         offlineModeDLC.GetType().GetProperty("Url").SetValue(offlineModeDLC,
-                            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Offline/Updater/LeuanVersion/LatestLeuanVersion.zip");
+                            "https://download1503.mediafire.com/735xnu4c2dtgGu8W5REi86BMQVzJ55qm6fBO9UJWcpwv3tJxizwB_S9krudo_Su9KtLF9tP9EwbGw81Xq6D6vjP_Vy0BYtAEOeCE-qOwTQWfp32wZAhRszFWtQllojg-Jgb9WKfHbu3W-9m5kow53aTZApZxEVIb5meuRo3ahNwZ/buzuqeomamfz5gc/LatestUpdateAndCrack.zip");
                     }
                     else
                     {
@@ -1723,18 +1802,7 @@ namespace ModernDesign.MVVM.View
 
                     bool shouldInstallUnlocker = false;
 
-                    if (!IsUnlockerInstalled(out _))
-                    {
-                        var result = MessageBox.Show(
-                            "EA DLC Unlocker is not installed.\n\n" +
-                            "Would you like to install it now?\n" +
-                            "This is required for DLCs to work properly.",
-                            "EA DLC Unlocker Required",
-                            MessageBoxButton.YesNo,
-                            MessageBoxImage.Question);
-
-                        shouldInstallUnlocker = (result == MessageBoxResult.Yes);
-                    }
+                    // To much errors for Owner property.
 
                     bool shortcutsSuccess = await DownloadAndExtractShortcutsAsync();
 
@@ -1744,12 +1812,14 @@ namespace ModernDesign.MVVM.View
                     }
                     else
                     {
+                        // CALCULAR TOTAL DE PRECIOS
+                        decimal totalSaved = selected.Sum(dlc => dlc.Price);
+
                         MessageBox.Show(
-                            $"Successfully downloaded {selected.Count} DLC(s) to:\n{_simsPath}\nCongratulations!\n\n you've just saved around $1.500 USD",
+                            $"Successfully downloaded {selected.Count} DLC(s) to:\n{_simsPath}\nCongratulations!\n\n💰 You've just saved ${totalSaved:F2} USD!",
                             "Download completed",
                             MessageBoxButton.OK,
                             MessageBoxImage.Information);
-
                     }
 
                     if (shouldInstallUnlocker)
@@ -1958,11 +2028,6 @@ namespace ModernDesign.MVVM.View
                     }
                     catch (UnauthorizedAccessException)
                     {
-                        // Intentar con permisos de admin
-                        if (ErrorAutoFix.TryFixPermissions(tempFile, isSpanish))
-                        {
-                            return; // Se reiniciará como admin
-                        }
                         throw;
                     }
                 }
@@ -2121,7 +2186,7 @@ namespace ModernDesign.MVVM.View
 
         private async Task<bool> DownloadAndExtractShortcutsAsync()
         {
-            const string shortcutsUrl = "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Utility/Accesos%20Directos.zip";
+            const string shortcutsUrl = "https://download1474.mediafire.com/xk6cyq9t7fzginVY4hMAxMpGok6_FpXW4N80Us_Fd_G4fndHGR5RgNJRhYzX76cDBSzW-7vFLUL6I-iItCZCDxuNkoFx2zBAw-0dkf64yDfsEy0YN4E7cuUNOFJQj-Ls-Bco_qXz5e8Vb1VPcIosWO2uFZB--SEMtTTufrULu-dX/e3g368v4dtlcahw/Accesos+Directos.zip";
 
             try
             {
@@ -2184,55 +2249,9 @@ namespace ModernDesign.MVVM.View
             //await SendShortcutsErrorWebhook();
         }
 
-        private async Task SendShortcutsErrorWebhook()
-        {
-            try
-            {
-                string webhookUrl = "https://discord.com/api/webhooks/1444461317934284862/OOhcp9Gy9BOPEV1spbQg7QuOaLrlOpCXqRrPg4vK_5Mc_-17dNLf2IVmYdhlve-Yr_8P";
 
-                //  OBTENER NOMBRE DE USUARIO
-                string userName = GetUserNameFromProfile();
+        // No more telemetry.
 
-                string jsonPayload = $@"{{
-            ""embeds"": [{{
-                ""title"": ""⚠️ Error en Accesos Directos"",
-                ""description"": ""La descarga de DLCs fue exitosa, pero falló la creación de accesos directos en el escritorio."",
-                ""color"": 16776960,
-                ""fields"": [
-                    {{
-                        ""name"": ""👤 Usuario"",
-                        ""value"": ""{userName}"",
-                        ""inline"": true
-                    }},
-                    {{
-                        ""name"": ""⚠️ Estado"",
-                        ""value"": ""Shortcuts Failed"",
-                        ""inline"": true
-                    }},
-                    {{
-                        ""name"": ""📋 Detalles"",
-                        ""value"": ""DLCs instalados correctamente, pero los accesos directos del escritorio no se pudieron crear."",
-                        ""inline"": false
-                    }}
-                ],
-                ""footer"": {{
-                    ""text"": ""Leuan's - Sims 4 ToolKit | Download Manager""
-                }},
-                ""timestamp"": ""{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ss.fffZ}""
-            }}]
-        }}";
-
-                using (HttpClient client = new HttpClient())
-                {
-                    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-                    await client.PostAsync(webhookUrl, content);
-                }
-            }
-            catch
-            {
-                // Silently fail - don't interrupt user experience if webhook fails
-            }
-        }
 
         /// <summary>
         /// Download file with resume support using HTTP Range header.
@@ -2374,12 +2393,13 @@ namespace ModernDesign.MVVM.View
                                             {
                                                 Process.Start(new ProcessStartInfo
                                                 {
-                                                    FileName = "https://youtube.com",
-                                                    UseShellExecute = true
+                                                    FileName = "cmd",
+                                                    Arguments = "/c start https://youtube.com",
+                                                    CreateNoWindow = true,
+                                                    UseShellExecute = false
                                                 });
                                             }
                                             catch { }
-
                                             // Cancelar descargas (lanzar excepción para salir del bucle)
                                             throw new OperationCanceledException("User cancelled download to use Semi-Automatic method");
                                         }
@@ -2479,10 +2499,6 @@ namespace ModernDesign.MVVM.View
                             }
                             catch (UnauthorizedAccessException)
                             {
-                                if (ErrorAutoFix.TryFixPermissions(destinationFilePath, isSpanish))
-                                {
-                                    return; // Se reiniciará como admin
-                                }
                                 throw;
                             }
                             catch (IOException) when (retryCount < 2)
@@ -2559,7 +2575,26 @@ namespace ModernDesign.MVVM.View
             }
         }
 
+        private void UpdateTotalValue()
+        {
+            bool isSpanish = IsSpanishLanguage();
 
+            if (string.IsNullOrEmpty(_simsPath))
+            {
+                TotalValueText.Text = isSpanish
+                    ? "💰 Tu juego vale: $0.00 USD"
+                    : "💰 Your game is worth: $0.00 USD";
+                return;
+            }
+
+            decimal totalValue = _dlcList
+                .Where(dlc => IsDlcInstalled(dlc))
+                .Sum(dlc => dlc.Price);
+
+            TotalValueText.Text = isSpanish
+                ? $"💰 Tu juego vale: ${totalValue:F2} USD"
+                : $"💰 Your game is worth: ${totalValue:F2} USD";
+        }
 
         /// <summary>
         /// Auto-check checkboxes for DLCs that are already installed.
@@ -2601,132 +2636,9 @@ namespace ModernDesign.MVVM.View
                 // ⚠️ IMPORTANTE: NO deshabilitar el CheckBox
                 // cb.IsEnabled = !installed;  <-- esto ya NO lo hacemos
             }
-        }
 
+            UpdateTotalValue();
 
-
-        // === HELPERS FOR UNLOCKER ===
-
-        private string GetUnlockerFolder()
-        {
-            return AppDomain.CurrentDomain.BaseDirectory;
-        }
-
-        private async Task DownloadUnlockerPackageAsync()
-        {
-            var unlockerFolder = GetUnlockerFolder();
-            var iniPath = Path.Combine(unlockerFolder, "g_The Sims 4.ini");
-
-            // Si ya está, no hacemos nada
-            if (File.Exists(iniPath))
-                return;
-
-            // ELIMINAR ESTA VERIFICACIÓN:
-            // if (!File.Exists(SevenZipPath))
-            // {
-            //     throw new FileNotFoundException(...);
-            // }
-
-            var tempZip = Path.Combine(_tempFolder, "g_ts4_config.zip"); // ⚠️ CAMBIAR a .zip
-
-            // Nos aseguramos de que el panel de progreso esté visible
-            ProgressPanel.Visibility = Visibility.Visible;
-
-            var progress = new Progress<DownloadProgressInfo>(p =>
-            {
-                p.Phase = string.IsNullOrEmpty(p.Phase) ? "Downloading" : p.Phase;
-                p.DlcName = "EA DLC Unlocker";
-                p.CurrentIndex = 1;
-                p.TotalCount = 1;
-                UpdateUiProgress(p);
-            });
-
-            await DownloadWithResumeAsync(
-                UnlockerPackageUrl,
-                tempZip,
-                "EA DLC Unlocker",
-                1,
-                1,
-                progress);
-
-            try
-            {
-                (progress as IProgress<DownloadProgressInfo>)?.Report(new DownloadProgressInfo
-                {
-                    Phase = "Extracting",
-                    DlcName = "EA DLC Unlocker",
-                    CurrentIndex = 1,
-                    TotalCount = 1,
-                    Message = "Extracting EA DLC Unlocker..."
-                });
-
-                await Task.Run(() => ExtractZipNatively(tempZip, unlockerFolder)); // ⚠️ CAMBIAR método
-            }
-            finally
-            {
-                if (File.Exists(tempZip))
-                    File.Delete(tempZip);
-            }
-
-            if (!File.Exists(iniPath))
-            {
-                throw new FileNotFoundException(
-                    "The unlocker package was extracted, but 'g_The Sims 4.ini' was not found.\n" +
-                    "Please check the contents of the ZIP and try again.",
-                    iniPath);
-            }
-
-            (progress as IProgress<DownloadProgressInfo>)?.Report(new DownloadProgressInfo
-            {
-                Phase = "Completed",
-                DlcName = "EA DLC Unlocker",
-                CurrentIndex = 1,
-                TotalCount = 1,
-                Percent = 100,
-                Message = "EA DLC Unlocker downloaded and extracted correctly."
-            });
-        }
-
-        private void RunUnlockerScriptAuto()
-        {
-            var folder = GetUnlockerFolder();
-            var exePath = Path.Combine(folder, "setup.exe");
-            var batPath = Path.Combine(folder, "setup.bat");
-
-            ProcessStartInfo psi;
-
-            if (File.Exists(exePath))
-            {
-                psi = new ProcessStartInfo
-                {
-                    FileName = exePath,
-                    Arguments = "auto",
-                    WorkingDirectory = folder,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Hidden
-                };
-            }
-            else if (File.Exists(batPath))
-            {
-                psi = new ProcessStartInfo
-                {
-                    FileName = "cmd.exe",
-                    Arguments = "/c \"setup.bat auto\"",
-                    WorkingDirectory = folder,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Hidden
-                };
-            }
-            else
-            {
-                throw new FileNotFoundException(
-                    "Neither setup.exe nor setup.bat were found in the unlocker folder.",
-                    exePath + " / " + batPath);
-            }
-
-            Process.Start(psi);
         }
 
         // === UNLOCKER STATUS (EA app / Origin) ===
@@ -2980,7 +2892,7 @@ namespace ModernDesign.MVVM.View
         public string ImageUrl { get; private set; }   // URL del .jpg
 
         public bool IsOfflineMode { get; private set; }  // Para Actualizar versiones crackeadas
-
+        public decimal Price { get; private set; }  // Precio en USD
 
         // 🔥 URL automática a la wiki de Sims
         public string WikiUrl
@@ -2993,51 +2905,21 @@ namespace ModernDesign.MVVM.View
             }
         }
 
-        public DLCInfo(string id, string name, string description, string url, string imageUrl, bool isOfflineMode = false)
+        public DLCInfo(string id, string name, string description, string url, string imageUrl, bool isOfflineMode = false, decimal price = 0)
         {
             Id = id;
             Name = name;
             Description = description;
             Url = url;
             ImageUrl = imageUrl;
-            IsOfflineMode = isOfflineMode;  // Versiones  crackeadas
-
+            IsOfflineMode = isOfflineMode;
+            Price = price;
         }
     }
 
     public static class ErrorAutoFix
     {
-        public static bool TryFixPermissions(string path, bool isSpanish)
-        {
-            try
-            {
-                string message = isSpanish
-                    ? $"❌ Error de permisos detectado en:\n{path}\n\n" +
-                      "🔧 SOLUCIÓN AUTOMÁTICA:\n" +
-                      "El programa intentará reiniciarse como Administrador.\n\n" +
-                      "¿Deseas continuar?"
-                    : $"❌ Permission error detected in:\n{path}\n\n" +
-                      "🔧 AUTOMATIC FIX:\n" +
-                      "The program will try to restart as Administrator.\n\n" +
-                      "Do you want to continue?";
-
-                string title = isSpanish ? "Error de Permisos" : "Permission Error";
-
-                var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    RestartAsAdmin();
-                    return true;
-                }
-                return false;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
+        // Admin is no longer obligatory.
 
         public static bool TryFixDiskSpace(string path, bool isSpanish)
         {
@@ -3098,28 +2980,7 @@ namespace ModernDesign.MVVM.View
             MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
-        private static void RestartAsAdmin()
-        {
-            try
-            {
-                var exeName = Process.GetCurrentProcess().MainModule.FileName;
-                var startInfo = new ProcessStartInfo(exeName)
-                {
-                    UseShellExecute = true,
-                    Verb = "runas"
-                };
-                Process.Start(startInfo);
-                Application.Current.Shutdown();
-            }
-            catch
-            {
-                MessageBox.Show(
-                    "Could not restart as Administrator.\nPlease run the program manually as Administrator.",
-                    "Error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-            }
-        }
+        // Admin is not obligatory anymore
 
 
         public static bool HasEnoughDiskSpace(string path, long requiredBytes)

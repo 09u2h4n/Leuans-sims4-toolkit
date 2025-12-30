@@ -1,0 +1,293 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="ModernDesign.MVVM.View.leuFastAllDLCsWindow"
+        Title="Leuan | Install All DLCs Tutorial" 
+        Height="750" 
+        Width="1200"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStartupLocation="CenterScreen" 
+        Icon="/Icono_TLK.ico">
+
+    <Window.Resources>
+        <Style x:Key="StepCard" TargetType="Border">
+            <Setter Property="Background" Value="#15FFFFFF"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="30"/>
+            <Setter Property="Margin" Value="0,0,0,25"/>
+            <Setter Property="BorderBrush" Value="#3EC7E8"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+
+        <Style x:Key="ActionButton" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="#0A6BF2"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="bg" Background="{TemplateBinding Background}" 
+                                CornerRadius="12" Padding="20,14">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bg" Property="Background" Value="#3EC7E8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="40" ResizeBorderThickness="6" 
+                            CornerRadius="0" GlassFrameThickness="0" UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+
+    <Border CornerRadius="20">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#0F172A" Offset="0"/>
+                <GradientStop Color="#1E293B" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.Background>
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="40" ShadowDepth="0" Opacity="0.6"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- HEADER -->
+            <Border Grid.Row="0" Padding="25,15">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                                WindowChrome.IsHitTestVisibleInChrome="True">
+                        <Button x:Name="BackBtn" Width="40" Height="40"
+                                Background="Transparent" Foreground="White" 
+                                BorderThickness="0" Cursor="Hand"
+                                Click="BackBtn_Click">
+                            <Button.Template>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="bg" Background="Transparent" CornerRadius="10" Padding="8">
+                                        <TextBlock Text="←" FontSize="20" FontWeight="Bold"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="bg" Property="Background" Value="#20FFFFFF"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                        <TextBlock x:Name="HeaderTitle" Text="📦  Install All DLCs Tutorial" 
+                                   Foreground="White" FontSize="18" 
+                                   FontWeight="SemiBold" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                    </StackPanel>
+
+                    <Button x:Name="CloseBtn" HorizontalAlignment="Right" Width="40" Height="40"
+                            Background="Transparent" Foreground="White" BorderThickness="0" 
+                            Cursor="Hand" Click="CloseBtn_Click"
+                            WindowChrome.IsHitTestVisibleInChrome="True">
+                        <Button.Template>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border x:Name="bg" Background="Transparent" CornerRadius="10" Padding="8">
+                                    <TextBlock Text="✕" FontSize="18" FontWeight="Bold"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bg" Property="Background" Value="#EF4444"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- MAIN CONTENT -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" 
+                          WindowChrome.IsHitTestVisibleInChrome="True">
+                <StackPanel Margin="50,20,50,50">
+
+                    <!-- Introduction -->
+                    <Border Style="{StaticResource StepCard}">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                <Border Width="60" Height="60" Background="#3EC7E8" CornerRadius="30">
+                                    <TextBlock Text="ℹ️" FontSize="30" 
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel Margin="20,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock x:Name="IntroTitle" Text="Before We Start" 
+                                               Foreground="White" FontSize="22" FontWeight="Bold"/>
+                                    <TextBlock x:Name="IntroSubtitle" Text="Choose your download method" 
+                                               Foreground="#94A3B8" FontSize="14"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <TextBlock x:Name="IntroText" 
+                                       Text="You need to download the complete DLC package first. Choose one of the following methods:"
+                                       Foreground="#E5E7EB" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,20"/>
+
+                            <!-- Download Options -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Google Drive Option -->
+                                <Border Grid.Column="0" Background="#10FFFFFF" CornerRadius="12" 
+                                        Padding="20" Margin="0,0,10,0" BorderBrush="#22C55E" BorderThickness="2">
+                                    <StackPanel>
+                                        <TextBlock Text="☁️" FontSize="40" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                        <TextBlock x:Name="GDriveTitle" Text="Google Drive" 
+                                                   Foreground="White" FontSize="16" FontWeight="Bold"
+                                                   HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                                        <TextBlock x:Name="GDriveDesc" Text="Fast and easy download" 
+                                                   Foreground="#94A3B8" FontSize="12"
+                                                   HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,15"/>
+                                        <Button x:Name="GDriveBtn" Content="📥 Download from Drive" 
+                                                Style="{StaticResource ActionButton}"
+                                                Click="GDriveBtn_Click"
+                                                WindowChrome.IsHitTestVisibleInChrome="True"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- BitTorrent Option -->
+                                <Border Grid.Column="1" Background="#10FFFFFF" CornerRadius="12" 
+                                        Padding="20" Margin="10,0,0,0" BorderBrush="#8B5CF6" BorderThickness="2">
+                                    <StackPanel>
+                                        <TextBlock Text="⚡" FontSize="40" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                        <TextBlock x:Name="TorrentTitle" Text="BitTorrent" 
+                                                   Foreground="White" FontSize="16" FontWeight="Bold"
+                                                   HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                                        <TextBlock x:Name="TorrentDesc" Text="Faster for large files" 
+                                                   Foreground="#94A3B8" FontSize="12"
+                                                   HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,15"/>
+                                        <Button x:Name="TorrentBtn" Content="🌐 Download Torrent" 
+                                                Style="{StaticResource ActionButton}"
+                                                Click="TorrentBtn_Click"
+                                                WindowChrome.IsHitTestVisibleInChrome="True"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Step 1: Extract -->
+                    <Border x:Name="Step1Card" Style="{StaticResource StepCard}" Opacity="0.5">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" Width="60" Height="60" 
+                                        Background="#0A6BF2" CornerRadius="30">
+                                    <TextBlock Text="1" FontSize="28" FontWeight="Bold" 
+                                               Foreground="White" 
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+
+                                <StackPanel Grid.Column="1" Margin="20,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock x:Name="Step1Title" Text="Extract the Downloaded File" 
+                                               Foreground="White" FontSize="20" FontWeight="Bold"/>
+                                    <TextBlock x:Name="Step1Subtitle" Text="Create a new folder on your Desktop" 
+                                               Foreground="#94A3B8" FontSize="13"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBlock x:Name="Step1Text" 
+                                       Text="Once downloaded, extract the .zip file to a NEW folder on your Desktop. Name it something like 'Sims4_DLCs'."
+                                       Foreground="#E5E7EB" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,15"/>
+
+                            <!-- Visual Example -->
+                            <Border Background="#10FFFFFF" CornerRadius="12" Padding="20">
+                                <StackPanel>
+                                    <TextBlock Text="💡 Example:" Foreground="#F59E0B" FontSize="13" FontWeight="Bold" Margin="0,0,0,10"/>
+                                    <TextBlock x:Name="Step1Example" Foreground="#94A3B8" FontSize="12" TextWrapping="Wrap">
+                                        <Run Text="1. Right-click the downloaded .zip file"/>
+                                        <LineBreak/>
+                                        <Run Text="2. Select 'Extract All...'"/>
+                                        <LineBreak/>
+                                        <Run Text="3. Choose your Desktop as destination"/>
+                                        <LineBreak/>
+                                        <Run Text="4. Create a folder named 'Sims4_DLCs'"/>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Step 2: Use Semi-Auto Installer -->
+                    <Border x:Name="Step2Card" Style="{StaticResource StepCard}" Opacity="0.5">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" Width="60" Height="60" 
+                                        Background="#22C55E" CornerRadius="30">
+                                    <TextBlock Text="2" FontSize="28" FontWeight="Bold" 
+                                               Foreground="White" 
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+
+                                <StackPanel Grid.Column="1" Margin="20,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock x:Name="Step2Title" Text="Use the Semi-Automatic Installer" 
+                                               Foreground="White" FontSize="20" FontWeight="Bold"/>
+                                    <TextBlock x:Name="Step2Subtitle" Text="Let the tool do the work" 
+                                               Foreground="#94A3B8" FontSize="13"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBlock x:Name="Step2Text" 
+                                       Text="Now use our Semi-Automatic Installer to complete the installation:"
+                                       Foreground="#E5E7EB" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,15"/>
+
+                            <!-- Instructions -->
+                            <Border Background="#10FFFFFF" CornerRadius="12" Padding="20" Margin="0,0,0,20">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                        <TextBlock Text="📁" FontSize="16" Margin="0,0,10,0"/>
+                                        <TextBlock x:Name="Step2Instruction1" 
+                                                   Text="Step 1: Click 'Browse' and select the folder you just extracted (Sims4_DLCs)"
+                                                   Foreground="#E5E7EB" FontSize="13" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="🎮" FontSize="16" Margin="0,0,10,0"/>
+                                        <TextBlock x:Name="Step2Instruction2" 
+                                                   Text="Step 2: Select your Sims 4 installation folder (or let it auto-detect)"
+                                                   Foreground="#E5E7EB" FontSize="13" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Button x:Name="OpenInstallerBtn" Content="🚀 Open Semi-Automatic Installer" 
+                                    Style="{StaticResource ActionButton}"
+                                    Height="55" FontSize="16"
+                                    Click="OpenInstallerBtn_Click"
+                                    WindowChrome.IsHitTestVisibleInChrome="True"/>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</Window>

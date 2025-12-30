@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Xml.Linq;
+using System.Web.Script.Serialization;
 
 namespace ModernDesign.MVVM.View
 {
@@ -16,37 +18,35 @@ namespace ModernDesign.MVVM.View
         private CancellationTokenSource _cancellationTokenSource;
         private readonly HttpClient _httpClient = new HttpClient();
         private string _simsPath = "";
-        private readonly string _tempFolder;
+        private Dictionary<string, string> _officialHashes = new Dictionary<string, string>();
+        private HashSet<string> _excludedFolders = new HashSet<string>();
+        private bool _scanConfigured = false;
 
-        // ✅ LISTA DE COMPONENTES PARA REPARACIÓN
-        private readonly Dictionary<string, RepairComponent> _repairComponents = new Dictionary<string, RepairComponent>
-        {
-            { "__Installer", new RepairComponent("__Installer", "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Offline/Updater/BaseGame/__Installer.zip") },
-            { "Data", new RepairComponent("Data", "https://www.mediafire.com/file_premium/617ntc9sfc5e6py/Data.zip/file") },
-            { "Delta", new RepairComponent("Delta", "https://www.mediafire.com/file_premium/m44n1u6c1d0s7un/Delta.zip/file") },
-            { "Game", new RepairComponent("Game", "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Offline/Updater/LeuanVersion/LatestLeuanVersion.zip") },
-            { "Support", new RepairComponent("Support", "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Offline/Updater/BaseGame/Support.zip") }
-        };
+        private const string OFFICIAL_DATABASE_URL = "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Utility/Repair/Sims4_Integrity_20251218_185419/leuan_steam_database.json";
+        private const string REPAIR_BASE_URL = "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Utility/Repair/";
+
+        private int _totalFiles = 0;
+        private int _scannedFiles = 0;
+        private int _correctFiles = 0;
+        private int _corruptFiles = 0;
 
         public RepairLoggerWindow()
         {
             InitializeComponent();
-            _tempFolder = Path.Combine(Path.GetTempPath(), "LeuansSims4Toolkit_Repair");
+            ApplyLanguage();
+            Loaded += RepairLoggerWindow_Loaded;
+        }
 
-            if (!Directory.Exists(_tempFolder))
+        private void MainBorder_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
             {
-                Directory.CreateDirectory(_tempFolder);
                 try
                 {
-                    var di = new DirectoryInfo(_tempFolder);
-                    di.Attributes |= FileAttributes.Hidden;
+                    this.DragMove();
                 }
                 catch { }
             }
-
-            ApplyLanguage();
-            this.MouseLeftButtonDown += (s, e) => this.DragMove();
-            Loaded += RepairLoggerWindow_Loaded;
         }
 
         private void ApplyLanguage()
@@ -55,27 +55,27 @@ namespace ModernDesign.MVVM.View
 
             if (isSpanish)
             {
-                HeaderText.Text = "🔧 Reparando el juego...";
-                SubHeaderText.Text = "Selecciona los componentes que deseas reparar";
+                HeaderText.Text = "🔍 Verificador de Integridad del Juego";
+                SubHeaderText.Text = "Compara archivos con la base de datos oficial de Steam";
                 PathLabelText.Text = "Ubicación de The Sims 4";
                 BrowseBtn.Content = "Buscar";
                 CancelBtn.Content = "❌ Cancelar";
-                StartBtn.Content = "🔧 Iniciar Reparación";
+                StartBtn.Content = "🔍 Iniciar Escaneo";
                 SpeedLabel.Text = "Velocidad:";
                 EtaLabel.Text = "ETA:";
-                ComponentsHeaderText.Text = "📦 Selecciona componentes a reparar:";
+                ConfigureBtn.Content = "⚙️ Configurar Escaneo (Seleccionar DLCs)";
             }
             else
             {
-                HeaderText.Text = "🔧 Repairing the game...";
-                SubHeaderText.Text = "Select the components you want to repair";
+                HeaderText.Text = "🔍 Game Integrity Checker";
+                SubHeaderText.Text = "Compare files with official Steam database";
                 PathLabelText.Text = "The Sims 4 install location";
                 BrowseBtn.Content = "Browse";
                 CancelBtn.Content = "❌ Cancel";
-                StartBtn.Content = "🔧 Start Repair";
+                StartBtn.Content = "🔍 Start Scan";
                 SpeedLabel.Text = "Speed:";
                 EtaLabel.Text = "ETA:";
-                ComponentsHeaderText.Text = "📦 Select components to repair:";
+                ConfigureBtn.Content = "⚙️ Configure Scan (Select DLCs)";
             }
         }
 
@@ -183,11 +183,19 @@ namespace ModernDesign.MVVM.View
             StatusText.Foreground = new System.Windows.Media.SolidColorBrush(
                 (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#22C55E"));
 
-            StartBtn.IsEnabled = true;
+            // Mostrar botón de configuración
+            ConfigureBtn.Visibility = Visibility.Visible;
+
+            // Deshabilitar StartBtn hasta que se configure
+            StartBtn.IsEnabled = false;
 
             AddLog(isSpanish
                 ? $"✅ Carpeta de The Sims 4 detectada: {path}"
                 : $"✅ The Sims 4 folder detected: {path}");
+
+            AddLog(isSpanish
+                ? "⚠️ Debes configurar el escaneo antes de iniciar."
+                : "⚠️ You must configure the scan before starting.");
         }
 
         private void BrowseBtn_Click(object sender, RoutedEventArgs e)
@@ -224,45 +232,53 @@ namespace ModernDesign.MVVM.View
             }
         }
 
+        private void ConfigureBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var selectorWindow = new DLCSelectorWindow
+            {
+                Owner = this
+            };
+
+            if (selectorWindow.ShowDialog() == true)
+            {
+                _excludedFolders = selectorWindow.ExcludedFolders;
+                _scanConfigured = true;
+                StartBtn.IsEnabled = true;
+
+                bool isSpanish = IsSpanishLanguage();
+                int excludedCount = _excludedFolders.Count;
+
+                AddLog(isSpanish
+                    ? $"✅ Configuración guardada. {excludedCount} carpeta(s) excluida(s) del escaneo."
+                    : $"✅ Configuration saved. {excludedCount} folder(s) excluded from scan.");
+
+                // Actualizar texto del botón
+                ConfigureBtn.Content = isSpanish
+                    ? $"⚙️ Reconfigurar Escaneo ({excludedCount} excluidas)"
+                    : $"⚙️ Reconfigure Scan ({excludedCount} excluded)";
+            }
+        }
+
         private async void StartBtn_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(_simsPath))
                 return;
 
-            // Verificar que al menos un componente esté seleccionado
-            var selectedComponents = GetSelectedComponents();
-            if (selectedComponents.Count == 0)
-            {
-                bool isSpanish = IsSpanishLanguage();
-                MessageBox.Show(
-                    isSpanish
-                        ? "Por favor selecciona al menos un componente para reparar."
-                        : "Please select at least one component to repair.",
-                    isSpanish ? "Sin componentes seleccionados" : "No components selected",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
-                return;
-            }
-
             StartBtn.IsEnabled = false;
             BrowseBtn.IsEnabled = false;
-            DataCheckBox.IsEnabled = false;
-            DeltaCheckBox.IsEnabled = false;
-            InstallerCheckBox.IsEnabled = false;
-            SupportCheckBox.IsEnabled = false;
-            GameCheckBox.IsEnabled = false;
+            ConfigureBtn.IsEnabled = false;
             ProgressPanel.Visibility = Visibility.Visible;
 
             _cancellationTokenSource = new CancellationTokenSource();
 
             try
             {
-                await StartRepairAsync(selectedComponents);
+                await StartIntegrityCheckAsync();
             }
             catch (OperationCanceledException)
             {
                 bool isSpanish = IsSpanishLanguage();
-                AddLog(isSpanish ? "❌ Reparación cancelada por el usuario." : "❌ Repair cancelled by user.");
+                AddLog(isSpanish ? "❌ Escaneo cancelado por el usuario." : "❌ Scan cancelled by user.");
             }
             catch (Exception ex)
             {
@@ -270,100 +286,290 @@ namespace ModernDesign.MVVM.View
                 AddLog(isSpanish ? $"❌ Error: {ex.Message}" : $"❌ Error: {ex.Message}");
                 MessageBox.Show(
                     isSpanish
-                        ? $"Error durante la reparación:\n\n{ex.Message}"
-                        : $"Error during repair:\n\n{ex.Message}",
+                        ? $"Error durante el escaneo:\n\n{ex.Message}"
+                        : $"Error during scan:\n\n{ex.Message}",
                     "Error",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
             finally
             {
-                StartBtn.IsEnabled = true;
+                StartBtn.IsEnabled = _scanConfigured;
                 BrowseBtn.IsEnabled = true;
-                DataCheckBox.IsEnabled = true;
-                DeltaCheckBox.IsEnabled = true;
-                InstallerCheckBox.IsEnabled = true;
-                SupportCheckBox.IsEnabled = true;
-                GameCheckBox.IsEnabled = true;
+                ConfigureBtn.IsEnabled = true;
                 ProgressPanel.Visibility = Visibility.Collapsed;
             }
         }
 
-        private List<RepairComponent> GetSelectedComponents()
-        {
-            var selected = new List<RepairComponent>();
-
-            if (DataCheckBox.IsChecked == true)
-                selected.Add(_repairComponents["Data"]);
-            if (DeltaCheckBox.IsChecked == true)
-                selected.Add(_repairComponents["Delta"]);
-            if (InstallerCheckBox.IsChecked == true)
-                selected.Add(_repairComponents["__Installer"]);
-            if (SupportCheckBox.IsChecked == true)
-                selected.Add(_repairComponents["Support"]);
-            if (GameCheckBox.IsChecked == true)
-                selected.Add(_repairComponents["Game"]);
-
-            return selected;
-        }
-
-        private async Task StartRepairAsync(List<RepairComponent> components)
+        private async Task StartIntegrityCheckAsync()
         {
             bool isSpanish = IsSpanishLanguage();
-            int totalFiles = components.Count;
 
-            AddLog(isSpanish
-                ? $"\n🔧 Iniciando reparación de {totalFiles} componente(s)..."
-                : $"\n🔧 Starting repair of {totalFiles} component(s)...");
-
-            for (int i = 0; i < totalFiles; i++)
+            if (!_scanConfigured)
             {
-                var component = components[i];
-                int currentIndex = i + 1;
-
-                AddLog($"\n[{currentIndex}/{totalFiles}] {component.Name}");
-                AddLog($"URL: {component.Url}");
-
-                string tempZipPath = Path.Combine(_tempFolder, $"repair_{component.Name}.zip");
-
-                // Descargar
-                AddLog(isSpanish ? "📥 Descargando..." : "📥 Downloading...");
-                await DownloadWithProgressAsync(component.Url, tempZipPath, component.Name, currentIndex, totalFiles);
-
-                // Extraer
-                AddLog(isSpanish ? "📦 Extrayendo..." : "📦 Extracting...");
-                ProgressText.Text = isSpanish
-                    ? $"Extrayendo {component.Name}... ({currentIndex}/{totalFiles})"
-                    : $"Extracting {component.Name}... ({currentIndex}/{totalFiles})";
-
-                await Task.Run(() => ExtractZipWithOverwrite(tempZipPath, _simsPath));
-
-                // Eliminar ZIP
-                if (File.Exists(tempZipPath))
-                {
-                    File.Delete(tempZipPath);
-                    AddLog(isSpanish ? "🗑️ Archivo temporal eliminado." : "🗑️ Temporary file deleted.");
-                }
-
-                AddLog(isSpanish
-                    ? $"✅ {component.Name} reparado exitosamente."
-                    : $"✅ {component.Name} repaired successfully.");
+                MessageBox.Show(
+                    isSpanish
+                        ? "Debes configurar el escaneo primero usando el botón de configuración."
+                        : "You must configure the scan first using the configuration button.",
+                    isSpanish ? "Configuración Requerida" : "Configuration Required",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
             }
 
             AddLog(isSpanish
-                ? "\n✅ ¡Reparación completada exitosamente!"
-                : "\n✅ Repair completed successfully!");
+                ? "\n🔍 Iniciando verificación de integridad..."
+                : "\n🔍 Starting integrity check...");
+
+            // Step 1: Download official database
+            AddLog(isSpanish
+                ? "📥 Descargando base de datos oficial de Steam..."
+                : "📥 Downloading official Steam database...");
+
+            await DownloadOfficialDatabaseAsync();
+
+            AddLog(isSpanish
+                ? $"✅ Base de datos descargada. Total de archivos oficiales: {_officialHashes.Count}"
+                : $"✅ Database downloaded. Total official files: {_officialHashes.Count}");
+
+            // Step 2: Prepare verification
+            AddLog(isSpanish
+                ? "\n🔎 Preparando verificación contra base de datos oficial..."
+                : "\n🔎 Preparing verification against official database...");
+
+            var corruptedFiles = new List<string>();
+            var sw = Stopwatch.StartNew();
+
+            // Step 3: Verify each file from official database
+            var missingFiles = new List<string>();
+
+            // Filtrar archivos de la base de datos según carpetas seleccionadas
+            var filteredOfficialHashes = _officialHashes
+                .Where(kvp =>
+                {
+                    var parts = kvp.Key.Split('/');
+                    if (parts.Length == 0) return false;
+
+                    var rootFolder = parts[0];
+
+                    // Si está en la lista de excluidos, no verificar
+                    return !_excludedFolders.Contains(rootFolder);
+                })
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            _totalFiles = filteredOfficialHashes.Count;
+            _scannedFiles = 0;
+            _correctFiles = 0;
+            _corruptFiles = 0;
+
+            AddLog(isSpanish
+                ? $"📊 Total de archivos a verificar (según base de datos): {_totalFiles}"
+                : $"📊 Total files to verify (from database): {_totalFiles}");
+
+            foreach (var officialEntry in filteredOfficialHashes)
+            {
+                _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+                var normalizedPath = officialEntry.Key;
+                var officialHash = officialEntry.Value;
+                var localPath = Path.Combine(_simsPath, normalizedPath.Replace("/", "\\"));
+
+                UpdateCurrentFile(normalizedPath);
+                _scannedFiles++;
+
+                // Verificar si el archivo existe localmente
+                if (!File.Exists(localPath))
+                {
+                    _corruptFiles++;
+                    missingFiles.Add(normalizedPath);
+                    corruptedFiles.Add(normalizedPath);
+                    AddLog(isSpanish
+                        ? $"❌ {normalizedPath} | FALTA ARCHIVO"
+                        : $"❌ {normalizedPath} | MISSING FILE");
+                }
+                else
+                {
+                    // El archivo existe, verificar hash
+                    var localHash = await Task.Run(() => CalculateSHA256(localPath));
+
+                    if (localHash.Equals(officialHash, StringComparison.OrdinalIgnoreCase))
+                    {
+                        _correctFiles++;
+                        AddLog(isSpanish
+                            ? $"✅ {normalizedPath}"
+                            : $"✅ {normalizedPath}");
+                    }
+                    else
+                    {
+                        _corruptFiles++;
+                        corruptedFiles.Add(normalizedPath);
+                        AddLog(isSpanish
+                            ? $"❌ {normalizedPath} | HASH INCORRECTO"
+                            : $"❌ {normalizedPath} | INCORRECT HASH");
+                    }
+                }
+
+                UpdateProgress(_scannedFiles, _totalFiles);
+                UpdateStats();
+            }
+
+            if (missingFiles.Count > 0)
+            {
+                AddLog(isSpanish
+                    ? $"\n⚠️ Se detectaron {missingFiles.Count} archivo(s) faltante(s)"
+                    : $"\n⚠️ Detected {missingFiles.Count} missing file(s)");
+            }
+
+            sw.Stop();
+
+            // Step 4: Summary
+            AddLog(isSpanish
+                ? $"\n📊 Escaneo completado en {sw.Elapsed.TotalSeconds:F2} segundos"
+                : $"\n📊 Scan completed in {sw.Elapsed.TotalSeconds:F2} seconds");
+            AddLog(isSpanish
+                ? $"   Total: {_totalFiles} | Correctos: {_correctFiles} | Corruptos: {_corruptFiles}"
+                : $"   Total: {_totalFiles} | Valid: {_correctFiles} | Corrupt: {_corruptFiles}");
+
+            // Step 5: Repair corrupted files
+            if (corruptedFiles.Count > 0)
+            {
+                var result = MessageBox.Show(
+                    isSpanish
+                        ? $"Se encontraron {corruptedFiles.Count} archivo(s) corrupto(s).\n\n¿Deseas repararlos automáticamente descargándolos desde el servidor oficial?"
+                        : $"Found {corruptedFiles.Count} corrupt file(s).\n\nDo you want to automatically repair them by downloading from the official server?",
+                    isSpanish ? "Archivos Corruptos Detectados" : "Corrupt Files Detected",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    await RepairCorruptedFilesAsync(corruptedFiles);
+                }
+            }
+            else
+            {
+                MessageBox.Show(
+                    isSpanish
+                        ? "✅ ¡Todos los archivos están correctos!\n\nTu instalación de The Sims 4 está actualizada y sin errores."
+                        : "✅ All files are valid!\n\nYour The Sims 4 installation is up-to-date and error-free.",
+                    isSpanish ? "Verificación Completada" : "Verification Completed",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
+        }
+
+        private async Task DownloadOfficialDatabaseAsync()
+        {
+            var jsonContent = await _httpClient.GetStringAsync(OFFICIAL_DATABASE_URL);
+
+            var serializer = new JavaScriptSerializer();
+            var jsonObj = serializer.Deserialize<Dictionary<string, object>>(jsonContent);
+
+            _officialHashes.Clear();
+
+            if (jsonObj != null && jsonObj.ContainsKey("files"))
+            {
+                var filesObj = jsonObj["files"] as Dictionary<string, object>;
+                if (filesObj != null)
+                {
+                    foreach (var kvp in filesObj)
+                    {
+                        // Normalizar la ruta: convertir backslashes a forward slashes
+                        var normalizedKey = kvp.Key.Replace("\\", "/");
+                        _officialHashes[normalizedKey] = kvp.Value.ToString().ToLowerInvariant();
+                    }
+                }
+            }
+        }
+
+        private string CalculateSHA256(string filePath)
+        {
+            using (var sha256 = SHA256.Create())
+            using (var stream = File.OpenRead(filePath))
+            {
+                var hash = sha256.ComputeHash(stream);
+                return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+            }
+        }
+
+        private async Task RepairCorruptedFilesAsync(List<string> corruptedFiles)
+        {
+            bool isSpanish = IsSpanishLanguage();
+
+            AddLog(isSpanish
+                ? $"\n🔧 Iniciando reparación de {corruptedFiles.Count} archivo(s)..."
+                : $"\n🔧 Starting repair of {corruptedFiles.Count} file(s)...");
+
+            int repairedCount = 0;
+            int failedCount = 0;
+
+            for (int i = 0; i < corruptedFiles.Count; i++)
+            {
+                _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+                var normalizedPath = corruptedFiles[i]; // Ya viene normalizado con /
+                var downloadUrl = REPAIR_BASE_URL + normalizedPath;
+                var localPath = Path.Combine(_simsPath, normalizedPath.Replace("/", "\\"));
+
+                AddLog(isSpanish
+                    ? $"\n[{i + 1}/{corruptedFiles.Count}] Reparando: {normalizedPath}"
+                    : $"\n[{i + 1}/{corruptedFiles.Count}] Repairing: {normalizedPath}");
+
+                try
+                {
+                    // Asegurar que el directorio existe
+                    var directory = Path.GetDirectoryName(localPath);
+                    if (!Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+
+                    // Descargar archivo
+                    await DownloadFileWithProgressAsync(downloadUrl, localPath, normalizedPath, i + 1, corruptedFiles.Count);
+
+                    // Verificar hash después de la descarga
+                    var newHash = await Task.Run(() => CalculateSHA256(localPath));
+                    if (_officialHashes.TryGetValue(normalizedPath, out var officialHash))
+                    {
+                        if (newHash.Equals(officialHash, StringComparison.OrdinalIgnoreCase))
+                        {
+                            repairedCount++;
+                            AddLog(isSpanish
+                                ? $"✅ Reparado exitosamente: {normalizedPath}"
+                                : $"✅ Successfully repaired: {normalizedPath}");
+                        }
+                        else
+                        {
+                            failedCount++;
+                            AddLog(isSpanish
+                                ? $"❌ Error: Hash no coincide después de descargar: {normalizedPath}"
+                                : $"❌ Error: Hash mismatch after download: {normalizedPath}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    failedCount++;
+                    AddLog(isSpanish
+                        ? $"❌ Error al reparar {normalizedPath}: {ex.Message}"
+                        : $"❌ Error repairing {normalizedPath}: {ex.Message}");
+                }
+            }
+
+            AddLog(isSpanish
+                ? $"\n📊 Reparación completada: {repairedCount} exitosos, {failedCount} fallidos"
+                : $"\n📊 Repair completed: {repairedCount} successful, {failedCount} failed");
 
             MessageBox.Show(
                 isSpanish
-                    ? "✅ Los componentes seleccionados han sido reparados correctamente.\n\nYa puedes cerrar esta ventana y jugar."
-                    : "✅ The selected components have been repaired successfully.\n\nYou can now close this window and play.",
+                    ? $"Reparación completada:\n\n✅ Reparados: {repairedCount}\n❌ Fallidos: {failedCount}"
+                    : $"Repair completed:\n\n✅ Repaired: {repairedCount}\n❌ Failed: {failedCount}",
                 isSpanish ? "Reparación Completada" : "Repair Completed",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
         }
 
-        private async Task DownloadWithProgressAsync(string url, string destinationPath, string fileName, int currentIndex, int totalCount)
+        private async Task DownloadFileWithProgressAsync(string url, string destinationPath, string fileName, int currentIndex, int totalCount)
         {
             using (var response = await _httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, _cancellationTokenSource.Token))
             {
@@ -387,18 +593,52 @@ namespace ModernDesign.MVVM.View
 
                         if (sw.ElapsedMilliseconds >= 500)
                         {
-                            UpdateProgress(totalRead, totalBytes, totalRead - lastBytesRead, sw.Elapsed.TotalSeconds, fileName, currentIndex, totalCount);
+                            UpdateDownloadProgress(totalRead, totalBytes, totalRead - lastBytesRead, sw.Elapsed.TotalSeconds, fileName, currentIndex, totalCount);
                             lastBytesRead = totalRead;
                             sw.Restart();
                         }
                     }
 
-                    UpdateProgress(totalBytes, totalBytes, 0, 0, fileName, currentIndex, totalCount);
+                    UpdateDownloadProgress(totalBytes, totalBytes, 0, 0, fileName, currentIndex, totalCount);
                 }
             }
         }
 
-        private void UpdateProgress(long bytesRead, long totalBytes, long bytesSinceLast, double secondsElapsed, string fileName, int currentIndex, int totalCount)
+        private void UpdateCurrentFile(string fileName)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                CurrentFileText.Text = $"({Path.GetFileName(fileName)})";
+            });
+        }
+
+        private void UpdateProgress(int current, int total)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (total > 0)
+                {
+                    double percent = (current * 100.0) / total;
+                    ProgressPercent.Text = $"{percent:F1}%";
+
+                    double totalWidth = ProgressPanel.ActualWidth > 0 ? ProgressPanel.ActualWidth : 700;
+                    ProgressBar.Width = (percent / 100.0) * totalWidth;
+                }
+            });
+        }
+
+        private void UpdateStats()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                bool isSpanish = IsSpanishLanguage();
+                StatsText.Text = isSpanish
+                    ? $"Archivos: {_scannedFiles}/{_totalFiles} | Correctos: {_correctFiles} | Corruptos: {_corruptFiles}"
+                    : $"Files: {_scannedFiles}/{_totalFiles} | Valid: {_correctFiles} | Corrupt: {_corruptFiles}";
+            });
+        }
+
+        private void UpdateDownloadProgress(long bytesRead, long totalBytes, long bytesSinceLast, double secondsElapsed, string fileName, int currentIndex, int totalCount)
         {
             Dispatcher.Invoke(() =>
             {
@@ -413,7 +653,7 @@ namespace ModernDesign.MVVM.View
                     double percent = (bytesRead * 100.0) / totalBytes;
                     ProgressPercent.Text = $"{percent:F0}%";
 
-                    double totalWidth = ProgressPanel.ActualWidth > 0 ? ProgressPanel.ActualWidth : 400;
+                    double totalWidth = ProgressPanel.ActualWidth > 0 ? ProgressPanel.ActualWidth : 700;
                     ProgressBar.Width = (percent / 100.0) * totalWidth;
 
                     if (secondsElapsed > 0 && bytesSinceLast > 0)
@@ -433,26 +673,6 @@ namespace ModernDesign.MVVM.View
             });
         }
 
-        private void ExtractZipWithOverwrite(string zipPath, string destinationPath)
-        {
-            using (ZipArchive archive = ZipFile.OpenRead(zipPath))
-            {
-                foreach (ZipArchiveEntry entry in archive.Entries)
-                {
-                    if (string.IsNullOrEmpty(entry.Name))
-                        continue;
-
-                    string destinationFilePath = Path.Combine(destinationPath, entry.FullName);
-                    string directoryPath = Path.GetDirectoryName(destinationFilePath);
-
-                    if (!Directory.Exists(directoryPath))
-                        Directory.CreateDirectory(directoryPath);
-
-                    entry.ExtractToFile(destinationFilePath, overwrite: true);
-                }
-            }
-        }
-
         private void AddLog(string message)
         {
             Dispatcher.Invoke(() =>
@@ -466,19 +686,6 @@ namespace ModernDesign.MVVM.View
         {
             _cancellationTokenSource?.Cancel();
             this.Close();
-        }
-    }
-
-    // ✅ CLASE AUXILIAR PARA COMPONENTES DE REPARACIÓN
-    public class RepairComponent
-    {
-        public string Name { get; set; }
-        public string Url { get; set; }
-
-        public RepairComponent(string name, string url)
-        {
-            Name = name;
-            Url = url;
         }
     }
 }

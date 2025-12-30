@@ -115,8 +115,10 @@ namespace ModernDesign.MVVM.View
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = "https://ko-fi.com/leuan", // Cambia por tu link real
-                    UseShellExecute = true
+                    FileName = "cmd",
+                    Arguments = $"/c start https://ko-fi.com/leuan",
+                    CreateNoWindow = true,
+                    UseShellExecute = false
                 });
             }
             catch { }

@@ -23,7 +23,7 @@ namespace ModernDesign.MVVM.View
             new InstallFile("Base Files", "https://www.mediafire.com/file_premium/hnillv3iy986uxn/Other_Files.zip/file"),
             new InstallFile("Delta Package", "https://www.mediafire.com/file_premium/m44n1u6c1d0s7un/Delta.zip/file"),
             new InstallFile("Data Package", "https://www.mediafire.com/file_premium/617ntc9sfc5e6py/Data.zip/file"),
-            new InstallFile("Latest Update", "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Offline/Updater/LeuanVersion/LatestLeuanVersion.zip")
+            new InstallFile("Latest Update", "https://download1503.mediafire.com/735xnu4c2dtg5YTUlhyMDc3wh3gSH_LIzE4xpr3K4wDLBHWw97HdAwHGOoAZRfcX1LhfKnmcLTqnqhpzAUOrEB-vA5271kVmgYPJc1SgxmIXXO89-ghAfeVtlzumzm1G9MX39PAS4RtImpccihpEFUWesRHxub2OCxwGG4Dg7I5J/buzuqeomamfz5gc/LatestUpdateAndCrack.zip")
         };
 
         public CrackedGameInstallerWindow()

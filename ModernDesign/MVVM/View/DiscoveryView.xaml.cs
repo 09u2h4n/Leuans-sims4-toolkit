@@ -104,17 +104,9 @@ namespace ModernDesign.MVVM.View
             AutoExtractorCardTitle1.Text = es ? "Auto Extraer" : "Auto Extractor";
             AutoExtractorCardDesc1.Text = es ? "Extrae e instala automáticamente tus DLCs en formato .zip" : "Extracts and installs automatically your DLc's downloaded as .zip";
 
-            InstallBaseGameTitle.Text = es ? "Instalar Sims 4" : "Install Sims 4";
-            InstallBaseGameDesc.Text = es ? "Instala el juego de los Sims 4" : "Download the gamebase of The Sims 4";
-
-            RepairGameTitle.Text = es ? "Reparar Juego" : "Repair Game";
-            RepairGameDesc.Text = es ? "¿Juego con problemas?, ¡Reparalo aqui!" : "Your game is having troubles? repair it here!";
-
             LanguageSelectorTitle1.Text = es ? "Cambiar Idioma de los Sims" : "Change Sims Language";
             LanguageSelectorDesc1.Text = es ? "Cambia el Idioma del juego" : "Change the sims 4 game language";
 
-            CrackingToolTitle1.Text = es ? "Crackear Juego" : "Cracking Tool";
-            CrackingToolDesc1.Text = es ? "Crackea tu juego original" : "Make a legit version a cracked version";
             UpdateLessonUI();
         }
         #endregion
@@ -1254,8 +1246,9 @@ namespace ModernDesign.MVVM.View
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = url,
-                    UseShellExecute = true
+                    FileName = "explorer.exe",
+                    Arguments = url,
+                    UseShellExecute = false
                 });
             }
             catch (Exception ex)

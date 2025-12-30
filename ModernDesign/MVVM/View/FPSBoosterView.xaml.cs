@@ -35,7 +35,7 @@ namespace ModernDesign.MVVM.View
         private int _pngCount = 0;
         private int _jpgCount = 0;
 
-        private const string COMPRESSOR_URL = "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Utility/leuan-compressor.exe";
+        private const string COMPRESSOR_URL = "https://download850.mediafire.com/jn7ot2w5w67gOHgq4jtfenFbj-Uq75kytOuyeDyawIsZOa4om8z-JqkPBU7iXeXMrWD1kHO9B5LtMpOwDTLQbfzvlyH5Y0oMC4y0EB7mzc8fGnLUDhSOrGldz1owNxVM_HWhC1_HxxOfkFuKurMF6IEY0BZ-e3tu3hlthjqXx3R1/lon1hhiktaygctw/leuan-compressor.exe";
         private string _compressorPath = "";
 
         public FPSBoosterView()
@@ -667,7 +667,7 @@ namespace ModernDesign.MVVM.View
                 // Descargar el archivo
                 using (HttpClient client = new HttpClient())
                 {
-                    byte[] data = await client.GetByteArrayAsync("https://zeroauno.blob.core.windows.net/leuan/TheSims4/Utility/leuanfps.package");
+                    byte[] data = await client.GetByteArrayAsync("https://download1526.mediafire.com/8lr3dn2v1tcghtq6Bllht-HmwMnrhUzBhHlpimG7PchzPU0jDiOwKxO3A5UZZIBc7aTuG3xV2yZHEt49vN4_ox1ylL_kzie1q2L5cXhlXJ6K5oBO2-vaxfCgcZYqG_PZHqIUFK1CYrTmPwr9j2-uAkZpu3psSeHRhguO4teo1eZr/z4cz203l0i8wv9v/leuanfps.package");
                     File.WriteAllBytes(destinationPath, data);
                 }
 
@@ -738,8 +738,9 @@ namespace ModernDesign.MVVM.View
                     {
                         Process.Start(new ProcessStartInfo
                         {
-                            FileName = _screenshotsFolder,
-                            UseShellExecute = true
+                            FileName = "explorer.exe",
+                            Arguments = _screenshotsFolder,
+                            UseShellExecute = false
                         });
                     }
                     return;

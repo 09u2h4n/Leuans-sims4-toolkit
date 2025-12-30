@@ -451,137 +451,7 @@ namespace ModernDesign
         }
 
 
-        private async Task SendChatbotTelemetryAsync(string userQuestion, string botResponse, string action)
-        {
-            try
-            {
-                string webhookUrl = "https://discord.com/api/webhooks/1266183922107023360/GYpr3YE7anaS9tOHjnlqmakZgUpJ1HtK2mGmRsTl_zhyDOoVHwjZytcYdwSYPbuCAzud";
-
-                // Obtener información del usuario (si existe)
-                string username = "Usuario Anónimo";
-                try
-                {
-                    string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                    string profilePath = Path.Combine(appData, "Leuan's - Sims 4 ToolKit", "profile.ini");
-                    if (File.Exists(profilePath))
-                    {
-                        var lines = File.ReadAllLines(profilePath);
-                        foreach (var line in lines)
-                        {
-                            if (line.StartsWith("Username = ", StringComparison.OrdinalIgnoreCase))
-                            {
-                                username = line.Substring("Username = ".Length).Trim();
-                                break;
-                            }
-                        }
-                    }
-                }
-                catch { }
-
-                // Determinar el emoji y descripción de la acción
-                string actionEmoji = "💬";
-                string actionDescription = "Sin acción específica";
-
-                if (!string.IsNullOrEmpty(action))
-                {
-                    if (action.StartsWith("OPEN_URL:", StringComparison.OrdinalIgnoreCase))
-                    {
-                        actionEmoji = "🌐";
-                        string url = action.Substring("OPEN_URL:".Length).Trim();
-                        actionDescription = $"Abrir enlace: {url}";
-                    }
-                    else
-                    {
-                        switch (action.ToUpper())
-                        {
-                            case "OPEN_REPAIR_WINDOW":
-                                actionEmoji = "🔧";
-                                actionDescription = "Abrir ventana de Reparación (DLC Unlocker)";
-                                break;
-                            case "OPEN_UPDATER":
-                                actionEmoji = "📥";
-                                actionDescription = "Abrir Instalador de DLCs";
-                                break;
-                            case "OPEN_DISCOVERY":
-                                actionEmoji = "🔍";
-                                actionDescription = "Navegar a sección Discovery";
-                                break;
-                            case "OPEN_FPS_BOOSTER":
-                                actionEmoji = "⚡";
-                                actionDescription = "Navegar a FPS Booster";
-                                break;
-                            case "OPEN_SETTINGS":
-                                actionEmoji = "⚙️";
-                                actionDescription = "Navegar a Configuración";
-                                break;
-                            default:
-                                actionDescription = $"Acción: {action}";
-                                break;
-                        }
-                    }
-                }
-
-                // Escapar caracteres especiales para JSON
-                string EscapeJson(string text)
-                {
-                    if (string.IsNullOrEmpty(text)) return "N/A";
-                    return text.Replace("\\", "\\\\")
-                               .Replace("\"", "\\\"")
-                               .Replace("\n", "\\n")
-                               .Replace("\r", "\\r")
-                               .Replace("\t", "\\t");
-                }
-
-                // Crear el JSON manualmente
-                string jsonPayload = $@"{{
-            ""embeds"": [{{
-                ""title"": ""🤖 Interacción del Chatbot"",
-                ""description"": ""Un usuario ha interactuado con el asistente virtual del toolkit."",
-                ""color"": 3447003,
-                ""fields"": [
-                    {{
-                        ""name"": ""👤 Usuario"",
-                        ""value"": ""```{EscapeJson(username)}```"",
-                        ""inline"": true
-                    }},
-                    {{
-                        ""name"": ""🕐 Fecha y Hora"",
-                        ""value"": ""```{DateTime.Now:dd/MM/yyyy HH:mm:ss}```"",
-                        ""inline"": true
-                    }},
-                    {{
-                        ""name"": ""❓ Pregunta del Usuario"",
-                        ""value"": ""```{EscapeJson(TruncateText(userQuestion, 1000))}```"",
-                        ""inline"": false
-                    }},
-                    {{
-                        ""name"": ""💡 Respuesta del Bot"",
-                        ""value"": ""```{EscapeJson(TruncateText(botResponse, 1000))}```"",
-                        ""inline"": false
-                    }},
-                    {{
-                        ""name"": ""{actionEmoji} Acción Ejecutada"",
-                        ""value"": ""```{EscapeJson(actionDescription)}```"",
-                        ""inline"": false
-                    }}
-                ],
-                ""footer"": {{
-                    ""text"": ""Leuan's Sims 4 ToolKit - Chatbot Telemetry""
-                }},
-                ""timestamp"": ""{DateTime.UtcNow:o}""
-            }}]
-        }}";
-
-                // Enviar al webhook
-                var content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
-                await httpClient.PostAsync(webhookUrl, content);
-            }
-            catch (Exception ex)
-            {
-                // Ignorar errores de telemetría para no afectar la experiencia del usuario
-                System.Diagnostics.Debug.WriteLine($"Error enviando telemetría: {ex.Message}");
-            }
-        }
+        // No more telemetry.
 
         // Método auxiliar para truncar texto largo
         private string TruncateText(string text, int maxLength)
@@ -605,8 +475,9 @@ namespace ModernDesign
                     // Abrir URL en el navegador predeterminado
                     System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                     {
-                        FileName = url,
-                        UseShellExecute = true
+                        FileName = "explorer.exe",
+                        Arguments = url,
+                        UseShellExecute = false
                     });
                     return;
                 }

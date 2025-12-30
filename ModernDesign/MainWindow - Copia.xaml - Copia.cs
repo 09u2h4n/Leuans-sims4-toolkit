@@ -1,10 +1,11 @@
-﻿using System;
+﻿using ModernDesign.Profile;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using ModernDesign.Profile;
+using System.Windows.Input;
 
 namespace ModernDesign
 {
@@ -132,49 +133,7 @@ namespace ModernDesign
             }
         }
 
-        private async Task SendDiscordWebhook(string userName, string languageCode)
-        {
-            try
-            {
-                string webhookUrl = "https://discord.com/api/webhooks/1444457608277786757/WhpK6Mh6KR_MRGzva7zHg-xpBehh8ceQ-sB9EYsyoTojKJRqFHoe2fk77m4gHM7rij5B";
-
-                string languageDisplay = languageCode == "es-ES" ? "🇪🇸 Español" : "🇺🇸 English";
-
-                string jsonPayload = $@"{{
-                    ""embeds"": [{{
-                        ""title"": ""🎉 Nuevo Usuario Registrado"",
-                        ""description"": ""Un nuevo usuario ha usado la APP por primera vez!"",
-                        ""color"": 5814783,
-                        ""fields"": [
-                            {{
-                                ""name"": ""👤 Usuario"",
-                                ""value"": ""{userName}"",
-                                ""inline"": true
-                            }},
-                            {{
-                                ""name"": ""🌐 Idioma"",
-                                ""value"": ""{languageDisplay}"",
-                                ""inline"": true
-                            }}
-                        ],
-                        ""footer"": {{
-                            ""text"": ""Leuan's - Sims 4 ToolKit""
-                        }},
-                        ""timestamp"": ""{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ss.fffZ}""
-                    }}]
-                }}";
-
-                using (HttpClient client = new HttpClient())
-                {
-                    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-                    await client.PostAsync(webhookUrl, content);
-                }
-            }
-            catch
-            {
-                // Silently fail - don't interrupt user experience if webhook fails
-            }
-        }
+       // No more telemetry.
 
         private void OpenDiscordInvite()
         {
@@ -182,8 +141,9 @@ namespace ModernDesign
             {
                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                 {
-                    FileName = "https://discord.gg/JYnpPt4nUu",
-                    UseShellExecute = true
+                    FileName = "explorer.exe",
+                    Arguments = "https://discord.gg/JYnpPt4nUu",
+                    UseShellExecute = false
                 });
             }
             catch
@@ -229,6 +189,11 @@ namespace ModernDesign
             File.WriteAllLines(_languageIniPath, lines);
         }
 
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
+        }
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();

@@ -948,8 +948,9 @@ namespace ModernDesign.MVVM.View
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = filePath,
-                    UseShellExecute = true
+                    FileName = "explorer.exe",
+                    Arguments = filePath,
+                    UseShellExecute = false
                 });
             }
             catch (Exception ex)
@@ -1075,8 +1076,9 @@ namespace ModernDesign.MVVM.View
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = "https://github.com/Leuansin/LeuMusic-Downloader",
-                    UseShellExecute = true
+                    FileName = "explorer.exe",
+                    Arguments = "https://github.com/Leuansin/LeuMusic-Downloader",
+                    UseShellExecute = false
                 });
             }
             catch { }

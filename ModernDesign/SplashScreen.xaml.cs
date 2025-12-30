@@ -17,15 +17,15 @@ namespace ModernDesign
     public partial class SplashScreen : Window
     {
         // 🔹 Versión local del launcher
-        private const string LocalLauncherVersion = "1.3.0";
+        private const string LocalLauncherVersion = "1.3.5";
 
         // 🔹 URL del archivo de versión remoto
         private const string VersionCheckUrl =
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/version.txt"; // Versionamiento
+            "https://zeroauno.blob.core.windows.net/leuan/Public/version.txt"; // Versionamiento
 
         // 🔹 URL donde vas a mandar al usuario a bajar el launcher nuevo
         private const string LauncherDownloadUrl =
-            "https://zeroauno.blob.core.windows.net/leuan/TheSims4/LTK.exe"; // Launcher Actualizado
+            "https://download1655.mediafire.com/a7vtarp92jygqRjy4Envlt3J8KV8VMJErCUxLI5TC9NtK9OqWg0Ffcn2RjOlBPvQZZVYCJ9_0OVbpy3LdnQngFu21ednbrtttbWNyQYkIg00vlIEZRiIX3G3oyIlTK8xa7wwPfN7pfSZDRZ7lbKpVleznAIFUDcS-ith3zCkYgva/rz9udgusy12qx12/LTK.exe"; // Launcher Actualizado
 
         // Download URLs (you can update versions later if needed)
         private const string Net48OfflineUrl =
@@ -132,81 +132,7 @@ namespace ModernDesign
         }
 
 
-        /// <summary>
-        /// Lee el User y Language del profile.ini y envía notificación al webhook de Discord
-        /// </summary>
-        private async Task SendDiscordNotificationAsync()
-        {
-            try
-            {
-                string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                string toolkitFolder = Path.Combine(appData, "Leuan's - Sims 4 ToolKit");
-                string profilePath = Path.Combine(toolkitFolder, "profile.ini");
-                string profilePath2 = Path.Combine(toolkitFolder, "language.ini");
-
-
-                if (!File.Exists(profilePath))
-                    return;
-
-                string userName = "Unknown";
-                string language = "Unknown";
-
-                // Leer el archivo profile.ini
-                string[] lines = File.ReadAllLines(profilePath);
-                foreach (string line in lines)
-                {
-                    string trimmed = line.Trim();
-
-                    if (trimmed.StartsWith("User", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var parts = trimmed.Split('=');
-                        if (parts.Length >= 2)
-                        {
-                            userName = parts[1].Trim();
-                        }
-                    }
-                }
-
-                // Leer el archivo language.ini
-                string[] lines2 = File.ReadAllLines(profilePath2);
-                foreach (string line in lines2)
-                {
-                    string trimmed = line.Trim();
-
-                    if (trimmed.StartsWith("Language", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var parts = trimmed.Split('=');
-                        if (parts.Length >= 2)
-                        {
-                            language = parts[1].Trim();
-                        }
-                    }
-                }
-
-                // Enviar al webhook de Discord
-                string webhookUrl = "https://discord.com/api/webhooks/1443082393627000981/C9Krm8muziIb-Y_LE9hpmWhQwFb-STHnhdvKxgWcq738r68iTCTU7StQLRiSem5oug4l";
-                string message = $"{userName} ha abierto mi APP con el idioma {language}!";
-
-                using (var httpClient = new HttpClient())
-                {
-                    var payload = new
-                    {
-                        content = message
-                    };
-
-                    // Escapar el mensaje para JSON (por si tiene comillas)
-                    string escapedMessage = message.Replace("\"", "\\\"");
-                    string jsonPayload = $"{{\"content\":\"{escapedMessage}\"}}";
-                    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-
-                    await httpClient.PostAsync(webhookUrl, content);
-                }
-            }
-            catch
-            {
-                // No queremos romper el arranque si falla el webhook
-            }
-        }
+        // No more telemetry.
 
         /// <summary>
         /// Lee profile.ini y verifica si PreloadImages está activado
@@ -319,7 +245,7 @@ namespace ModernDesign
                         Process.Start(new ProcessStartInfo
                         {
                             FileName = LauncherDownloadUrl,
-                            UseShellExecute = true
+                            UseShellExecute = false
                         });
                     }
                     catch
@@ -345,25 +271,31 @@ namespace ModernDesign
                     return;
                 }
 
-                // 2) Verificar si se está ejecutando como administrador
+                // 1.5) Revisar si abrió como admin
                 UpdateProgress(3, isSpanish ? "Verificando permisos..." : "Verifying permissions...");
 
                 if (!IsRunningAsAdministrator())
                 {
                     string msgText = isSpanish
-                        ? "Por favor, ejecuta el ToolKit como Administrador. (Haz click derecho en el ejecutable)"
-                        : "Please run the ToolKit as Admin. (Right Click on LTX.exe)";
+                        ? "Has iniciado el ToolKit sin permisos de administrador.\n\n" +
+                          "Esto no es obligatorio, pero algunas acciones (como extraer archivos a otros volúmenes o carpetas protegidas) pueden fallar por falta de permisos.\n\n" +
+                          "Si experimentas errores, vuelve a ejecutar el programa como Administrador."
+                        : "You have started the ToolKit without administrator permissions.\n\n" +
+                          "This is not required, but some actions (such as extracting files to other volumes or protected folders) may fail due to lack of permissions.\n\n" +
+                          "If you encounter errors, please restart the program as Administrator.";
 
-                    string msgTitle = isSpanish ? "Permisos de Administrador Requeridos" : "Administrator Permissions Required";
+                    string msgTitle = isSpanish
+                        ? "Ejecutando sin permisos de Administrador"
+                        : "Running without Administrator Permissions";
 
                     MessageBox.Show(
                         msgText,
                         msgTitle,
                         MessageBoxButton.OK,
-                        MessageBoxImage.Warning);
+                        MessageBoxImage.Information
+                    );
 
-                    Application.Current.Shutdown();
-                    return;
+                    // Continue execution without admin
                 }
 
                 // 2) Si la versión es correcta, seguimos como antes
@@ -412,8 +344,7 @@ namespace ModernDesign
                 {
                     OpenNextWindow();
 
-                    // Enviar notificación a Discord
-                    await SendDiscordNotificationAsync();
+                    // No more telemetry.
                 };
 
                 this.BeginAnimation(Window.OpacityProperty, fadeOut);
@@ -646,7 +577,7 @@ namespace ModernDesign
                 var startInfo = new ProcessStartInfo
                 {
                     FileName = exePath,
-                    UseShellExecute = true
+                    UseShellExecute = false
                 };
                 Process.Start(startInfo);
             }

@@ -103,8 +103,9 @@ namespace ModernDesign.MVVM.View
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = url,
-                    UseShellExecute = true
+                    FileName = "explorer.exe",
+                    Arguments = url,
+                    UseShellExecute = false
                 });
             }
             catch (Exception ex)

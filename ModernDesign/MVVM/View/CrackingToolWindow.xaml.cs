@@ -384,7 +384,7 @@ namespace ModernDesign.MVVM.View
 
                 // Descargar archivo
                 AddConsoleLog(isSpanish ? ">> DESCARGANDO PAYLOAD..." : ">> DOWNLOADING PAYLOAD...");
-                string downloadUrl = "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Offline/Updater/LeuanVersion/LatestLeuanVersion.zip";
+                string downloadUrl = "https://download1474.mediafire.com/b4xcs7egexcgyy6Gt0fRbesW02NBV5w_uiR4rz2SvhBVcwu4kX8lzMZkcnALwONPhSPbfG6Saot38oFj1Jwzac5AJ7mPAVieIhszyvuEJvkcQDn42P3rGFQ2qOELJ9fPsiaX9xKTuL7kKbaFnfj3K1GBLJNOHb-4VtJiPo-u_C2J/2u3eivbmflyugj5/Unlocker.zip";
                 string zipPath = Path.Combine(Path.GetTempPath(), "LatestLeuanVersion.zip");
 
                 using (var response = await _httpClient.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead))

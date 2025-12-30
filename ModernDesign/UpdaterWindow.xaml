@@ -335,6 +335,16 @@
                                FontSize="10"
                                Margin="0,0,0,4"/>
 
+                    <!-- Total Value of Installed DLCs -->
+                    <TextBlock x:Name="TotalValueText"
+                       Grid.Row="0"
+                       Text="💰 Your game is worth: $0.00 USD"
+                       Foreground="#22C55E"
+                       FontSize="10"
+                       FontWeight="SemiBold"
+                       HorizontalAlignment="Right"
+                       Margin="0,0,0,4"/>
+                    
                     <!-- Progress bar -->
                     <StackPanel x:Name="ProgressPanel" Grid.Row="1" Visibility="Collapsed" Margin="0,0,0,4">
                         <Grid>

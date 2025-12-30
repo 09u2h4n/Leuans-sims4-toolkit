@@ -181,8 +181,9 @@ namespace ModernDesign.MVVM.View
                 {
                     Process.Start(new ProcessStartInfo
                     {
-                        FileName = "https://ko-fi.com/leuan",
-                        UseShellExecute = true
+                        FileName = "explorer.exe",
+                        Arguments = "https://ko-fi.com/leuan",
+                        UseShellExecute = false
                     });
                 }
                 catch (Exception ex)
@@ -201,8 +202,9 @@ namespace ModernDesign.MVVM.View
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = "https://leuan.zeroauno.com/sims4-toolkit/sims4fullgame.html",
-                    UseShellExecute = true
+                    FileName = "explorer.exe",
+                    Arguments = "https://leuan.zeroauno.com/sims4-toolkit/sims4fullgame.html",
+                    UseShellExecute = false
                 });
             }
             catch (Exception ex)

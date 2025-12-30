@@ -23,8 +23,8 @@ namespace ModernDesign.MVVM.View
         private bool _isInitializing = true;
 
         // ===== CONFIGURA ESTAS VARIABLES =====
-        private const string CURRENT_VERSION = "1.3.0";
-        private const string VERSION_CHECK_URL = "https://zeroauno.blob.core.windows.net/leuan/TheSims4/version.txt";
+        private const string CURRENT_VERSION = "1.3.5";
+        private const string VERSION_CHECK_URL = "https://zeroauno.blob.core.windows.net/leuan/Public/version.txt";
         // =====================================
 
         public SettingsView()
@@ -796,8 +796,9 @@ Language = en-US
 
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = _appDataFolder,
-                    UseShellExecute = true
+                    FileName = "explorer.exe",
+                    Arguments = _appDataFolder,
+                    UseShellExecute = false
                 });
             }
             catch { }

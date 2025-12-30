@@ -14,7 +14,7 @@ namespace ModernDesign.Managers
 
     public static class AnnouncementManager
     {
-        private const string ANNOUNCEMENT_URL = "https://zeroauno.blob.core.windows.net/leuan/TheSims4/Utility/Anuncio.txt";
+        private const string ANNOUNCEMENT_URL = "https://zeroauno.blob.core.windows.net/leuan/Public/Anuncio.txt?sp=r&st=2025-12-29T23:44:34Z&se=2026-02-28T07:59:34Z&spr=https&sv=2024-11-04&sr=b&sig=5LICZsBvJWw63%2BZzqPMwg3dgtIZTxdGKX3vwuDc0TO8%3D";
 
         public static async Task<AnnouncementData> GetAnnouncementAsync()
         {

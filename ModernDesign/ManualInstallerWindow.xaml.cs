@@ -602,8 +602,9 @@ namespace ModernDesign.MVVM.View
                     {
                         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                         {
-                            FileName = e.Uri.AbsoluteUri,
-                            UseShellExecute = true
+                            FileName = "explorer.exe",
+                            Arguments = e.Uri.AbsoluteUri,
+                            UseShellExecute = false
                         });
                     }
                     catch (Exception ex)
