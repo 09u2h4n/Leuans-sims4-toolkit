@@ -1,157 +1,273 @@
-# 🎮 Sims 4 Strings Package Copier
+# 🎮 Sims 4 String Relocator
 
-A Python utility to extract and organize language string files from The Sims 4 installation.
+A modern desktop application to extract and organize language files from The Sims 4 installation. Built with Python and CustomTkinter for a sleek, user-friendly experience.
 
-## What does this do?
+![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
+![CustomTkinter](https://img.shields.io/badge/CustomTkinter-5.0+-green.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-If you've ever needed to work with The Sims 4 localization files, you know they're scattered across different folders in your game installation. This script finds all the `Strings_*.package` files and copies them to a single organized location while preserving the original folder structure.
+## What is this?
 
-Perfect for modders, translators, or anyone curious about how the game handles different languages.
+The Sims 4 stores language files (strings) scattered across different directories. This tool helps modders, translators, and curious players extract all `Strings_*.package` files and organize them neatly by language code, preserving the original folder structure.
+
+After extraction, the app automatically opens the output folder so you can dive right into your files.
 
 ## Features
 
-- Automatically locates string packages in your Sims 4 installation
-- Preserves original directory structure
-- Searches recursively through Data/Client and Delta folders
-- Case-insensitive file matching
-- Progress feedback as files are copied
+- **Modern Dark UI**: Clean, aesthetic interface built with CustomTkinter
+- **Bilingual Support**: Switch between English and Spanish on the fly
+- **Smart Detection**: Automatically finds all available languages in your game
+- **Organized Output**: Files are grouped by language code (EN_US, ES_ES, etc.)
+- **Real-time Feedback**: Console output shows exactly what's happening
+- **Auto-open Folder**: Opens destination folder when extraction completes
+
+## Screenshots
+
+The app features a dark, modern interface with:
+- Large, clear input fields for game and output paths
+- Real-time console logging
+- Language switcher (EN/ES)
+- One-click extraction button
 
 ## Requirements
 
-- Python 3.6 or higher
+- Python 3.8 or higher
 - The Sims 4 installed on your system
-- No external dependencies needed (uses only Python standard library)
+- CustomTkinter library
 
-## How to use
+## Installation
 
-1. **Clone or download** this repository
+1. **Clone or download this repository**
 
-2. **Edit the paths** in the script to match your system:
-   ```python
-   origen_base = Path(r"D:\SteamLibrary\steamapps\common\The Sims 4")
-   destino_base = Path(r"C:\Users\user\Desktop\Strings")
-   ```
-
-3. **Run the script:**
+2. **Install dependencies:**
    ```bash
-   python copiar_strings_sims.py
+   pip install customtkinter
    ```
 
-The script will create a `Strings` folder (or whatever destination you chose) containing all the language package files organized by their original location.
+3. **Run the application:**
+   ```bash
+   python sims4_string_relocator.py
+   ```
 
-## Configuration
+## How to Use
 
-You can modify which folders get searched by editing the `subcarpetas_objetivo` list:
+1. **Launch the app** - Double-click the Python file or run it from terminal
+2. **Set your game path** - Browse to your Sims 4 installation folder (usually `D:\SteamLibrary\steamapps\common\The Sims 4` or similar)
+3. **Choose output location** - Select where you want the organized files saved
+4. **Click "START EXTRACTION"** - The app will:
+   - Scan for available languages
+   - Copy all string packages
+   - Organize them by language
+   - Open the destination folder
+
+## Output Structure
+
+```
+Strings/
+├── ENG_US/
+│   ├── Data/Client/Strings_ENG_US.package
+│   └── Delta/EP01/Strings_ENG_US.package
+├── ESP_ES/
+│   ├── Data/Client/Strings_ESP_ES.package
+│   └── Delta/EP01/Strings_ESP_ES.package
+└── ...
+```
+
+Each language gets its own folder with the complete file hierarchy preserved.
+
+## Use Cases
+
+**For Modders:**
+- Extract strings to analyze game text structure
+- Create translations or language patches
+- Debug localization issues
+
+**For Translators:**
+- Access all language files in one organized location
+- Compare translations across languages
+- Export strings for translation workflows
+
+**For Players:**
+- Backup language files
+- Explore game content
+- Learn how localization works in The Sims 4
+
+## Troubleshooting
+
+**"The game path does not exist" error:**
+- Make sure you selected the root Sims 4 folder (contains `Data` and `Delta` folders)
+- Try browsing manually instead of typing the path
+
+**No languages detected:**
+- Verify your game installation is complete
+- Check that `Data/Client` contains `Strings_*.package` files
+
+**App won't start:**
+- Ensure CustomTkinter is installed: `pip install customtkinter`
+- Check Python version: `python --version` (needs 3.8+)
+
+## Customization
+
+Edit these lines in the code to change default paths:
 
 ```python
-subcarpetas_objetivo = ["Data/Client", "Delta"]
+self.path_origin = ctk.StringVar(value=r"D:\SteamLibrary\steamapps\common\The Sims 4")
+self.path_dest = ctk.StringVar(value=str(Path.home() / "Desktop" / "Strings"))
 ```
 
-Add or remove folders as needed for your specific use case.
+Change default language from Spanish to English:
 
-## Output example
-
-```
-✅ Copiado: Data/Client/Strings_ENG_US.package
-✅ Copiado: Data/Client/Strings_ESP_ES.package
-✅ Copiado: Delta/EP01/Strings_ENG_US.package
-⚠️ No se encontró la carpeta: Delta/SomeOtherPack
-
-Proceso finalizado con éxito
-Los archivos están en: C:\Users\user\Desktop\Strings
+```python
+self.current_lang = "EN"  # Change from "ES" to "EN"
 ```
 
-## Why would I need this?
+## Technical Details
 
-- **Mod development:** Extract strings to analyze or create translations
-- **Language research:** Compare how different languages handle game text
-- **Backup purposes:** Keep a clean copy of all language files
-- **Translation work:** Easy access to all localization packages
-
-## License
-
-Free to use and modify as you wish. If you make something cool with it, feel free to share!
+- **Framework**: CustomTkinter (modern tkinter wrapper)
+- **Theme**: Dark mode with custom color palette
+- **File Operations**: Uses `shutil` for safe file copying
+- **Path Handling**: `pathlib` for cross-platform compatibility
 
 ## Contributing
 
-Found a bug or have a suggestion? Open an issue or submit a pull request. All contributions are welcome.
+Found a bug? Have a feature idea? Contributions are welcome!
+
+- Open an issue to report bugs
+- Submit pull requests for improvements
+- Share feedback on what works and what doesn't
+
+## License
+
+Free to use, modify, and distribute. Do whatever you want with it!
 
 ---
 
-# 🎮 Copiador de Archivos Strings de Los Sims 4
+# 🎮 Relocalizador de Strings - Los Sims 4
 
-Una utilidad en Python para extraer y organizar los archivos de idioma de tu instalación de Los Sims 4.
+Una aplicación de escritorio moderna para extraer y organizar archivos de idioma de la instalación de Los Sims 4. Construida con Python y CustomTkinter para una experiencia elegante y fácil de usar.
 
-## ¿Qué hace esto?
+## ¿Qué es esto?
 
-Si alguna vez has necesitado trabajar con los archivos de localización de Los Sims 4, sabes que están dispersos por diferentes carpetas en la instalación del juego. Este script encuentra todos los archivos `Strings_*.package` y los copia a una ubicación organizada manteniendo la estructura de carpetas original.
+Los Sims 4 almacena archivos de idioma (strings) dispersos en diferentes directorios. Esta herramienta ayuda a modders, traductores y jugadores curiosos a extraer todos los archivos `Strings_*.package` y organizarlos ordenadamente por código de idioma, preservando la estructura de carpetas original.
 
-Perfecto para modders, traductores o cualquier persona curiosa sobre cómo el juego maneja los diferentes idiomas.
+Después de la extracción, la app abre automáticamente la carpeta de destino para que puedas acceder directamente a tus archivos.
 
 ## Características
 
-- Localiza automáticamente los paquetes de strings en tu instalación de Sims 4
-- Preserva la estructura de directorios original
-- Busca recursivamente en las carpetas Data/Client y Delta
-- Coincidencia de archivos sin importar mayúsculas/minúsculas
-- Retroalimentación del progreso mientras se copian los archivos
+- **UI Moderna Oscura**: Interfaz limpia y estética construida con CustomTkinter
+- **Soporte Bilingüe**: Cambia entre inglés y español al instante
+- **Detección Inteligente**: Encuentra automáticamente todos los idiomas disponibles en tu juego
+- **Salida Organizada**: Los archivos se agrupan por código de idioma (EN_US, ES_ES, etc.)
+- **Retroalimentación en Tiempo Real**: La consola muestra exactamente qué está pasando
+- **Auto-abrir Carpeta**: Abre la carpeta de destino cuando completa la extracción
 
 ## Requisitos
 
-- Python 3.6 o superior
+- Python 3.8 o superior
 - Los Sims 4 instalado en tu sistema
-- No necesita dependencias externas (usa solo la librería estándar de Python)
+- Librería CustomTkinter
 
-## Cómo usar
+## Instalación
 
-1. **Clona o descarga** este repositorio
+1. **Clona o descarga este repositorio**
 
-2. **Edita las rutas** en el script para que coincidan con tu sistema:
-   ```python
-   origen_base = Path(r"D:\SteamLibrary\steamapps\common\The Sims 4")
-   destino_base = Path(r"C:\Users\user\Desktop\Strings")
-   ```
-
-3. **Ejecuta el script:**
+2. **Instala las dependencias:**
    ```bash
-   python copiar_strings_sims.py
+   pip install customtkinter
    ```
 
-El script creará una carpeta `Strings` (o el destino que hayas elegido) conteniendo todos los archivos de idioma organizados según su ubicación original.
+3. **Ejecuta la aplicación:**
+   ```bash
+   python sims4_string_relocator.py
+   ```
 
-## Configuración
+## Cómo Usar
 
-Puedes modificar qué carpetas se buscan editando la lista `subcarpetas_objetivo`:
+1. **Inicia la app** - Haz doble clic en el archivo Python o ejecútalo desde la terminal
+2. **Configura la ruta del juego** - Navega hasta tu carpeta de instalación de Los Sims 4
+3. **Elige la ubicación de salida** - Selecciona dónde quieres guardar los archivos organizados
+4. **Haz clic en "INICIAR EXTRACCIÓN"** - La app:
+   - Escaneará los idiomas disponibles
+   - Copiará todos los paquetes de strings
+   - Los organizará por idioma
+   - Abrirá la carpeta de destino
+
+## Estructura de Salida
+
+```
+Strings/
+├── ENG_US/
+│   ├── Data/Client/Strings_ENG_US.package
+│   └── Delta/EP01/Strings_ENG_US.package
+├── ESP_ES/
+│   ├── Data/Client/Strings_ESP_ES.package
+│   └── Delta/EP01/Strings_ESP_ES.package
+└── ...
+```
+
+Cada idioma obtiene su propia carpeta con la jerarquía completa de archivos preservada.
+
+## Casos de Uso
+
+**Para Modders:**
+- Extraer strings para analizar la estructura de texto del juego
+- Crear traducciones o parches de idioma
+- Depurar problemas de localización
+
+**Para Traductores:**
+- Acceder a todos los archivos de idioma en una ubicación organizada
+- Comparar traducciones entre idiomas
+- Exportar strings para flujos de trabajo de traducción
+
+**Para Jugadores:**
+- Respaldar archivos de idioma
+- Explorar contenido del juego
+- Aprender cómo funciona la localización en Los Sims 4
+
+## Solución de Problemas
+
+**Error "La ruta del juego no existe":**
+- Asegúrate de seleccionar la carpeta raíz de Sims 4 (contiene las carpetas `Data` y `Delta`)
+- Intenta navegar manualmente en lugar de escribir la ruta
+
+**No se detectan idiomas:**
+- Verifica que tu instalación del juego esté completa
+- Comprueba que `Data/Client` contenga archivos `Strings_*.package`
+
+**La app no inicia:**
+- Asegúrate de que CustomTkinter esté instalado: `pip install customtkinter`
+- Verifica la versión de Python: `python --version` (necesitas 3.8+)
+
+## Personalización
+
+Edita estas líneas en el código para cambiar las rutas predeterminadas:
 
 ```python
-subcarpetas_objetivo = ["Data/Client", "Delta"]
+self.path_origin = ctk.StringVar(value=r"D:\SteamLibrary\steamapps\common\The Sims 4")
+self.path_dest = ctk.StringVar(value=str(Path.home() / "Desktop" / "Strings"))
 ```
 
-Agrega o elimina carpetas según tus necesidades específicas.
+Cambiar idioma predeterminado de español a inglés:
 
-## Ejemplo de salida
-
-```
-✅ Copiado: Data/Client/Strings_ENG_US.package
-✅ Copiado: Data/Client/Strings_ESP_ES.package
-✅ Copiado: Delta/EP01/Strings_ENG_US.package
-⚠️ No se encontró la carpeta: Delta/SomeOtherPack
-
-Proceso finalizado con éxito
-Los archivos están en: C:\Users\user\Desktop\Strings
+```python
+self.current_lang = "EN"  # Cambia de "ES" a "EN"
 ```
 
-## ¿Por qué necesitaría esto?
+## Detalles Técnicos
 
-- **Desarrollo de mods:** Extrae strings para analizar o crear traducciones
-- **Investigación lingüística:** Compara cómo diferentes idiomas manejan el texto del juego
-- **Respaldo:** Mantén una copia limpia de todos los archivos de idioma
-- **Trabajo de traducción:** Acceso fácil a todos los paquetes de localización
-
-## Licencia
-
-Libre para usar y modificar como desees. Si haces algo genial con esto, ¡compártelo!
+- **Framework**: CustomTkinter (wrapper moderno de tkinter)
+- **Tema**: Modo oscuro con paleta de colores personalizada
+- **Operaciones de Archivo**: Usa `shutil` para copia segura de archivos
+- **Manejo de Rutas**: `pathlib` para compatibilidad multiplataforma
 
 ## Contribuciones
 
-¿Encontraste un bug o tienes una sugerencia? Abre un issue o envía un pull request. Todas las contribuciones son bienvenidas.
+¿Encontraste un bug? ¿Tienes una idea para una funcionalidad? ¡Las contribuciones son bienvenidas!
+
+- Abre un issue para reportar bugs
+- Envía pull requests para mejoras
+- Comparte feedback sobre qué funciona y qué no
+
+## Licencia
+
+Libre para usar, modificar y distribuir. ¡Haz lo que quieras con él!
