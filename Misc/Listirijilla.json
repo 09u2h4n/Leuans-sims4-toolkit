@@ -2,8 +2,8 @@
   "dlcs": [
     {
       "id": "EP01",
-      "name": "Get to Workkkkuhhh",
-      "description": "Expansion Pack - Active careers, aliens and moreeee",
+      "name": "Get to Work",
+      "description": "Expansion Pack - Active careers, aliens and more",
       "urls": ["https://github.com/l1ntol/lunia-dlc/releases/download/EP01/Sims4_DLC_EP01_Get_to_Work.zip"],
       "imageFileName": "EP01.jpg",
       "price": 39.99,
@@ -954,15 +954,6 @@
     {
       "id": "FP01",
       "name": "Holiday Celebration",
-      "description": "Feature Pack - Holiday themed content and celebrations",
-      "urls": ["https://github.com/l1ntol/lunia-dlc/releases/download/FP01/Sims4_DLC_FP01_Holiday_Celebration_Pack.zip"],
-      "imageFileName": "FP01.jpg",
-      "price": 0,
-      "isOfflineMode": false
-    },
-    {
-      "id": "FP012-Test",
-      "name": "TEST",
       "description": "Feature Pack - Holiday themed content and celebrations",
       "urls": ["https://github.com/l1ntol/lunia-dlc/releases/download/FP01/Sims4_DLC_FP01_Holiday_Celebration_Pack.zip"],
       "imageFileName": "FP01.jpg",
