@@ -959,6 +959,15 @@
       "imageFileName": "FP01.jpg",
       "price": 0,
       "isOfflineMode": false
+    },
+    {
+      "id": "FP012-Test",
+      "name": "TEST",
+      "description": "Feature Pack - Holiday themed content and celebrations",
+      "urls": ["https://github.com/l1ntol/lunia-dlc/releases/download/FP01/Sims4_DLC_FP01_Holiday_Celebration_Pack.zip"],
+      "imageFileName": "FP01.jpg",
+      "price": 0,
+      "isOfflineMode": false
     }
   ]
 }
