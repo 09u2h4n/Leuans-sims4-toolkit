@@ -1,33 +1,38 @@
-name: Build Leuan's Sims 4 Toolkit
+name: Build Sims 4 Toolkit
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch: # Manuel tetikleme için
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-latest  # .NET Framework 4.8 için Windows şart
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+    - name: Depoyu Çek (Checkout)
+      uses: actions/checkout@v4
 
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
+    - name: MSBuild Kurulumu
+      uses: microsoft/setup-msbuild@v2
 
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.2.0
+    - name: NuGet Kurulumu
+      uses: nuget/setup-nuget@v2
 
-    - name: Restore NuGet packages
+    - name: Paketleri Geri Yükle (Restore NuGet Packages)
       run: nuget restore LeuanS4ToolKit.sln
 
-    - name: Build solution
-      run: msbuild LeuanS4ToolKit.sln /p:Configuration=Release
+    - name: Projeyi Derle (Build Solution)
+      run: msbuild LeuanS4ToolKit.sln /p:Configuration=Release /p:Platform="Any CPU"
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
+    - name: Derlenen Dosyaları Topla (Upload Artifact)
+      uses: actions/upload-artifact@v4
       with:
-        name: Leuans-sims4-toolkit
-        path: ModernDesign/bin/Release/
+        name: Leuans-Sims4-Toolkit-Build
+        path: |
+          **/bin/Release/*.exe
+          **/bin/Release/*.dll
+          **/bin/Release/*.config
+        if-no-files-found: warn
