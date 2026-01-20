@@ -1,0 +1,33 @@
+name: Build Leuan's Sims 4 Toolkit
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.2.0
+
+    - name: Restore NuGet packages
+      run: nuget restore LeuanS4ToolKit.sln
+
+    - name: Build solution
+      run: msbuild LeuanS4ToolKit.sln /p:Configuration=Release
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Leuans-sims4-toolkit
+        path: ModernDesign/bin/Release/
